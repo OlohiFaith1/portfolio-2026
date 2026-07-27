@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { usePathname } from 'next/navigation'
 import { useNavigation } from '@/components/providers/NavigationProvider'
@@ -13,12 +13,21 @@ export function NavigationDrawer() {
   const { isOpen, mode, open, close } = useNavigation()
   const pathname = usePathname()
   const isLanding = pathname === '/'
+  const [workEntered, setWorkEntered] = useState(false)
+
+  useEffect(() => {
+    const handler = () => setWorkEntered(true)
+    window.addEventListener('work-entered', handler)
+    return () => window.removeEventListener('work-entered', handler)
+  }, [])
 
   const prefersReducedMotion = useReducedMotion()
   const drawerRef = useRef<HTMLDivElement>(null)
   const previousFocusRef = useRef<HTMLElement | null>(null)
 
-  const closedY = isLanding ? '-100%' : 'calc(-82vh)'
+  // Landing + not yet in work section: hide bookmark entirely when drawer is closed.
+  // Work section (or any non-landing page): bookmark peeks from top at all times.
+  const closedY = isLanding && !workEntered ? '-100%' : 'calc(-82vh)'
 
   // Close when the route changes (e.g. clicking a nav link inside the drawer)
   useEffect(() => {
@@ -138,7 +147,7 @@ export function NavigationDrawer() {
           <DrawerBookmark
             isOpen={isOpen}
             onToggle={() => (isOpen ? close() : open())}
-            align={isLanding ? 'right' : 'center'}
+            align="right"
           />
         </motion.div>
       </div>

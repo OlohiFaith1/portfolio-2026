@@ -11,8 +11,8 @@ interface Props {
 export function DrawerContent({ mode, isPlaying = false }: Props) {
   return (
     <div className="relative w-full h-[82vh] bg-[#0a0a0a] overflow-hidden pointer-events-auto">
-      {/* Work reel — full drawer width, ambient background */}
-      <div className="absolute inset-0">
+      {/* Work reel — inset 48px from top and bottom to match Figma spacing */}
+      <div className="absolute inset-x-0 top-[48px] bottom-[48px] rounded-[12px] overflow-hidden">
         <WorkSlideshow isPlaying={isPlaying} />
       </div>
 

@@ -20,9 +20,11 @@ const rethink = Rethink_Sans({
 })
 
 export const metadata: Metadata = {
-  title: 'Ijelekhai Faith Olohijere',
+  // TODO: replace with production domain once live
+  metadataBase: new URL('https://example.com'),
+  title: 'Ijelekhai Faith Olohijere | Product Designer & Design Engineer',
   description:
-    'I design digital products that are simple to use and enjoyable to interact with.',
+    'Product designer crafting thoughtful digital experiences while exploring AI and design engineering.',
 }
 
 export default function RootLayout({

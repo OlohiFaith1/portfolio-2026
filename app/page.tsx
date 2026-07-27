@@ -1,5 +1,19 @@
 import { LandingHero } from '@/components/sections/LandingHero'
+import { CaseStudySection } from '@/components/sections/CaseStudySection'
+import { ScrollGate } from '@/components/sections/ScrollGate'
 
 export default function Home() {
-  return <LandingHero />
+  return (
+    <ScrollGate
+      landing={<LandingHero />}
+      work={
+        <CaseStudySection
+          name="Azza"
+          role={"Conversational &\nExperience Design"}
+          year="2025"
+          nextHref="/"
+        />
+      }
+    />
+  )
 }

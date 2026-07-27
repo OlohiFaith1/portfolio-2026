@@ -16,9 +16,19 @@ export function SmoothScrollProvider({ children }: { children: React.ReactNode }
 
     rafId = requestAnimationFrame(raf)
 
+    // When ScrollGate signals that the work section is entered, immediately
+    // cancel any in-flight scroll animation so it doesn't fight the layout
+    // collapse + scroll reset that follows.
+    function onWorkEntered() {
+      lenis.scrollTo(0, { immediate: true })
+    }
+
+    window.addEventListener('work-entered', onWorkEntered)
+
     return () => {
       cancelAnimationFrame(rafId)
       lenis.destroy()
+      window.removeEventListener('work-entered', onWorkEntered)
     }
   }, [])
 

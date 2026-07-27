@@ -1,13 +1,21 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { useNavigation } from '@/components/providers/NavigationProvider'
 
 export function Nav() {
   const { isOpen, open } = useNavigation()
   const pathname = usePathname()
+  const [workEntered, setWorkEntered] = useState(false)
 
-  if (pathname !== '/') return null
+  useEffect(() => {
+    const handler = () => setWorkEntered(true)
+    window.addEventListener('work-entered', handler)
+    return () => window.removeEventListener('work-entered', handler)
+  }, [])
+
+  if (pathname !== '/' || workEntered) return null
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 pt-10 md:px-16 xl:px-24">
