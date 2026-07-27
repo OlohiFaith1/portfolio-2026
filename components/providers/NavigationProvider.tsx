@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, type ReactNode } from 'react'
+import { createContext, useContext, useState, useCallback, useMemo, type ReactNode } from 'react'
 
 export type DrawerMode = 'navigation' | 'contact'
 
@@ -17,13 +17,16 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false)
   const [mode, setMode] = useState<DrawerMode>('navigation')
 
-  function open(m: DrawerMode = 'navigation') {
+  const close = useCallback(() => setIsOpen(false), [])
+  const open = useCallback((m: DrawerMode = 'navigation') => {
     setMode(m)
     setIsOpen(true)
-  }
+  }, [])
+
+  const value = useMemo(() => ({ isOpen, mode, open, close }), [isOpen, mode, open, close])
 
   return (
-    <NavigationContext.Provider value={{ isOpen, mode, open, close: () => setIsOpen(false) }}>
+    <NavigationContext.Provider value={value}>
       {children}
     </NavigationContext.Provider>
   )

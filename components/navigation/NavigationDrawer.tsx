@@ -7,7 +7,6 @@ import { useNavigation } from '@/components/providers/NavigationProvider'
 import { DrawerContent } from './DrawerContent'
 import { DrawerBookmark } from './DrawerBookmark'
 
-// Re-export so existing child imports keep working
 export type { DrawerMode } from '@/components/providers/NavigationProvider'
 
 export function NavigationDrawer() {
@@ -19,35 +18,49 @@ export function NavigationDrawer() {
   const drawerRef = useRef<HTMLDivElement>(null)
   const previousFocusRef = useRef<HTMLElement | null>(null)
 
-  // On landing: hide everything when closed.
-  // On other pages: slide up only the drawer panel; bookmark stays visible at the top.
   const closedY = isLanding ? '-100%' : 'calc(-82vh)'
 
-  // Escape to close
+  // Close when the route changes (e.g. clicking a nav link inside the drawer)
+  useEffect(() => {
+    close()
+  }, [pathname, close])
+
+  // Escape to close + Tab focus trap (combined to avoid two document listeners)
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape' && isOpen) close()
+      if (!isOpen) return
+
+      if (e.key === 'Escape') {
+        close()
+        return
+      }
+
+      if (e.key === 'Tab') {
+        const focusable = drawerRef.current?.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input, textarea, select, [tabindex]:not([tabindex="-1"])'
+        )
+        if (!focusable || focusable.length === 0) return
+        const first = focusable[0]
+        const last = focusable[focusable.length - 1]
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault()
+            last.focus()
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault()
+            first.focus()
+          }
+        }
+      }
     }
+
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
   }, [isOpen, close])
 
-  // Click outside to close
-  useEffect(() => {
-    if (!isOpen) return
-    const timer = setTimeout(() => {
-      function onPointerDown(e: PointerEvent) {
-        if (drawerRef.current && !drawerRef.current.contains(e.target as Node)) {
-          close()
-        }
-      }
-      document.addEventListener('pointerdown', onPointerDown)
-      return () => document.removeEventListener('pointerdown', onPointerDown)
-    }, 0)
-    return () => clearTimeout(timer)
-  }, [isOpen, close])
-
-  // Focus management
+  // Focus management: move focus into the drawer on open, restore it on close
   useEffect(() => {
     if (isOpen) {
       previousFocusRef.current = document.activeElement as HTMLElement
@@ -76,11 +89,16 @@ export function NavigationDrawer() {
 
   return (
     <>
-      {/* Backdrop — blur + dim the page while drawer is open */}
+      {/*
+        Backdrop: pointer-events-auto so the underlying page is not interactive
+        while the drawer is open. onClick handles outside-click-to-close,
+        replacing the old document-level pointerdown handler.
+      */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed inset-0 z-[99] pointer-events-none"
+            aria-hidden="true"
+            className="fixed inset-0 z-[99]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -90,22 +108,32 @@ export function NavigationDrawer() {
               WebkitBackdropFilter: 'blur(6px)',
               backgroundColor: 'rgba(0,0,0,0.25)',
             }}
+            onClick={close}
           />
         )}
       </AnimatePresence>
 
+      {/*
+        Outer container: no aria-hidden here so the bookmark button is always
+        reachable by AT on inner pages (it is the only open trigger there).
+      */}
       <div
         ref={drawerRef}
         className="fixed left-0 right-0 top-0 z-[100] pointer-events-none"
-        aria-hidden={!isOpen}
       >
         <motion.div
           initial={false}
           variants={variants}
           animate={isOpen ? 'open' : 'closed'}
         >
-          <div role="dialog" aria-modal="true" aria-label="Navigation">
-            <DrawerContent mode={mode} />
+          {/* aria-hidden scoped to the dialog content only, not the bookmark */}
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Navigation"
+            aria-hidden={!isOpen}
+          >
+            <DrawerContent mode={mode} isPlaying={isOpen} />
           </div>
           <DrawerBookmark
             isOpen={isOpen}
