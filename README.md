@@ -1,36 +1,108 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Faith Olohijere — Portfolio
+
+A motion-first portfolio built with **Next.js**, showcasing selected product design work through immersive interactions, custom animations, and thoughtful storytelling.
+
+Rather than presenting static case studies, the experience is designed to feel like exploring a carefully crafted product.
+
+## Preview
+
+> Live site: *(coming soon)*
+
+---
+
+## Features
+
+- Custom animated navigation drawer
+- Bookmark-inspired navigation
+- Scroll-driven storytelling
+- Animated project gallery
+- Interactive hover states
+- Responsive across desktop and mobile
+- Accessible keyboard navigation
+- Pixel-accurate implementation from Figma
+
+---
+
+## Tech Stack
+
+- Next.js 16
+- React
+- TypeScript
+- Tailwind CSS v4
+- Framer Motion
+- Figma
+- Claude Code
+
+---
 
 ## Getting Started
 
-First, run the development server:
+Clone the repository:
+
+```bash
+git clone https://github.com/yourusername/portfolio.git
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000 in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Structure
 
-## Learn More
+```
+app/
+components/
+contexts/
+hooks/
+lib/
+public/
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Design & Development
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The portfolio was designed in Figma before being implemented in Next.js.
 
-## Deploy on Vercel
+The development workflow combines Figma MCP and Claude Code to translate designs into production-ready components while preserving layout, spacing, typography, and motion.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Roadmap
+
+- [x] Landing page
+- [x] Navigation drawer
+- [x] Interactive slideshow
+- [x] First case study
+- [ ] Remaining case studies
+- [ ] Discoveries page
+- [ ] Travels page
+- [ ] Playground
+- [ ] Dark mode
+- [ ] Performance optimization
+
+---
+
+## Deployment
+
+This project is configured for deployment on Vercel.
+
+---
+
+## License
+
+This repository showcases my portfolio work. Please do not copy or redistribute the design or content without permission.
+
+© 2026 Faith Olohijere
