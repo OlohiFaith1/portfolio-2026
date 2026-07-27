@@ -16,25 +16,24 @@ export function NavigationDrawer() {
   const pathname = usePathname()
   const isLanding = pathname === '/'
   const [workEntered, setWorkEntered] = useState(false)
-  // True only during the single render triggered by entering the work section,
-  // so the bookmark snaps to its visible position with no spring lag.
-  const justEnteredWork = useRef(false)
+  // State (not ref) so it can be safely read during render.
+  // True only for the single render where the work section is first entered,
+  // so the bookmark snaps instantly with no spring lag.
+  const [justEnteredWork, setJustEnteredWork] = useState(false)
 
   useEffect(() => {
     const handler = () => {
-      justEnteredWork.current = true
-      // Force synchronous re-render so the bookmark appears in the same frame.
-      flushSync(() => setWorkEntered(true))
+      flushSync(() => {
+        setWorkEntered(true)
+        setJustEnteredWork(true)
+      })
+      // Reset on the next tick — after the render that consumed the instant
+      // transition — so subsequent open/close interactions use spring.
+      setTimeout(() => setJustEnteredWork(false), 0)
     }
     window.addEventListener(WORK_ENTERED_EVENT, handler)
     return () => window.removeEventListener(WORK_ENTERED_EVENT, handler)
   }, [])
-
-  // Reset the flag after the render that consumed it; subsequent open/close
-  // interactions will use the normal spring transitions.
-  useEffect(() => {
-    justEnteredWork.current = false
-  })
 
   const prefersReducedMotion = useReducedMotion()
   const drawerRef = useRef<HTMLDivElement>(null)
@@ -109,7 +108,7 @@ export function NavigationDrawer() {
 
   const currentTransition = (() => {
     // Snap instantly when entering the work section for the first time.
-    if (justEnteredWork.current) return { type: 'tween' as const, duration: 0 }
+    if (justEnteredWork) return { type: 'tween' as const, duration: 0 }
     if (prefersReducedMotion)    return { type: 'tween' as const, duration: 0.01 }
     return isOpen
       ? { type: 'spring' as const, stiffness: 70, damping: 24, mass: 1 }
