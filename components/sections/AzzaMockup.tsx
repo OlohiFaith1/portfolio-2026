@@ -267,7 +267,7 @@ function PhoneFrame() {
                     margin: 0,
                   }}
                 >
-                  Receiver's Details
+                  Receiver&apos;s Details
                 </p>
                 <LabelValue label="Bank Name:" value="Zenith Bank" />
                 <LabelValue label="Account Name:" value="Toochukwu Okoro" />
