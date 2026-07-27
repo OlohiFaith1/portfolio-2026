@@ -40,7 +40,7 @@ Rather than presenting static case studies, the experience is designed to feel l
 Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/portfolio.git
+git clone https://github.com/OlohiFaith1/portfolio.git
 ```
 
 Install dependencies:
@@ -90,7 +90,6 @@ The development workflow combines Figma MCP and Claude Code to translate designs
 - [ ] Discoveries page
 - [ ] Travels page
 - [ ] Playground
-- [ ] Dark mode
 - [ ] Performance optimization
 
 ---
