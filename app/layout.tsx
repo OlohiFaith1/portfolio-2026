@@ -3,6 +3,8 @@ import { Pirata_One, Rethink_Sans } from 'next/font/google'
 import '@/styles/globals.css'
 import { Nav } from '@/components/nav/Nav'
 import { SmoothScrollProvider } from '@/components/providers/SmoothScrollProvider'
+import { NavigationProvider } from '@/components/providers/NavigationProvider'
+import { NavigationDrawer } from '@/components/navigation/NavigationDrawer'
 
 const pirata = Pirata_One({
   weight: '400',
@@ -31,10 +33,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${pirata.variable} ${rethink.variable}`}>
       <body className="font-sans antialiased">
-        <SmoothScrollProvider>
-          <Nav />
-          <main>{children}</main>
-        </SmoothScrollProvider>
+        <NavigationProvider>
+          <SmoothScrollProvider>
+            <Nav />
+            <NavigationDrawer />
+            <main>{children}</main>
+          </SmoothScrollProvider>
+        </NavigationProvider>
       </body>
     </html>
   )
