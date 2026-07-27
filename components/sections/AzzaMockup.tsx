@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useLayoutEffect, useState } from 'react'
 import Image from 'next/image'
 
 const NATIVE_W = 408
@@ -10,15 +10,20 @@ export function AzzaMockup() {
   const wrapRef = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
 
-  useEffect(() => {
+  // useLayoutEffect so the scale is measured and applied before the browser
+  // paints — prevents the phone flashing at native size on first render.
+  // ResizeObserver covers viewport height changes that don't fire window resize
+  // (e.g. mobile browser chrome appearing/disappearing).
+  useLayoutEffect(() => {
     const update = () => {
       if (wrapRef.current) {
         setScale(wrapRef.current.offsetHeight / NATIVE_H)
       }
     }
     update()
-    window.addEventListener('resize', update)
-    return () => window.removeEventListener('resize', update)
+    const ro = new ResizeObserver(update)
+    if (wrapRef.current) ro.observe(wrapRef.current)
+    return () => ro.disconnect()
   }, [])
 
   return (

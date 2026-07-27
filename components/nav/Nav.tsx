@@ -1,18 +1,22 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { usePathname } from 'next/navigation'
 import { useNavigation } from '@/components/providers/NavigationProvider'
+import { WORK_ENTERED_EVENT } from '@/lib/events'
 
 export function Nav() {
-  const { isOpen, open } = useNavigation()
+  const { isOpen, mode, open } = useNavigation()
   const pathname = usePathname()
   const [workEntered, setWorkEntered] = useState(false)
 
   useEffect(() => {
-    const handler = () => setWorkEntered(true)
-    window.addEventListener('work-entered', handler)
-    return () => window.removeEventListener('work-entered', handler)
+    // flushSync forces a synchronous re-render so the header unmounts in the
+    // same frame the event fires, with no visible linger.
+    const handler = () => flushSync(() => setWorkEntered(true))
+    window.addEventListener(WORK_ENTERED_EVENT, handler)
+    return () => window.removeEventListener(WORK_ENTERED_EVENT, handler)
   }, [])
 
   if (pathname !== '/' || workEntered) return null
@@ -22,7 +26,7 @@ export function Nav() {
       <button
         type="button"
         onClick={() => open('navigation')}
-        aria-expanded={isOpen}
+        aria-expanded={isOpen && mode === 'navigation'}
         aria-haspopup="dialog"
         className="text-[16px] leading-[1.3] tracking-[-0.2px] text-muted font-normal"
       >
@@ -31,7 +35,7 @@ export function Nav() {
       <button
         type="button"
         onClick={() => open('contact')}
-        aria-expanded={isOpen}
+        aria-expanded={isOpen && mode === 'contact'}
         aria-haspopup="dialog"
         className="text-[16px] leading-[1.3] tracking-[-0.2px] text-muted font-normal"
       >

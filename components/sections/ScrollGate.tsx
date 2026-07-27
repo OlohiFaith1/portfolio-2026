@@ -2,6 +2,7 @@
 
 import { useRef, useEffect, useCallback } from 'react'
 import type { ReactNode } from 'react'
+import { WORK_ENTERED_EVENT } from '@/lib/events'
 
 interface Props {
   landing: ReactNode
@@ -11,67 +12,89 @@ interface Props {
 export function ScrollGate({ landing, work }: Props) {
   const heroRef = useRef<HTMLDivElement>(null)
   const gated = useRef(false)
+  const cleanupListeners = useRef<(() => void) | null>(null)
 
   const enter = useCallback(() => {
     if (gated.current) return
     gated.current = true
 
-    // Signal Nav, NavigationDrawer, and SmoothScrollProvider.
-    // SmoothScrollProvider will call lenis.scrollTo(0, { immediate: true })
-    // to cancel any in-flight scroll animation before the layout collapses.
-    window.dispatchEvent(new CustomEvent('work-entered'))
+    // Remove gesture listeners immediately — no need to keep them active.
+    cleanupListeners.current?.()
 
-    // Collapse the hero out of the document flow. At this moment the work
-    // section (z=2) is already fully covering the hero (z=1, sticky), so
-    // there is no visual jump. The page height drops and the browser auto-
-    // clamps scrollY to 0, placing the work section at the viewport top.
-    const hero = heroRef.current
-    if (hero) {
-      hero.style.height = '0'
-      hero.style.overflow = 'hidden'
-      hero.style.position = 'static'
-    }
+    // Signal Nav (flushSync), NavigationDrawer (flushSync + instant snap),
+    // and SmoothScrollProvider simultaneously.
+    window.dispatchEvent(new CustomEvent(WORK_ENTERED_EVENT))
+
+    // Hard-cut: remove the hero with no animation, no overlap.
+    if (heroRef.current) heroRef.current.style.display = 'none'
   }, [])
 
   useEffect(() => {
-    // Fire when the user has scrolled the full height of the hero — at that
-    // point the work section is entirely covering the sticky hero.
-    const handleScroll = () => {
-      if (!gated.current && window.scrollY >= window.innerHeight) {
+    const onWheel = (e: WheelEvent) => {
+      if (e.deltaY > 0) enter()
+    }
+
+    let touchStartY = 0
+    const onTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY
+    }
+    const onTouchMove = (e: TouchEvent) => {
+      if (e.touches[0].clientY < touchStartY - 10) enter()
+    }
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      // Don't intercept Space/ArrowDown on interactive elements inside the landing hero.
+      const tag = (e.target as HTMLElement).tagName
+      if (['BUTTON', 'INPUT', 'TEXTAREA', 'SELECT', 'A'].includes(tag)) return
+      if (['ArrowDown', 'PageDown', 'End', ' '].includes(e.key)) {
+        e.preventDefault()
         enter()
       }
     }
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+
+    const cleanup = () => {
+      window.removeEventListener('wheel', onWheel)
+      window.removeEventListener('touchstart', onTouchStart)
+      window.removeEventListener('touchmove', onTouchMove)
+      window.removeEventListener('keydown', onKeyDown)
+    }
+
+    cleanupListeners.current = cleanup
+
+    window.addEventListener('wheel', onWheel, { passive: true })
+    window.addEventListener('touchstart', onTouchStart, { passive: true })
+    window.addEventListener('touchmove', onTouchMove, { passive: true })
+    window.addEventListener('keydown', onKeyDown)
+
+    return cleanup
   }, [enter])
 
   return (
     <>
       {/*
-        The hero sticks to the top of the viewport (z=1) while the work
-        section (z=2) scrolls up from below and covers it. Once the work
-        section fully covers the hero (scrollY ≥ innerHeight), the hero is
-        collapsed silently and scroll resets to 0 via Lenis.
-      */}
-      <div ref={heroRef} style={{ position: 'sticky', top: 0, zIndex: 1 }}>
-        {landing}
-      </div>
-
-      {/*
-        Explicit background replicates the body's dot pattern so the work
-        section is opaque and fully covers the sticky hero as it rises.
+        Hero is fixed (z=10), sitting above the work section but below Nav (z=50)
+        and the drawer (z=100). It takes no space in the document flow, so the
+        work section is always at document y=0. On the first downward gesture
+        the hero is hidden instantly — a hard cut with zero overlap.
       */}
       <div
+        ref={heroRef}
         style={{
-          position: 'relative',
-          zIndex: 2,
+          position: 'fixed',
+          inset: 0,
+          zIndex: 10,
+          // Opaque background so the work section below is not visible through
+          // the hero. Matches the body dot-pattern exactly.
           backgroundColor: 'var(--background)',
           backgroundImage: 'radial-gradient(circle, #d8d8d8 1px, transparent 1px)',
           backgroundSize: '28px 28px',
         }}
       >
-        {work}
+        {landing}
       </div>
+
+      {/* Always at document y=0; revealed the moment the hero is hidden. */}
+      {work}
     </>
   )
 }

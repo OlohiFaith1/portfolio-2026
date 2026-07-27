@@ -1,8 +1,10 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { usePathname } from 'next/navigation'
+import { WORK_ENTERED_EVENT } from '@/lib/events'
 import { useNavigation } from '@/components/providers/NavigationProvider'
 import { DrawerContent } from './DrawerContent'
 import { DrawerBookmark } from './DrawerBookmark'
@@ -14,12 +16,25 @@ export function NavigationDrawer() {
   const pathname = usePathname()
   const isLanding = pathname === '/'
   const [workEntered, setWorkEntered] = useState(false)
+  // True only during the single render triggered by entering the work section,
+  // so the bookmark snaps to its visible position with no spring lag.
+  const justEnteredWork = useRef(false)
 
   useEffect(() => {
-    const handler = () => setWorkEntered(true)
-    window.addEventListener('work-entered', handler)
-    return () => window.removeEventListener('work-entered', handler)
+    const handler = () => {
+      justEnteredWork.current = true
+      // Force synchronous re-render so the bookmark appears in the same frame.
+      flushSync(() => setWorkEntered(true))
+    }
+    window.addEventListener(WORK_ENTERED_EVENT, handler)
+    return () => window.removeEventListener(WORK_ENTERED_EVENT, handler)
   }, [])
+
+  // Reset the flag after the render that consumed it; subsequent open/close
+  // interactions will use the normal spring transitions.
+  useEffect(() => {
+    justEnteredWork.current = false
+  })
 
   const prefersReducedMotion = useReducedMotion()
   const drawerRef = useRef<HTMLDivElement>(null)
@@ -85,16 +100,21 @@ export function NavigationDrawer() {
     }
   }, [isOpen])
 
-  const instant = { type: 'tween' as const, duration: 0.01 }
-  const variants = prefersReducedMotion
-    ? {
-        open:   { y: '0%',    transition: instant },
-        closed: { y: closedY, transition: instant },
-      }
-    : {
-        open:   { y: '0%',    transition: { type: 'spring' as const, stiffness: 70, damping: 24, mass: 1 } },
-        closed: { y: closedY, transition: { type: 'spring' as const, stiffness: 85, damping: 22, mass: 1 } },
-      }
+  // Variants carry only position values — transitions are specified separately
+  // via the `transition` prop so they can be overridden for the instant snap.
+  const variants = {
+    open:   { y: '0%' },
+    closed: { y: closedY },
+  }
+
+  const currentTransition = (() => {
+    // Snap instantly when entering the work section for the first time.
+    if (justEnteredWork.current) return { type: 'tween' as const, duration: 0 }
+    if (prefersReducedMotion)    return { type: 'tween' as const, duration: 0.01 }
+    return isOpen
+      ? { type: 'spring' as const, stiffness: 70, damping: 24, mass: 1 }
+      : { type: 'spring' as const, stiffness: 85, damping: 22, mass: 1 }
+  })()
 
   return (
     <>
@@ -134,6 +154,7 @@ export function NavigationDrawer() {
           initial={false}
           variants={variants}
           animate={isOpen ? 'open' : 'closed'}
+          transition={currentTransition}
         >
           {/* aria-hidden scoped to the dialog content only, not the bookmark */}
           <div

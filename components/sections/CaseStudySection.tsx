@@ -1,6 +1,5 @@
-import Image from 'next/image'
-import Link from 'next/link'
 import { AzzaMockup } from './AzzaMockup'
+import { AnimatedRightArrow } from './AnimatedRightArrow'
 
 export interface CaseStudySectionProps {
   name: string
@@ -45,19 +44,7 @@ export function CaseStudySection({
       <AzzaMockup />
 
       {/* Next-project arrow — right, desktop only */}
-      <Link
-        href={nextHref}
-        aria-label="Next project"
-        className="hidden lg:block absolute right-[7vw] top-1/2 -translate-y-1/2"
-      >
-        <Image
-          src="/arrow-right.svg"
-          alt=""
-          width={33}
-          height={12}
-          aria-hidden="true"
-        />
-      </Link>
+      <AnimatedRightArrow href={nextHref} />
     </section>
   )
 }
