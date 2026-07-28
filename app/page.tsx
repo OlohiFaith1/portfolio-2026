@@ -8,6 +8,7 @@ export default function Home() {
       landing={<LandingHero />}
       work={
         <CaseStudySection
+          href="/work/azza"
           name="Azza"
           role={"Conversational &\nExperience Design"}
           year="2025"

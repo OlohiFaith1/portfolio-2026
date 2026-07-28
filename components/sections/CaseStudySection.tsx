@@ -1,11 +1,12 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { AzzaMockup } from './AzzaMockup'
 import { AnimatedRightArrow } from './AnimatedRightArrow'
-
 export interface CaseStudySectionProps {
+  href: string
   name: string
   role: string
   year: string
@@ -13,6 +14,7 @@ export interface CaseStudySectionProps {
 }
 
 export function CaseStudySection({
+  href,
   name,
   role,
   year,
@@ -62,12 +64,33 @@ export function CaseStudySection({
 
       {/* Project metadata — left edge aligns with Nav's "Menu" label via matching responsive padding */}
       <div className="hidden lg:flex flex-col absolute top-1/2 -translate-y-1/2 items-start gap-[20px] left-8 md:left-16 xl:left-24">
-        <span
-          className="font-display leading-[1.1] text-foreground"
-          style={{ fontSize: 20 }}
+        {/*
+          Title: underline animates left-to-right on hover via scaleX variant
+          propagation. Typography is unchanged — only the underline is added.
+        */}
+        <motion.div
+          className="relative"
+          initial="rest"
+          animate="rest"
+          whileHover="hover"
         >
-          {name}
-        </span>
+          <Link href={href}>
+            <span
+              className="font-display leading-[1.1] text-foreground"
+              style={{ fontSize: 20 }}
+            >
+              {name}
+            </span>
+          </Link>
+          <motion.span
+            className="absolute left-0 w-full block origin-left"
+            style={{ bottom: -2, height: 1, backgroundColor: 'currentColor' }}
+            variants={{ rest: { scaleX: 0 }, hover: { scaleX: 1 } }}
+            transition={{ duration: 0.35, ease: 'easeInOut' }}
+            aria-hidden="true"
+          />
+        </motion.div>
+
         <span
           className="font-sans font-normal leading-[1.3] text-[#5a5a5a]"
           style={{ fontSize: 16, letterSpacing: '-0.16px', width: 191, display: 'block', whiteSpace: 'pre-line' }}
@@ -82,13 +105,15 @@ export function CaseStudySection({
         </span>
       </div>
 
-      {/* Device mockup — hover target */}
-      <div
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-      >
-        <AzzaMockup />
-      </div>
+      {/* Device mockup — hover target for background effect + click to navigate */}
+      <Link href={href}>
+        <div
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+        >
+          <AzzaMockup />
+        </div>
+      </Link>
 
       {/* Next-project arrow — right, desktop only */}
       <AnimatedRightArrow href={nextHref} />
