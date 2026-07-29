@@ -62,8 +62,8 @@ function Metadata() {
             Collaborators
           </span>
           <p className="font-sans" style={{ fontSize: 16, lineHeight: 1.5, letterSpacing: '-0.16px', color: '#737373', margin: 0 }}>
-            Emmanuella James,{' '}
-            <span style={{ color: '#a3a3a3' }}>Brand and designer</span>
+            Ella James,{' '}
+            <span style={{ color: '#a3a3a3' }}>Brand and Product Designer</span>
           </p>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -193,7 +193,7 @@ export function AzzaStudy2() {
       {/* ── DESKTOP (≥1024px) — unchanged from original Figma layout ─────────── */}
       <div
         className="hidden lg:block"
-        style={{ position: 'relative', minHeight: 2040, overflowX: 'hidden' }}
+        style={{ position: 'relative', minHeight: 1818, overflowX: 'hidden' }}
       >
         <div
           style={{
@@ -214,7 +214,7 @@ export function AzzaStudy2() {
         <div
           style={{
             position: 'absolute',
-            top: 848,
+            top: 650,
             left: '50%',
             transform: 'translateX(-50%)',
           }}

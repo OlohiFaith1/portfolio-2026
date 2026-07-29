@@ -2,7 +2,7 @@ import { AnimatedArrow } from './AnimatedArrow'
 
 export function LandingHero() {
   return (
-    <section className="min-h-screen flex flex-col">
+    <section className="h-[100svh] flex flex-col">
       <div className="flex-1 flex items-center justify-center px-6 md:px-8">
         <div className="flex flex-col gap-4 md:gap-6 text-center w-[320px] max-w-full">
           <h1 className="font-display text-[26px] md:text-[32px] leading-[1.1] text-foreground">
@@ -17,7 +17,7 @@ export function LandingHero() {
         </div>
       </div>
 
-      <div className="pb-10 md:pb-14 flex flex-col items-center gap-5">
+      <div className="pb-[6svh] md:pb-14 flex flex-col items-center gap-5">
         <p className="text-[16px] leading-[1.3] tracking-[-0.2px] text-foreground">
           Scroll to see my work.
         </p>

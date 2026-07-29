@@ -9,7 +9,7 @@ const LINKS = [
   { label: 'Playground', href: '/playground' },
 ]
 
-const LINK_BASE = 'block font-medium text-[28px] leading-[1.5] tracking-[-1px] text-[#fff]'
+const LINK_BASE = 'block font-medium text-[28px] leading-[1.5] tracking-[-1px] text-[#fff] outline-none [-webkit-tap-highlight-color:transparent] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white'
 const LINK_DESKTOP = `${LINK_BASE} w-[190px]`
 
 interface Props {
