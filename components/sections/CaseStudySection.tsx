@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
@@ -23,6 +23,20 @@ export function CaseStudySection({
   nextHref,
 }: CaseStudySectionProps) {
   const [hovered, setHovered] = useState(false)
+
+  // True only on devices that support real hover (fine pointer / mouse).
+  // Stays false on touch screens so hover state is never triggered there.
+  const [hoverCapable, setHoverCapable] = useState(false)
+  useEffect(() => {
+    const mq = window.matchMedia('(hover: hover) and (pointer: fine)')
+    setHoverCapable(mq.matches)
+    const onChange = (e: MediaQueryListEvent) => setHoverCapable(e.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+
+  const enterHover = () => { if (hoverCapable) setHovered(true) }
+  const leaveHover = () => { if (hoverCapable) setHovered(false) }
 
   return (
     <section className="relative min-h-screen flex flex-col lg:items-center lg:justify-center overflow-hidden">
@@ -93,8 +107,8 @@ export function CaseStudySection({
         <div className="flex justify-center">
           <Link href={href}>
             <div
-              onMouseEnter={() => setHovered(true)}
-              onMouseLeave={() => setHovered(false)}
+              onMouseEnter={enterHover}
+              onMouseLeave={leaveHover}
             >
               <AzzaMockup className="h-[55vh]" />
             </div>
@@ -158,8 +172,8 @@ export function CaseStudySection({
         <div className="flex justify-center">
           <Link href={href}>
             <div
-              onMouseEnter={() => setHovered(true)}
-              onMouseLeave={() => setHovered(false)}
+              onMouseEnter={enterHover}
+              onMouseLeave={leaveHover}
             >
               <AzzaMockup className="h-[63vh]" />
             </div>
@@ -205,7 +219,7 @@ export function CaseStudySection({
           className="relative"
           initial="rest"
           animate="rest"
-          whileHover="hover"
+          {...(hoverCapable ? { whileHover: 'hover' } : {})}
         >
           <Link href={href}>
             <span
@@ -241,8 +255,8 @@ export function CaseStudySection({
       {/* Phone mockup — desktop only, centred by section's lg:items-center lg:justify-center */}
       <Link href={href} className="hidden lg:block">
         <div
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
+          onMouseEnter={enterHover}
+          onMouseLeave={leaveHover}
         >
           <AzzaMockup />
         </div>
