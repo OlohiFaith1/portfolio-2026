@@ -6,7 +6,7 @@ interface Props {
 
 export function DrawerBookmark({ isOpen, onToggle, align }: Props) {
   return (
-    <div className={`flex ${align === 'center' ? 'justify-center' : 'justify-end pr-[61px]'}`}>
+    <div className={`flex ${align === 'center' ? 'justify-center' : 'justify-end pr-2 lg:pr-[61px]'}`}>
       {/*
         pointer-events-auto overrides the parent motion div's pointer-events-none
         so the bookmark remains clickable in the closed state on non-landing pages.
@@ -17,7 +17,7 @@ export function DrawerBookmark({ isOpen, onToggle, align }: Props) {
         aria-label={isOpen ? 'Close navigation' : 'Open navigation'}
         aria-expanded={isOpen}
         aria-haspopup="dialog"
-        className="block w-[36px] h-[64px] lg:h-[74px] cursor-pointer pointer-events-auto"
+        className="block w-[36px] h-[54px] lg:h-[74px] cursor-pointer pointer-events-auto"
       >
         <img
           src="/bookmark.svg"

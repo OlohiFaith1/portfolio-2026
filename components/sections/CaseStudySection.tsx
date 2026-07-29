@@ -63,12 +63,12 @@ export function CaseStudySection({
       </motion.div>
 
       {/* ── MOBILE / TABLET layout (<lg) ───────────────────────────────────
-          Vertical editorial: name → role → year → phone → Next →
+          One full viewport: info → phone → [space] → Next (pinned bottom)
       ──────────────────────────────────────────────────────────────────── */}
-      <div className="lg:hidden flex flex-col w-full px-6 pt-12 md:pt-16 pb-10 gap-6 md:gap-8 relative">
+      <div className="lg:hidden flex flex-col w-full px-6 pt-16 md:pt-20 h-[100svh]">
 
-        {/* 1. Project info — left-aligned */}
-        <div className="flex flex-col">
+        {/* 1. Project info — left-aligned, breathing room above and below */}
+        <div className="flex flex-col mt-5 md:mt-6 mb-5 md:mb-6">
           <Link href={href}>
             <span className="font-display text-[24px] md:text-[28px] leading-[1.1] text-foreground">
               {name}
@@ -88,23 +88,26 @@ export function CaseStudySection({
           </span>
         </div>
 
-        {/* 2. Phone mockup — centered horizontally */}
-        <div className="self-center">
+        {/* 2. Phone mockup — centered, ~10% larger than before */}
+        <div className="flex justify-center">
           <Link href={href}>
             <div
               onMouseEnter={() => setHovered(true)}
               onMouseLeave={() => setHovered(false)}
             >
-              <AzzaMockup className="h-[50vh] md:h-[58vh]" />
+              <AzzaMockup className="h-[55vh] md:h-[63vh]" />
             </div>
           </Link>
         </div>
 
-        {/* 3. Next → — left-aligned with animated arrow */}
+        {/* Spacer — distributes remaining height as whitespace above Next */}
+        <div className="flex-1" />
+
+        {/* 3. Next → — left-aligned, pinned to bottom of viewport */}
         <Link
           href={nextHref}
           aria-label="Next project"
-          className="flex items-center gap-3"
+          className="flex items-center gap-2 pb-8"
         >
           <span
             className="font-sans font-normal leading-[1.3] text-foreground"
@@ -113,14 +116,14 @@ export function CaseStudySection({
             Next
           </span>
           <motion.div
-            animate={{ x: [0, 9, 0] }}
+            animate={{ x: [0, 7, 0] }}
             transition={{ duration: 1.8, ease: 'easeInOut', repeat: Infinity }}
           >
             <Image
               src="/arrow-right.svg"
               alt=""
-              width={33}
-              height={12}
+              width={24}
+              height={9}
               aria-hidden="true"
             />
           </motion.div>
