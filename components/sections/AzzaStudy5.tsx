@@ -4,9 +4,9 @@ const PHONE_W = 324
 const PHONE_H = 662
 
 const PHONES = [
-  { src: '/images/azza/phone1-ghs-withdrawal.png', alt: 'GHS withdrawal receipt on Azza' },
-  { src: '/images/azza/phone2-ngn-withdrawal.png', alt: 'NGN withdrawal receipt on Azza' },
-  { src: '/images/azza/phone3-bill-payment.png', alt: 'Bill payment receipt on Azza' },
+  { src: '/azza/Azza%20Study%205-%20PNG%201.png', alt: 'GHS withdrawal receipt on Azza' },
+  { src: '/azza/Azza%20Study%205-%20PNG%202.png', alt: 'NGN withdrawal receipt on Azza' },
+  { src: '/azza/Azza%20Study%205-%20PNG%203.png', alt: 'Bill payment receipt on Azza' },
 ]
 
 const PARAGRAPHS = [
