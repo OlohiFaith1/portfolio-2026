@@ -9,6 +9,9 @@ const LINKS = [
   { label: 'Playground', href: '/playground' },
 ]
 
+const LINK_BASE = 'block font-medium text-[28px] leading-[1.5] tracking-[-1px] text-[#fff]'
+const LINK_DESKTOP = `${LINK_BASE} w-[190px]`
+
 interface Props {
   mode: DrawerMode
   mobile?: boolean
@@ -25,7 +28,7 @@ export function NavigationLinks({ mode, mobile = false }: Props) {
           <li key={link.href}>
             <Link
               href={link.href}
-              className={`block font-medium text-[28px] leading-[1.5] tracking-[-1px] text-white${mobile ? '' : ' w-[190px]'}`}
+              className={mobile ? LINK_BASE : LINK_DESKTOP}
             >
               {link.label}
             </Link>

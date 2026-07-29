@@ -62,15 +62,81 @@ export function CaseStudySection({
         />
       </motion.div>
 
-      {/* ── MOBILE / TABLET layout (<lg) ───────────────────────────────────
-          One full viewport: info → phone → [space] → Next (pinned bottom)
+      {/* ── MOBILE layout (<md) ─────────────────────────────────────────────
+          justify-evenly: equal gaps before/between/after all three items.
+          pt-[54px] offsets for the 54px bookmark so the first gap matches.
       ──────────────────────────────────────────────────────────────────── */}
-      <div className="lg:hidden flex flex-col w-full px-6 pt-16 md:pt-20 h-[100svh]">
+      <div className="md:hidden flex flex-col justify-evenly w-full px-6 pt-[54px] h-[100svh]">
 
-        {/* 1. Project info — left-aligned, breathing room above and below */}
-        <div className="flex flex-col mt-5 md:mt-6 mb-5 md:mb-6">
+        {/* 1. Project info */}
+        <div className="flex flex-col">
           <Link href={href}>
-            <span className="font-display text-[24px] md:text-[28px] leading-[1.1] text-foreground">
+            <span className="font-display text-[24px] leading-[1.1] text-foreground">
+              {name}
+            </span>
+          </Link>
+          <span
+            className="font-sans font-normal leading-[1.3] text-[#5a5a5a] mt-3"
+            style={{ fontSize: 16, letterSpacing: '-0.16px', whiteSpace: 'pre-line' }}
+          >
+            {role}
+          </span>
+          <span
+            className="font-sans font-normal leading-[1.3] text-[#5a5a5a] mt-1"
+            style={{ fontSize: 16, letterSpacing: '-0.16px' }}
+          >
+            {year}
+          </span>
+        </div>
+
+        {/* 2. Phone mockup */}
+        <div className="flex justify-center">
+          <Link href={href}>
+            <div
+              onMouseEnter={() => setHovered(true)}
+              onMouseLeave={() => setHovered(false)}
+            >
+              <AzzaMockup className="h-[55vh]" />
+            </div>
+          </Link>
+        </div>
+
+        {/* 3. Next → */}
+        <Link
+          href={nextHref}
+          aria-label="Next project"
+          className="flex items-center gap-2"
+        >
+          <span
+            className="font-sans font-normal leading-[1.3] text-foreground"
+            style={{ fontSize: 16, letterSpacing: '-0.16px' }}
+          >
+            Next
+          </span>
+          <motion.div
+            animate={{ x: [0, 7, 0] }}
+            transition={{ duration: 1.8, ease: 'easeInOut', repeat: Infinity }}
+          >
+            <Image
+              src="/arrow-right.svg"
+              alt=""
+              width={24}
+              height={9}
+              aria-hidden="true"
+            />
+          </motion.div>
+        </Link>
+      </div>
+
+      {/* ── TABLET layout (md–lg) ────────────────────────────────────────────
+          Unchanged from the previous tablet experience.
+      ──────────────────────────────────────────────────────────────────── */}
+      <div className="hidden md:flex lg:hidden flex-col w-full px-6 pt-20 h-[100svh]">
+
+        {/* 1. Project info */}
+        <div className="flex flex-col mt-6 mb-6">
+          <Link href={href}>
+            <span className="font-display text-[28px] leading-[1.1] text-foreground">
               {name}
             </span>
           </Link>
@@ -88,22 +154,21 @@ export function CaseStudySection({
           </span>
         </div>
 
-        {/* 2. Phone mockup — centered, ~10% larger than before */}
+        {/* 2. Phone mockup */}
         <div className="flex justify-center">
           <Link href={href}>
             <div
               onMouseEnter={() => setHovered(true)}
               onMouseLeave={() => setHovered(false)}
             >
-              <AzzaMockup className="h-[55vh] md:h-[63vh]" />
+              <AzzaMockup className="h-[63vh]" />
             </div>
           </Link>
         </div>
 
-        {/* Spacer — distributes remaining height as whitespace above Next */}
         <div className="flex-1" />
 
-        {/* 3. Next → — left-aligned, pinned to bottom of viewport */}
+        {/* 3. Next → */}
         <Link
           href={nextHref}
           aria-label="Next project"

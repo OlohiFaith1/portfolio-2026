@@ -24,3 +24,11 @@ body {
   background-image: radial-gradient(circle, #d8d8d8 1px, transparent 1px);
   background-size: 28px 28px;
 }
+
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}

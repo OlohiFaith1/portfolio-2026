@@ -2,6 +2,9 @@
 
 import { motion } from 'framer-motion'
 
+const PHONE_W = 367
+const PHONE_H = 750
+
 export function AzzaHero() {
   return (
     <motion.section
@@ -16,46 +19,81 @@ export function AzzaHero() {
         overflow: 'hidden',
       }}
     >
-      {/* Layer 2: Dotted grid — same pattern as the landing page body */}
+      {/*
+        Three coloured-light glows — no rectangular image, no visible edges.
+        Each is a circle blurred so heavily it fades to nothing at its own edges.
+        Wrapper scales down on mobile/tablet so the light supports rather than fills.
+      */}
       <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)',
-          backgroundSize: '28px 28px',
-        }}
-      />
-
-      {/* Layer 3: Hero artwork — manually exported from Figma, blur/composition baked in */}
-      <div
+        className="scale-[0.80] md:scale-[0.88] lg:scale-100"
         aria-hidden="true"
         style={{ position: 'absolute', inset: 0 }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/images/azza/hero/LOGO%20Asset.png"
-          alt=""
+        {/* Green/teal — behind upper-left of phone */}
+        <div
           style={{
-            display: 'block',
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            objectPosition: 'center',
+            position: 'absolute',
+            left: '37%',
+            top: '27%',
+            width: 280,
+            height: 280,
+            transform: 'translate(-50%, -50%)',
+            borderRadius: '50%',
+            backgroundColor: '#2CCCA3',
+            filter: 'blur(80px)',
+            opacity: 0.82,
+          }}
+        />
+        {/* Yellow — behind lower-left of phone */}
+        <div
+          style={{
+            position: 'absolute',
+            left: '36%',
+            top: '70%',
+            width: 300,
+            height: 300,
+            transform: 'translate(-50%, -50%)',
+            borderRadius: '50%',
+            backgroundColor: '#F0B90B',
+            filter: 'blur(80px)',
+            opacity: 0.75,
+          }}
+        />
+        {/* Blue — behind lower-right of phone */}
+        <div
+          style={{
+            position: 'absolute',
+            left: '64%',
+            top: '70%',
+            width: 300,
+            height: 300,
+            transform: 'translate(-50%, -50%)',
+            borderRadius: '50%',
+            backgroundColor: '#174680',
+            filter: 'blur(80px)',
+            opacity: 0.9,
           }}
         />
       </div>
 
-      {/* Layer 4: Phone mockup — centered, always sharp */}
+      {/* Phone — centered, raised slightly for visual balance */}
       <div
         style={{
           position: 'absolute',
           left: '50%',
-          top: '50%',
+          top: '47%',
           transform: 'translate(-50%, -50%)',
         }}
       >
-        <PhoneMockup />
+        {/*
+          scale-[0.62] → mobile  (228×465 visual)
+          sm:scale-[0.75]        (275×563)
+          md:scale-[0.85]        (312×638)
+          lg:scale-[0.91]        (334×683, desktop — unchanged from previous task)
+        */}
+        <div className="scale-[0.62] sm:scale-[0.75] md:scale-[0.85] lg:scale-[0.91]">
+          <PhoneMockup />
+        </div>
       </div>
     </motion.section>
   )
@@ -63,7 +101,7 @@ export function AzzaHero() {
 
 function PhoneMockup() {
   return (
-    <div style={{ position: 'relative', width: 367, height: 750 }}>
+    <div style={{ position: 'relative', width: PHONE_W, height: PHONE_H }}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/azza/hero/phone-shadow.png"

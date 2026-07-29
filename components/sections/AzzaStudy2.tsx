@@ -2,12 +2,6 @@
 
 const CARDS = [
   {
-    id: 1,
-    src: '/images/azza/hero/Azza%20Study%202-%20Asset%201.png',
-    alt: 'Azza account statement showing transaction history',
-    tall: true,
-  },
-  {
     id: 2,
     src: '/images/azza/hero/Azza%20Study%202-%20Asset%202.png',
     alt: 'Achievement trophy icon',
@@ -31,20 +25,30 @@ const CARDS = [
     alt: 'Withdrawal and cashback notification flow',
     tall: true,
   },
-  {
-    id: 6,
-    src: '/images/azza/hero/Azza%20Study%202-%20Asset%206.png',
-    alt: 'Azza branded token coin',
-    tall: false,
-  },
 ]
 
-// Figma dimensions (1× CSS pixels)
+// ── Figma (1×) desktop dimensions ────────────────────────────────────────────
 const TALL_W = 311
 const TALL_H = 470
 const SQ = 274
 const CARD_RADIUS = 55
 const CARD_GAP = 86
+
+// ── Scaled dimensions for mobile (<768px) — ~0.59× ───────────────────────────
+const M_TALL_W = 184
+const M_TALL_H = 278
+const M_SQ = 162
+const M_RADIUS = 32
+const M_GAP = 20
+
+// ── Scaled dimensions for tablet (768–1023px) — ~0.75× ───────────────────────
+const T_TALL_W = 234
+const T_TALL_H = 353
+const T_SQ = 206
+const T_RADIUS = 41
+const T_GAP = 32
+
+// ── Components ────────────────────────────────────────────────────────────────
 
 function Metadata() {
   return (
@@ -53,7 +57,6 @@ function Metadata() {
         Azza
       </span>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 36 }}>
-        {/* Collaborators */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <span className="font-display" style={{ fontSize: 24, lineHeight: 1.1, color: '#1e1e1e' }}>
             Collaborators
@@ -63,7 +66,6 @@ function Metadata() {
             <span style={{ color: '#a3a3a3' }}>Brand and designer</span>
           </p>
         </div>
-        {/* Year */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <span className="font-display" style={{ fontSize: 24, lineHeight: 1.1, color: '#1e1e1e' }}>
             Year
@@ -72,7 +74,6 @@ function Metadata() {
             2025
           </p>
         </div>
-        {/* Role */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <span className="font-display" style={{ fontSize: 24, lineHeight: 1.1, color: '#1e1e1e' }}>
             Role
@@ -107,60 +108,78 @@ function Narrative() {
   )
 }
 
-function Card({ card }: { card: typeof CARDS[number] }) {
-  const w = card.tall ? TALL_W : SQ
-  const h = card.tall ? TALL_H : SQ
+interface CardProps {
+  card: typeof CARDS[number]
+  w: number
+  h: number
+  radius: number
+}
+
+function Card({ card, w, h, radius }: CardProps) {
   return (
-    <div
-      style={{
-        width: w,
-        height: h,
-        borderRadius: CARD_RADIUS,
-        overflow: 'hidden',
-        flexShrink: 0,
-      }}
-    >
+    <div style={{ width: w, height: h, borderRadius: radius, overflow: 'hidden', flexShrink: 0 }}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={card.src}
         alt={card.alt}
-        width={w * 2}
-        height={h * 2}
         style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
       />
     </div>
   )
 }
 
-function CardStrip({ scrollable }: { scrollable: boolean }) {
+interface GalleryProps {
+  tallW: number
+  tallH: number
+  sq: number
+  radius: number
+  gap: number
+  edgePad: number
+}
+
+function Gallery({ tallW, tallH, sq, radius, gap, edgePad }: GalleryProps) {
   return (
     <div
+      className="hide-scrollbar"
       style={{
+        overflowX: 'auto',
         display: 'flex',
-        gap: CARD_GAP,
+        gap,
         alignItems: 'center',
-        ...(scrollable
-          ? {
-              overflowX: 'auto',
-              scrollSnapType: 'x mandatory',
-              WebkitOverflowScrolling: 'touch',
-              paddingBottom: 4, // micro-space to avoid clipping scroll shadow
-              cursor: 'grab',
-            }
-          : { overflow: 'visible' }),
+        paddingLeft: edgePad,
+        paddingRight: edgePad,
+        scrollSnapType: 'x mandatory',
+        WebkitOverflowScrolling: 'touch',
       }}
     >
-      {CARDS.map((card) => (
-        <div
-          key={card.id}
-          style={scrollable ? { scrollSnapAlign: 'center', flexShrink: 0 } : {}}
-        >
-          <Card card={card} />
-        </div>
-      ))}
+      {CARDS.map((card) => {
+        const w = card.tall ? tallW : sq
+        const h = card.tall ? tallH : sq
+        return (
+          <div key={card.id} style={{ scrollSnapAlign: 'start', flexShrink: 0 }}>
+            <Card card={card} w={w} h={h} radius={radius} />
+          </div>
+        )
+      })}
     </div>
   )
 }
+
+function DesktopCardStrip() {
+  return (
+    <div style={{ display: 'flex', gap: CARD_GAP, alignItems: 'center', overflow: 'visible' }}>
+      {CARDS.map((card) => {
+        const w = card.tall ? TALL_W : SQ
+        const h = card.tall ? TALL_H : SQ
+        return (
+          <Card key={card.id} card={card} w={w} h={h} radius={CARD_RADIUS} />
+        )
+      })}
+    </div>
+  )
+}
+
+// ── Section ───────────────────────────────────────────────────────────────────
 
 export function AzzaStudy2() {
   return (
@@ -171,15 +190,11 @@ export function AzzaStudy2() {
         backgroundSize: '28px 28px',
       }}
     >
-      {/* ── DESKTOP (≥1024px) ─────────────────────────────────────────────────
-          Right column absolute at Figma-exact offset.
-          Card strip centered, overflows edges (overflow-x: hidden on section).
-      ──────────────────────────────────────────────────────────────────────── */}
+      {/* ── DESKTOP (≥1024px) — unchanged from original Figma layout ─────────── */}
       <div
         className="hidden lg:block"
         style={{ position: 'relative', minHeight: 2040, overflowX: 'hidden' }}
       >
-        {/* Right column: metadata top, narrative bottom */}
         <div
           style={{
             position: 'absolute',
@@ -196,7 +211,6 @@ export function AzzaStudy2() {
           <Narrative />
         </div>
 
-        {/* Card strip: centered, visually bleeds past viewport edges */}
         <div
           style={{
             position: 'absolute',
@@ -205,55 +219,56 @@ export function AzzaStudy2() {
             transform: 'translateX(-50%)',
           }}
         >
-          <CardStrip scrollable={false} />
+          <DesktopCardStrip />
         </div>
       </div>
 
       {/* ── TABLET (768–1023px) ───────────────────────────────────────────────
-          Two-column layout: scrollable card strip | metadata + narrative
+          Vertical editorial flow: metadata → card gallery → narrative
       ──────────────────────────────────────────────────────────────────────── */}
-      <div className="hidden md:flex lg:hidden" style={{ padding: '80px 48px', gap: 64, alignItems: 'flex-start' }}>
-        {/* Left: scrollable card strip */}
-        <div style={{ flex: '1 1 0', minWidth: 0, overflow: 'hidden' }}>
-          <CardStrip scrollable={true} />
-        </div>
-        {/* Right: metadata + narrative */}
-        <div style={{ width: 280, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 80 }}>
+      <div className="hidden md:flex lg:hidden flex-col" style={{ paddingTop: 80, paddingBottom: 80 }}>
+        {/* 1. Project info */}
+        <div style={{ paddingLeft: 48, paddingRight: 48, marginBottom: 64 }}>
           <Metadata />
+        </div>
+
+        {/* 2. Horizontal card gallery */}
+        <Gallery
+          tallW={T_TALL_W}
+          tallH={T_TALL_H}
+          sq={T_SQ}
+          radius={T_RADIUS}
+          gap={T_GAP}
+          edgePad={48}
+        />
+
+        {/* 3. Description */}
+        <div style={{ paddingLeft: 48, paddingRight: 48, marginTop: 64 }}>
           <Narrative />
         </div>
       </div>
 
       {/* ── MOBILE (<768px) ───────────────────────────────────────────────────
-          Vertical editorial: metadata → cards (swipe) → narrative
+          Vertical editorial flow: metadata → card gallery → narrative
       ──────────────────────────────────────────────────────────────────────── */}
-      <div className="flex flex-col md:hidden" style={{ padding: '48px 0' }}>
-        {/* 1. Metadata */}
-        <div style={{ padding: '0 24px', marginBottom: 32 }}>
+      <div className="flex flex-col md:hidden" style={{ paddingTop: 64, paddingBottom: 64 }}>
+        {/* 1. Project info */}
+        <div style={{ paddingLeft: 24, paddingRight: 24, marginBottom: 48 }}>
           <Metadata />
         </div>
 
-        {/* 2. Horizontal swipeable card gallery */}
-        <div
-          style={{
-            overflowX: 'auto',
-            scrollSnapType: 'x mandatory',
-            WebkitOverflowScrolling: 'touch',
-            display: 'flex',
-            gap: 16,
-            padding: '0 24px',
-            marginBottom: 32,
-          }}
-        >
-          {CARDS.map((card) => (
-            <div key={card.id} style={{ scrollSnapAlign: 'center', flexShrink: 0 }}>
-              <Card card={card} />
-            </div>
-          ))}
-        </div>
+        {/* 2. Horizontal card gallery */}
+        <Gallery
+          tallW={M_TALL_W}
+          tallH={M_TALL_H}
+          sq={M_SQ}
+          radius={M_RADIUS}
+          gap={M_GAP}
+          edgePad={24}
+        />
 
-        {/* 3. Narrative */}
-        <div style={{ padding: '0 24px' }}>
+        {/* 3. Description */}
+        <div style={{ paddingLeft: 24, paddingRight: 24, marginTop: 48 }}>
           <Narrative />
         </div>
       </div>
