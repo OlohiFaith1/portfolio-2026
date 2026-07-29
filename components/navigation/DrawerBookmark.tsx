@@ -17,7 +17,7 @@ export function DrawerBookmark({ isOpen, onToggle, align }: Props) {
         aria-label={isOpen ? 'Close navigation' : 'Open navigation'}
         aria-expanded={isOpen}
         aria-haspopup="dialog"
-        className="block w-[36px] h-[74px] cursor-pointer pointer-events-auto"
+        className="block w-[36px] h-[64px] lg:h-[74px] cursor-pointer pointer-events-auto"
       >
         <img
           src="/bookmark.svg"

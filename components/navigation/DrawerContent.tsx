@@ -10,26 +10,31 @@ interface Props {
 
 export function DrawerContent({ mode, isPlaying = false }: Props) {
   return (
-    <div className="relative w-full h-[82vh] bg-[#0a0a0a] overflow-hidden pointer-events-auto">
-      {/* Work reel — inset 48px from top and bottom to match Figma spacing */}
-      <div className="absolute inset-x-0 top-[48px] bottom-[48px] rounded-[12px] overflow-hidden">
-        <WorkSlideshow isPlaying={isPlaying} />
+    <>
+      {/* ── MOBILE / TABLET (<lg): no slideshow, nav above social ── */}
+      <div className="lg:hidden w-full h-[82vh] bg-[#0a0a0a] pointer-events-auto flex flex-col justify-between px-6 md:px-[59px] py-[40px]">
+        <NavigationLinks mode={mode} mobile />
+        <SocialLinks mode={mode} mobile />
       </div>
 
-      {/* Left vignette — shields nav links from white-background slides */}
-      <div
-        className="absolute inset-y-0 left-0 w-[340px] pointer-events-none"
-        style={{ background: 'linear-gradient(to right, #0a0a0a 180px, transparent)' }}
-      />
+      {/* ── DESKTOP (≥lg): slideshow + absolute-positioned links ── */}
+      <div className="hidden lg:block relative w-full h-[82vh] bg-[#0a0a0a] overflow-hidden pointer-events-auto">
+        <div className="absolute inset-x-0 top-[48px] bottom-[48px] rounded-[12px] overflow-hidden">
+          <WorkSlideshow isPlaying={isPlaying} />
+        </div>
 
-      {/* Right vignette — soft edge */}
-      <div
-        className="absolute inset-y-0 right-0 w-[120px] pointer-events-none"
-        style={{ background: 'linear-gradient(to left, #0a0a0a 40px, transparent)' }}
-      />
+        <div
+          className="absolute inset-y-0 left-0 w-[340px] pointer-events-none"
+          style={{ background: 'linear-gradient(to right, #0a0a0a 180px, transparent)' }}
+        />
+        <div
+          className="absolute inset-y-0 right-0 w-[120px] pointer-events-none"
+          style={{ background: 'linear-gradient(to left, #0a0a0a 40px, transparent)' }}
+        />
 
-      <NavigationLinks mode={mode} />
-      <SocialLinks mode={mode} />
-    </div>
+        <NavigationLinks mode={mode} />
+        <SocialLinks mode={mode} />
+      </div>
+    </>
   )
 }

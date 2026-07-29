@@ -6,7 +6,12 @@ import Image from 'next/image'
 const NATIVE_W = 408
 const NATIVE_H = 834
 
-export function AzzaMockup() {
+interface Props {
+  /** Tailwind height class(es), e.g. "h-[50vh] md:h-[60vh] lg:h-[77vh]" */
+  className?: string
+}
+
+export function AzzaMockup({ className = 'h-[77vh]' }: Props) {
   const wrapRef = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
 
@@ -29,8 +34,8 @@ export function AzzaMockup() {
   return (
     <div
       ref={wrapRef}
-      className="relative"
-      style={{ height: '77vh', maxHeight: NATIVE_H, aspectRatio: `${NATIVE_W}/${NATIVE_H}` }}
+      className={`relative ${className}`}
+      style={{ maxHeight: NATIVE_H, aspectRatio: `${NATIVE_W}/${NATIVE_H}` }}
     >
       <div
         style={{

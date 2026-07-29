@@ -9,9 +9,29 @@ const SOCIALS = [
 
 interface Props {
   mode: DrawerMode
+  mobile?: boolean
 }
 
-export function SocialLinks({ mode }: Props) {
+export function SocialLinks({ mode, mobile = false }: Props) {
+  if (mobile) {
+    return (
+      <div className="flex items-center gap-3">
+        {SOCIALS.map((social) => (
+          <a
+            key={social.label}
+            href={social.href}
+            aria-label={social.ariaLabel}
+            target={social.href.startsWith('http') ? '_blank' : undefined}
+            rel={social.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+            className="flex-1 flex items-center justify-center h-10 bg-[#d4d4d4] rounded-[4px] font-medium text-[14px] md:text-[17px] text-[#1e1e1e] tracking-[-0.85px]"
+          >
+            {social.label}
+          </a>
+        ))}
+      </div>
+    )
+  }
+
   return (
     <div className="absolute right-[61px] bottom-[55px] flex items-center gap-4">
       {SOCIALS.map((social) => (

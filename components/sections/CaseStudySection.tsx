@@ -2,9 +2,11 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { AzzaMockup } from './AzzaMockup'
 import { AnimatedRightArrow } from './AnimatedRightArrow'
+
 export interface CaseStudySectionProps {
   href: string
   name: string
@@ -23,7 +25,7 @@ export function CaseStudySection({
   const [hovered, setHovered] = useState(false)
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex flex-col lg:items-center lg:justify-center overflow-hidden">
 
       {/* Tint layer — covers dot-grid with #D8BAFF on phone hover */}
       <motion.div
@@ -36,9 +38,7 @@ export function CaseStudySection({
 
       {/*
         Background artwork — Figma asset exported from "Hover on First Page" bg group.
-        Positioned to match the Figma frame exactly (left: -323, top: -232).
-        32px blur sits behind every foreground element; overflow-hidden on the
-        section clips the bleed edges cleanly.
+        Section overflow-hidden clips it at all viewport sizes.
       */}
       <motion.div
         className="absolute pointer-events-none"
@@ -62,12 +62,77 @@ export function CaseStudySection({
         />
       </motion.div>
 
-      {/* Project metadata — left edge aligns with Nav's "Menu" label via matching responsive padding */}
+      {/* ── MOBILE / TABLET layout (<lg) ───────────────────────────────────
+          Vertical editorial: name → role → year → phone → Next →
+      ──────────────────────────────────────────────────────────────────── */}
+      <div className="lg:hidden flex flex-col w-full px-6 pt-12 md:pt-16 pb-10 gap-6 md:gap-8 relative">
+
+        {/* 1. Project info — left-aligned */}
+        <div className="flex flex-col">
+          <Link href={href}>
+            <span className="font-display text-[24px] md:text-[28px] leading-[1.1] text-foreground">
+              {name}
+            </span>
+          </Link>
+          <span
+            className="font-sans font-normal leading-[1.3] text-[#5a5a5a] mt-3"
+            style={{ fontSize: 16, letterSpacing: '-0.16px' }}
+          >
+            {role}
+          </span>
+          <span
+            className="font-sans font-normal leading-[1.3] text-[#5a5a5a] mt-1"
+            style={{ fontSize: 16, letterSpacing: '-0.16px' }}
+          >
+            {year}
+          </span>
+        </div>
+
+        {/* 2. Phone mockup — centered horizontally */}
+        <div className="self-center">
+          <Link href={href}>
+            <div
+              onMouseEnter={() => setHovered(true)}
+              onMouseLeave={() => setHovered(false)}
+            >
+              <AzzaMockup className="h-[50vh] md:h-[58vh]" />
+            </div>
+          </Link>
+        </div>
+
+        {/* 3. Next → — left-aligned with animated arrow */}
+        <Link
+          href={nextHref}
+          aria-label="Next project"
+          className="flex items-center gap-3"
+        >
+          <span
+            className="font-sans font-normal leading-[1.3] text-foreground"
+            style={{ fontSize: 16, letterSpacing: '-0.16px' }}
+          >
+            Next
+          </span>
+          <motion.div
+            animate={{ x: [0, 9, 0] }}
+            transition={{ duration: 1.8, ease: 'easeInOut', repeat: Infinity }}
+          >
+            <Image
+              src="/arrow-right.svg"
+              alt=""
+              width={33}
+              height={12}
+              aria-hidden="true"
+            />
+          </motion.div>
+        </Link>
+      </div>
+
+      {/* ── DESKTOP layout (≥lg) ───────────────────────────────────────────
+          Project info | Phone (centred by section flex) | Arrow
+      ──────────────────────────────────────────────────────────────────── */}
+
+      {/* Project metadata — left edge aligns with Nav's "Menu" label */}
       <div className="hidden lg:flex flex-col absolute top-1/2 -translate-y-1/2 items-start gap-[20px] left-8 md:left-16 xl:left-24">
-        {/*
-          Title: underline animates left-to-right on hover via scaleX variant
-          propagation. Typography is unchanged — only the underline is added.
-        */}
         <motion.div
           className="relative"
           initial="rest"
@@ -105,8 +170,8 @@ export function CaseStudySection({
         </span>
       </div>
 
-      {/* Device mockup — hover target for background effect + click to navigate */}
-      <Link href={href}>
+      {/* Phone mockup — desktop only, centred by section's lg:items-center lg:justify-center */}
+      <Link href={href} className="hidden lg:block">
         <div
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
