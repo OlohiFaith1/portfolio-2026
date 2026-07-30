@@ -25,12 +25,6 @@ const LINKS = [
     external: true,
   },
   {
-    label: 'FreeCode Camp',
-    href: 'https://www.freecodecamp.org/news/author/snowolohijere/',
-    ariaLabel: "Faith's articles on freeCodeCamp (opens in new tab)",
-    external: true,
-  },
-  {
     label: 'LinkedIn',
     href: 'https://www.linkedin.com/in/faith-ijelekhai',
     ariaLabel: "Faith's LinkedIn profile (opens in new tab)",
@@ -77,13 +71,17 @@ export function CaseStudyFooter() {
           right: 0,
           zIndex: 0,
           backgroundColor: '#080808',
+          border: 'none',
+          // Extends the dark bg 2px above the footer edge, eliminating any
+          // subpixel gap that could expose the body background as a white line.
+          boxShadow: '0 -2px 0 0 #080808',
         }}
       >
         {/* ── DESKTOP & TABLET (≥768px) ──────────────────────────────────────── */}
         <div
           className="hidden md:flex flex-col items-center"
           style={{
-            height: '70vh',
+            height: '90vh',
             justifyContent: 'space-between',
             paddingTop: 100,
             paddingBottom: 72,
@@ -136,7 +134,7 @@ export function CaseStudyFooter() {
         <div
           className="flex flex-col items-center md:hidden"
           style={{
-            height: '70vh',
+            height: '90vh',
             justifyContent: 'space-between',
             paddingTop: 60,
             paddingBottom: 64,
@@ -144,8 +142,8 @@ export function CaseStudyFooter() {
             paddingRight: 24,
           }}
         >
-          {/* Quote block */}
-          <div className="flex flex-col items-center text-center" style={{ gap: 28 }}>
+          {/* Quote block — left-aligned on mobile */}
+          <div className="flex flex-col items-start text-left" style={{ gap: 28 }}>
             <p
               className="font-sans text-white"
               style={{ ...baseText, fontSize: 16, letterSpacing: '-0.16px' }}
@@ -161,11 +159,11 @@ export function CaseStudyFooter() {
             </p>
           </div>
 
-          {/* Social links — wrap on narrow viewports */}
-          <nav aria-label="Social links">
+          {/* Social links — single horizontal row, evenly spaced */}
+          <nav aria-label="Social links" className="w-full">
             <ul
-              className="flex flex-wrap justify-center"
-              style={{ margin: 0, padding: 0, listStyle: 'none', gap: '16px 32px' }}
+              className="flex items-center justify-evenly w-full"
+              style={{ margin: 0, padding: 0, listStyle: 'none' }}
             >
               {LINKS.map((link) => (
                 <li key={link.label}>
