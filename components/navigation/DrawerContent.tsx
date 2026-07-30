@@ -1,7 +1,7 @@
 import type { DrawerMode } from './NavigationDrawer'
 import { NavigationLinks } from './NavigationLinks'
 import { SocialLinks } from './SocialLinks'
-import { WorkSlideshow } from './WorkSlideshow'
+import { GallerySlideshow } from './WorkSlideshow'
 
 interface Props {
   mode: DrawerMode
@@ -17,20 +17,24 @@ export function DrawerContent({ mode, isPlaying = false }: Props) {
         <SocialLinks mode={mode} mobile />
       </div>
 
-      {/* ── DESKTOP (≥lg): slideshow + absolute-positioned links ── */}
+      {/* ── DESKTOP (≥lg): phone mockup + absolute-positioned links ── */}
       <div className="hidden lg:block relative w-full h-[82vh] bg-[#0a0a0a] overflow-hidden pointer-events-auto">
-        <div className="absolute inset-x-0 top-[48px] bottom-[48px] rounded-[12px] overflow-hidden">
-          <WorkSlideshow isPlaying={isPlaying} />
+        {/* Phone mockup — scales to fit drawer height, 48px vertical padding, horizontally centred */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            height: 'min(820px, calc(82vh - 96px))',
+            aspectRatio: '401 / 820',
+            borderRadius: 48,
+            overflow: 'hidden',
+            backgroundColor: '#000',
+          }}
+        >
+          <GallerySlideshow isPlaying={isPlaying} />
         </div>
-
-        <div
-          className="absolute inset-y-0 left-0 w-[340px] pointer-events-none"
-          style={{ background: 'linear-gradient(to right, #0a0a0a 180px, transparent)' }}
-        />
-        <div
-          className="absolute inset-y-0 right-0 w-[120px] pointer-events-none"
-          style={{ background: 'linear-gradient(to left, #0a0a0a 40px, transparent)' }}
-        />
 
         <NavigationLinks mode={mode} />
         <SocialLinks mode={mode} />

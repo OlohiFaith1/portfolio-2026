@@ -21,7 +21,7 @@ export function NavigationLinks({ mode, mobile = false }: Props) {
   return (
     <nav
       aria-label="Portfolio navigation"
-      className={mobile ? '' : 'absolute left-[59px] top-[40px]'}
+      className={mobile ? '' : 'absolute left-[59px] top-[48px]'}
     >
       <ul className="flex flex-col gap-[2px]">
         {LINKS.map((link) => (

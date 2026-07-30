@@ -23,6 +23,11 @@ const SLIDES: Slide[] = [
   { src: '/slides/slide-11.png', alt: 'Syncwatch — party summary' },
 ]
 
+const GALLERY_SLIDES: Slide[] = Array.from({ length: 10 }, (_, i) => ({
+  src: `/slides/Gallery%20${i + 1}.png`,
+  alt: `Gallery ${i + 1}`,
+}))
+
 // Ken Burns variants — cycle through all slides
 const KB_VARIANTS = [
   { initial: { scale: 1.0,  x: '0%',    y: '0%'  }, animate: { scale: 1.06, x: '0%',    y: '-1%' } }, // zoom in + drift up
@@ -98,6 +103,34 @@ export function WorkSlideshow({
           </motion.div>
         </motion.div>
       </AnimatePresence>
+    </div>
+  )
+}
+
+// Gallery phone slideshow — Gallery 1–10, instant screen change, no transition
+export function GallerySlideshow({ isPlaying = false }: { isPlaying?: boolean }) {
+  const [index, setIndex] = useState(0)
+
+  useEffect(() => {
+    if (!isPlaying) return
+    const id = setInterval(() => {
+      setIndex(i => (i + 1) % GALLERY_SLIDES.length)
+    }, INTERVAL_MS)
+    return () => clearInterval(id)
+  }, [isPlaying])
+
+  const slide = GALLERY_SLIDES[index]
+
+  return (
+    <div className="relative w-full h-full overflow-hidden bg-black">
+      <Image
+        src={slide.src}
+        alt={slide.alt}
+        fill
+        className="object-contain"
+        sizes="401px"
+        priority={index === 0}
+      />
     </div>
   )
 }
