@@ -24,12 +24,12 @@ export function CaseStudySection({
 }: CaseStudySectionProps) {
   const [hovered, setHovered] = useState(false)
 
-  // True only on devices that support real hover (fine pointer / mouse).
-  // Stays false on touch screens so hover state is never triggered there.
-  const [hoverCapable, setHoverCapable] = useState(false)
+  const [hoverCapable, setHoverCapable] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false
+    return window.matchMedia('(hover: hover) and (pointer: fine)').matches
+  })
   useEffect(() => {
     const mq = window.matchMedia('(hover: hover) and (pointer: fine)')
-    setHoverCapable(mq.matches)
     const onChange = (e: MediaQueryListEvent) => setHoverCapable(e.matches)
     mq.addEventListener('change', onChange)
     return () => mq.removeEventListener('change', onChange)
