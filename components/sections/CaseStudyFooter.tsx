@@ -60,13 +60,13 @@ function QuoteBlock({ align }: { align: 'center' | 'left' }) {
   )
 }
 
-// Shared social links — desktop/tablet row vs mobile evenly spaced row
+// Shared social links — desktop/tablet horizontal row vs mobile vertical stack
 function SocialLinks({ variant }: { variant: 'desktop' | 'mobile' }) {
   return (
-    <nav aria-label="Social links" className={variant === 'mobile' ? 'w-full' : undefined}>
+    <nav aria-label="Social links">
       <ul
-        className={variant === 'mobile' ? 'flex items-center justify-evenly w-full' : 'flex items-center'}
-        style={{ margin: 0, padding: 0, listStyle: 'none', gap: variant === 'desktop' ? 72 : undefined }}
+        className={variant === 'mobile' ? 'flex flex-col items-start' : 'flex items-center'}
+        style={{ margin: 0, padding: 0, listStyle: 'none', gap: variant === 'desktop' ? 72 : 24 }}
       >
         {LINKS.map((link) => (
           <li key={link.label}>
@@ -117,15 +117,13 @@ export function CaseStudyFooter() {
         <div
           className="flex flex-col"
           style={{
-            height: '90vh',
-            justifyContent: 'flex-start',
             paddingTop: 60,
-            paddingBottom: 64,
+            paddingBottom: 60,
             paddingLeft: 24,
             paddingRight: 24,
           }}
         >
-          <div style={{ marginBottom: 56 }}>
+          <div style={{ marginBottom: 48 }}>
             <QuoteBlock align="left" />
           </div>
           <SocialLinks variant="mobile" />
