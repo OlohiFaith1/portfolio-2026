@@ -40,3 +40,10 @@ body {
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+@media (hover: hover) and (pointer: fine) {
+  .about-link:hover {
+    text-decoration-line: underline;
+    text-underline-offset: 3px;
+  }
+}
