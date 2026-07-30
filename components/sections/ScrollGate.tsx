@@ -2,7 +2,7 @@
 
 import { useRef, useEffect, useCallback } from 'react'
 import type { ReactNode } from 'react'
-import { WORK_ENTERED_EVENT } from '@/lib/events'
+import { WORK_ENTERED_EVENT, ENTER_WORK_EVENT } from '@/lib/events'
 
 interface Props {
   landing: ReactNode
@@ -21,13 +21,22 @@ export function ScrollGate({ landing, work }: Props) {
     // Remove gesture listeners immediately — no need to keep them active.
     cleanupListeners.current?.()
 
-    // Signal Nav (flushSync), NavigationDrawer (flushSync + instant snap),
-    // and SmoothScrollProvider simultaneously.
+    // Signal Nav and NavigationDrawer to update their work-entered state.
     window.dispatchEvent(new CustomEvent(WORK_ENTERED_EVENT))
 
     // Hard-cut: remove the hero with no animation, no overlap.
     if (heroRef.current) heroRef.current.style.display = 'none'
+
+    // Reflect the work section in the URL without a history entry or page reload.
+    window.history.replaceState(null, '', '/work')
   }, [])
+
+  // Allow NavigationLinks (same page) to trigger entry via a custom event
+  useEffect(() => {
+    const handler = () => enter()
+    window.addEventListener(ENTER_WORK_EVENT, handler)
+    return () => window.removeEventListener(ENTER_WORK_EVENT, handler)
+  }, [enter])
 
   useEffect(() => {
     const onWheel = (e: WheelEvent) => {

@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { flushSync } from 'react-dom'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { usePathname } from 'next/navigation'
 import { WORK_ENTERED_EVENT } from '@/lib/events'
@@ -23,12 +22,10 @@ export function NavigationDrawer() {
 
   useEffect(() => {
     const handler = () => {
-      flushSync(() => {
-        setWorkEntered(true)
-        setJustEnteredWork(true)
-      })
-      // Reset on the next tick — after the render that consumed the instant
-      // transition — so subsequent open/close interactions use spring.
+      setWorkEntered(true)
+      setJustEnteredWork(true)
+      // Reset after React has processed the above batch so subsequent
+      // open/close interactions use the spring transition, not the instant snap.
       setTimeout(() => setJustEnteredWork(false), 0)
     }
     window.addEventListener(WORK_ENTERED_EVENT, handler)

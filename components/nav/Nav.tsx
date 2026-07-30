@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { flushSync } from 'react-dom'
 import { usePathname } from 'next/navigation'
 import { useNavigation } from '@/components/providers/NavigationProvider'
 import { WORK_ENTERED_EVENT } from '@/lib/events'
@@ -14,7 +13,7 @@ export function Nav() {
   useEffect(() => {
     // flushSync forces a synchronous re-render so the header unmounts in the
     // same frame the event fires, with no visible linger.
-    const handler = () => flushSync(() => setWorkEntered(true))
+    const handler = () => setWorkEntered(true)
     window.addEventListener(WORK_ENTERED_EVENT, handler)
     return () => window.removeEventListener(WORK_ENTERED_EVENT, handler)
   }, [])
