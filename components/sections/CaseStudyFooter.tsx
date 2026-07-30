@@ -79,18 +79,19 @@ export function CaseStudyFooter() {
       >
         {/* ── DESKTOP & TABLET (≥768px) ──────────────────────────────────────── */}
         <div
-          className="hidden md:flex flex-col items-center"
+          className="hidden md:flex flex-col items-center md:justify-start lg:justify-between"
           style={{
             height: '90vh',
-            justifyContent: 'space-between',
             paddingTop: 100,
             paddingBottom: 72,
             paddingLeft: 48,
             paddingRight: 48,
           }}
         >
-          {/* Quote block — sits in the upper portion of the footer */}
-          <div className="flex flex-col items-center text-center" style={{ gap: 40 }}>
+          {/* Quote block — sits in the upper portion of the footer.
+              On tablet (md–lg) a fixed bottom margin keeps social links close;
+              on desktop (lg+) space-between handles the distribution instead. */}
+          <div className="flex flex-col items-center text-center md:mb-[56px] lg:mb-0" style={{ gap: 40 }}>
             <p
               className="font-sans text-white lg:max-w-[440px]"
               style={{ ...baseText, fontSize: 16, letterSpacing: '-0.16px' }}
@@ -135,15 +136,16 @@ export function CaseStudyFooter() {
           className="flex flex-col items-center md:hidden"
           style={{
             height: '90vh',
-            justifyContent: 'space-between',
+            justifyContent: 'flex-start',
             paddingTop: 60,
             paddingBottom: 64,
             paddingLeft: 24,
             paddingRight: 24,
           }}
         >
-          {/* Quote block — left-aligned on mobile */}
-          <div className="flex flex-col items-start text-left" style={{ gap: 28 }}>
+          {/* Quote block — left-aligned on mobile; fixed bottom margin keeps
+              social links visually connected rather than pushed to the bottom */}
+          <div className="flex flex-col items-start text-left" style={{ gap: 28, marginBottom: 56 }}>
             <p
               className="font-sans text-white"
               style={{ ...baseText, fontSize: 16, letterSpacing: '-0.16px' }}
