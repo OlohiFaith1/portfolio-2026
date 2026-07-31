@@ -1,45 +1,69 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useNavigation } from '@/components/providers/NavigationProvider'
-import { WORK_ENTERED_EVENT } from '@/lib/events'
+import { WORK_ENTERED_EVENT, ENTER_WORK_EVENT } from '@/lib/events'
+
+const LINKS = [
+  { label: 'WORK',        href: '/work',       isWork: true },
+  { label: 'ABOUT',       href: '/about'                    },
+  { label: 'DISCOVERIES', href: '/discoveries'              },
+  { label: 'TRAVELS',     href: '/travels'                  },
+  { label: 'PLAYGROUND',  href: '/playground'               },
+]
+
+// Figma: Caption/Caption (M) — Rethink Sans Medium 16px, tracking -0.16px, #737373
+const ITEM = 'font-sans font-medium leading-[1.3] tracking-[-0.16px] text-[#737373] outline-none [-webkit-tap-highlight-color:transparent] text-[12px] sm:text-[13px] lg:text-[16px]'
 
 export function Nav() {
-  const { isOpen, mode, open } = useNavigation()
   const pathname = usePathname()
   const [workEntered, setWorkEntered] = useState(false)
 
+  // Listen for the work section being entered on this page
   useEffect(() => {
-    // flushSync forces a synchronous re-render so the header unmounts in the
-    // same frame the event fires, with no visible linger.
     const handler = () => setWorkEntered(true)
     window.addEventListener(WORK_ENTERED_EVENT, handler)
     return () => window.removeEventListener(WORK_ENTERED_EVENT, handler)
   }, [])
 
+  // When the user navigates back to '/' (e.g. via a home link), reset so the
+  // landing nav shows with the hero. Deferred so the setState happens inside a
+  // callback, not synchronously in the effect body (react-hooks/set-state-in-effect).
+  useEffect(() => {
+    if (pathname !== '/') return
+    const id = setTimeout(() => setWorkEntered(false), 0)
+    return () => clearTimeout(id)
+  }, [pathname])
+
+  // Only visible on the landing page before the work section is entered
   if (pathname !== '/' || workEntered) return null
 
+  const handleWork = (e: React.MouseEvent) => {
+    e.preventDefault()
+    window.dispatchEvent(new CustomEvent(ENTER_WORK_EVENT))
+  }
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 pt-10 md:px-16 xl:px-24">
-      <button
-        type="button"
-        onClick={() => open('navigation')}
-        aria-expanded={isOpen && mode === 'navigation'}
-        aria-haspopup="dialog"
-        className="text-[16px] leading-[1.3] tracking-[-0.2px] text-muted font-normal"
+    // pointer-events-none on the full-width fixed header so only the nav
+    // items themselves block clicks (not the empty space around them).
+    <header className="fixed top-[102px] left-0 right-0 z-50 flex justify-start sm:justify-center px-6 pointer-events-none">
+      <nav
+        aria-label="Landing navigation"
+        className="flex flex-col items-start gap-y-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-y-0 sm:justify-center sm:gap-x-8 md:gap-x-12 lg:gap-x-[100px] pointer-events-auto"
       >
-        Menu
-      </button>
-      <button
-        type="button"
-        onClick={() => open('contact')}
-        aria-expanded={isOpen && mode === 'contact'}
-        aria-haspopup="dialog"
-        className="text-[16px] leading-[1.3] tracking-[-0.2px] text-muted font-normal"
-      >
-        Contact
-      </button>
+        {LINKS.map((link) =>
+          link.isWork ? (
+            <button key={link.label} type="button" onClick={handleWork} className={ITEM}>
+              {link.label}
+            </button>
+          ) : (
+            <Link key={link.label} href={link.href} className={ITEM}>
+              {link.label}
+            </Link>
+          )
+        )}
+      </nav>
     </header>
   )
 }

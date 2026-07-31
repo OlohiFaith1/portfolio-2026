@@ -12,7 +12,7 @@ export default function Home() {
           name="Azza"
           role={"Conversational &\nExperience Design"}
           year="2025"
-          nextHref="/"
+          nextHref="/work"
         />
       }
     />

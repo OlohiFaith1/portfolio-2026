@@ -1,17 +1,20 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 
 export function AnimatedArrow() {
+  const reduced = useReducedMotion()
+
   return (
     <motion.div
-      animate={{ y: [0, 9, 0] }}
-      transition={{
-        duration: 1.8,
-        ease: 'easeInOut',
-        repeat: Infinity,
-      }}
+      animate={reduced ? {} : { y: [0, 4, 0] }}
+      transition={
+        reduced
+          ? { duration: 0 }
+          : { duration: 1.3, ease: 'easeInOut', repeat: Infinity }
+      }
     >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/arrow.svg"
         alt=""

@@ -13,11 +13,15 @@ export function AnimatedRightArrow({ href }: Props) {
     <Link
       href={href}
       aria-label="Next project"
-      className="hidden lg:block absolute top-1/2 -translate-y-1/2"
-      // right: 61px aligns the arrowhead tip with the bookmark's right edge
-      // (DrawerBookmark uses pr-[61px] on its justify-end container).
+      className="hidden lg:flex items-center gap-2 absolute top-1/2 -translate-y-1/2"
       style={{ right: 61 }}
     >
+      <span
+        className="font-sans font-normal leading-[1.3] text-foreground"
+        style={{ fontSize: 16, letterSpacing: '-0.16px' }}
+      >
+        Next
+      </span>
       <motion.div
         animate={{ x: [0, 9, 0] }}
         transition={{

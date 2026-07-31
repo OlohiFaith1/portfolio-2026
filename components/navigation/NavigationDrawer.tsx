@@ -36,14 +36,28 @@ export function NavigationDrawer() {
   const drawerRef = useRef<HTMLDivElement>(null)
   const previousFocusRef = useRef<HTMLElement | null>(null)
 
-  // Landing + not yet in work section: hide bookmark entirely when drawer is closed.
-  // Work section (or any non-landing page): bookmark peeks from top at all times.
-  const closedY = isLanding && !workEntered ? '-100%' : 'calc(-82vh)'
+  // Landing + not yet entered work: hide everything (drawer + bookmark).
+  // Work section or any inner page: slide drawer off-top while keeping the 74px
+  // bookmark visible — calc(-100% + 74px) works at any drawer height.
+  const closedY = isLanding && !workEntered ? '-100%' : 'calc(-100% + 74px)'
 
   // Close when the route changes (e.g. clicking a nav link inside the drawer)
   useEffect(() => {
     close()
   }, [pathname, close])
+
+  // When the user navigates back to '/' fresh (e.g. via a home link after having
+  // been in the work section), reset work-entered state so the bookmark is fully
+  // hidden again and the landing page behaves as if newly loaded.
+  // Deferred to avoid calling setState synchronously in the effect body.
+  useEffect(() => {
+    if (pathname !== '/') return
+    const id = setTimeout(() => {
+      setWorkEntered(false)
+      setJustEnteredWork(false)
+    }, 0)
+    return () => clearTimeout(id)
+  }, [pathname])
 
   // Escape to close + Tab focus trap (combined to avoid two document listeners)
   useEffect(() => {
@@ -159,7 +173,7 @@ export function NavigationDrawer() {
             aria-label="Navigation"
             aria-hidden={!isOpen}
           >
-            <DrawerContent mode={mode} isPlaying={isOpen} />
+            <DrawerContent isPlaying={isOpen} />
           </div>
           <DrawerBookmark
             isOpen={isOpen}

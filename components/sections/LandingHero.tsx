@@ -1,28 +1,59 @@
+'use client'
+
+import { motion, useReducedMotion } from 'framer-motion'
 import { AnimatedArrow } from './AnimatedArrow'
 
+// Fade in + rise a few pixels — runs once on mount, respects prefers-reduced-motion
+function useFadeUp(delay = 0) {
+  const reduced = useReducedMotion()
+  if (reduced) return {}
+  return {
+    initial: { opacity: 0, y: 8 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.6, ease: [0.25, 0, 0.1, 1] as const, delay },
+  }
+}
+
 export function LandingHero() {
+  const nameAnim     = useFadeUp(0)
+  const subtitleAnim = useFadeUp(0.18)
+
   return (
     <section className="h-[100svh] flex flex-col">
-      <div className="flex-1 flex items-center justify-center px-6 md:px-8">
-        <div className="flex flex-col gap-4 md:gap-6 text-center w-[320px] max-w-full">
-          <h1 className="font-display text-[26px] md:text-[32px] leading-[1.1] text-foreground">
+
+      {/* ── Vertically centered hero text ─────────────────────────────── */}
+      {/* Figma: Hero Text group, gap 19px, centered */}
+      <div className="flex-1 flex items-center justify-start sm:justify-center px-6">
+        <div className="flex flex-col items-start sm:items-center gap-[19px] text-left sm:text-center">
+
+          {/* Figma: Headings/Heading 4 — Pirata One 24px, #1e1e1e, lh 1.1, w 321px */}
+          <motion.h1
+            {...nameAnim}
+            className="font-display text-[24px] leading-[1.1] text-foreground max-w-full sm:w-[321px]"
+          >
             Ijelekhai Faith Olohijere
-          </h1>
-          <p className="text-[15px] md:text-[16px] leading-[1.55] tracking-[-0.2px] text-muted">
-            I design digital products that are simple to use and enjoyable to interact with.
-          </p>
-          <p className="text-[15px] md:text-[16px] leading-[1.55] tracking-[-0.2px] text-muted">
-            I&apos;m currently pursuing my MBA while exploring AI and building products with it.
-          </p>
+          </motion.h1>
+
+          {/* Figma: Caption/Caption (M) — Rethink Sans Medium 16px, #737373, tracking -0.16px */}
+          <motion.p
+            {...subtitleAnim}
+            className="font-sans font-medium text-[13px] sm:text-[16px] leading-[1.3] tracking-[-0.16px] text-[#737373]"
+          >
+            PRODUCT DESIGNER (VIBECODING ALL MY IDEAS)
+          </motion.p>
+
         </div>
       </div>
 
+      {/* ── Scroll prompt — text static, arrow animated ──────────────── */}
+      {/* Figma: Small Body Text (R) — Rethink Sans Regular 20px, #1e1e1e, tracking -0.2px */}
       <div className="pb-[6svh] md:pb-14 flex flex-col items-center gap-5">
-        <p className="text-[16px] leading-[1.3] tracking-[-0.2px] text-foreground">
+        <p className="font-sans font-normal text-[20px] leading-[1.3] tracking-[-0.2px] text-foreground">
           Scroll to see my work.
         </p>
         <AnimatedArrow />
       </div>
+
     </section>
   )
 }
