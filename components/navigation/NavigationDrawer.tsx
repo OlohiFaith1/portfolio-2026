@@ -11,7 +11,7 @@ import { DrawerBookmark } from './DrawerBookmark'
 export type { DrawerMode } from '@/components/providers/NavigationProvider'
 
 export function NavigationDrawer() {
-  const { isOpen, mode, open, close } = useNavigation()
+  const { isOpen, open, close } = useNavigation()
   const pathname = usePathname()
   const isLanding = pathname === '/'
   const [workEntered, setWorkEntered] = useState(false)
@@ -36,10 +36,22 @@ export function NavigationDrawer() {
   const drawerRef = useRef<HTMLDivElement>(null)
   const previousFocusRef = useRef<HTMLElement | null>(null)
 
+  // Bookmark is h-[54px] on mobile/tablet and h-[74px] on lg+.
+  // closedY must match so the drawer slides exactly flush to the top with only
+  // the bookmark peeking — no white strip of DrawerContent visible above it.
+  const [bookmarkH, setBookmarkH] = useState(74)
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)')
+    const update = () => setBookmarkH(mq.matches ? 74 : 54)
+    update()
+    mq.addEventListener('change', update)
+    return () => mq.removeEventListener('change', update)
+  }, [])
+
   // Landing + not yet entered work: hide everything (drawer + bookmark).
-  // Work section or any inner page: slide drawer off-top while keeping the 74px
-  // bookmark visible — calc(-100% + 74px) works at any drawer height.
-  const closedY = isLanding && !workEntered ? '-100%' : 'calc(-100% + 74px)'
+  // Work section or any inner page: slide drawer off-top keeping only the
+  // bookmark visible — calc(-100% + bookmarkH) works at any drawer height.
+  const closedY = isLanding && !workEntered ? '-100%' : `calc(-100% + ${bookmarkH}px)`
 
   // Close when the route changes (e.g. clicking a nav link inside the drawer)
   useEffect(() => {
@@ -173,7 +185,7 @@ export function NavigationDrawer() {
             aria-label="Navigation"
             aria-hidden={!isOpen}
           >
-            <DrawerContent isPlaying={isOpen} />
+            <DrawerContent />
           </div>
           <DrawerBookmark
             isOpen={isOpen}

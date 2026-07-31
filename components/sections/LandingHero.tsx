@@ -23,13 +23,13 @@ export function LandingHero() {
 
       {/* ── Vertically centered hero text ─────────────────────────────── */}
       {/* Figma: Hero Text group, gap 19px, centered */}
-      <div className="flex-1 flex items-center justify-start sm:justify-center px-6">
+      <div className="flex-1 flex items-center justify-start sm:justify-center px-6 pt-[140px] sm:pt-0">
         <div className="flex flex-col items-start sm:items-center gap-[19px] text-left sm:text-center">
 
           {/* Figma: Headings/Heading 4 — Pirata One 24px, #1e1e1e, lh 1.1, w 321px */}
           <motion.h1
             {...nameAnim}
-            className="font-display text-[24px] leading-[1.1] text-foreground max-w-full sm:w-[321px]"
+            className="font-display text-[28px] sm:text-[24px] leading-[1.1] text-foreground max-w-full sm:w-[321px]"
           >
             Ijelekhai Faith Olohijere
           </motion.h1>
@@ -37,7 +37,7 @@ export function LandingHero() {
           {/* Figma: Caption/Caption (M) — Rethink Sans Medium 16px, #737373, tracking -0.16px */}
           <motion.p
             {...subtitleAnim}
-            className="font-sans font-medium text-[13px] sm:text-[16px] leading-[1.3] tracking-[-0.16px] text-[#737373]"
+            className="font-sans font-medium text-[20px] sm:text-[16px] leading-[1.3] tracking-[-0.16px] text-[#737373]"
           >
             PRODUCT DESIGNER (VIBECODING ALL MY IDEAS)
           </motion.p>

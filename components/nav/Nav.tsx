@@ -14,7 +14,7 @@ const LINKS = [
 ]
 
 // Figma: Caption/Caption (M) — Rethink Sans Medium 16px, tracking -0.16px, #737373
-const ITEM = 'font-sans font-medium leading-[1.3] tracking-[-0.16px] text-[#737373] outline-none [-webkit-tap-highlight-color:transparent] text-[12px] sm:text-[13px] lg:text-[16px]'
+const ITEM = 'font-sans font-medium leading-[1.3] tracking-[-0.16px] text-[#737373] outline-none [-webkit-tap-highlight-color:transparent] text-[20px] sm:text-[13px] lg:text-[16px]'
 
 export function Nav() {
   const pathname = usePathname()

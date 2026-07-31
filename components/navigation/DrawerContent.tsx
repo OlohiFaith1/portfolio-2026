@@ -1,15 +1,11 @@
 import { NavigationLinks } from './NavigationLinks'
 import { SocialLinks } from './SocialLinks'
 
-interface Props {
-  isPlaying?: boolean
-}
-
-export function DrawerContent(_props: Props) {
+export function DrawerContent() {
   return (
     <>
       {/* Mobile / tablet (<lg): tall vertical panel */}
-      <div className="lg:hidden w-full h-[70svh] bg-white pointer-events-auto flex flex-col justify-between px-6 py-10">
+      <div className="lg:hidden w-full h-[75svh] bg-white pointer-events-auto flex flex-col justify-between px-6 py-10">
         <NavigationLinks mobile />
         <SocialLinks mobile />
       </div>
