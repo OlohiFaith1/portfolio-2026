@@ -23,7 +23,7 @@ export function LandingHero() {
 
       {/* ── Vertically centered hero text ─────────────────────────────── */}
       {/* Figma: Hero Text group, gap 19px, centered */}
-      <div className="flex-1 flex items-center justify-start sm:justify-center px-6 pt-[140px] sm:pt-0">
+      <div className="flex-1 flex flex-col justify-start sm:flex-row sm:items-center sm:justify-center px-6 pt-[calc(13svh+194px)] sm:pt-0">
         <div className="flex flex-col items-start sm:items-center gap-[19px] text-left sm:text-center">
 
           {/* Figma: Headings/Heading 4 — Pirata One 24px, #1e1e1e, lh 1.1, w 321px */}

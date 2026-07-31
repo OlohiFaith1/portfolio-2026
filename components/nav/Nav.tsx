@@ -47,7 +47,7 @@ export function Nav() {
   return (
     // pointer-events-none on the full-width fixed header so only the nav
     // items themselves block clicks (not the empty space around them).
-    <header className="fixed top-[102px] left-0 right-0 z-50 flex justify-start sm:justify-center px-6 pointer-events-none">
+    <header className="fixed top-[5svh] sm:top-[102px] left-0 right-0 z-50 flex justify-start sm:justify-center px-6 pointer-events-none">
       <nav
         aria-label="Landing navigation"
         className="flex flex-col items-start gap-y-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-y-0 sm:justify-center sm:gap-x-8 md:gap-x-12 lg:gap-x-[100px] pointer-events-auto"
