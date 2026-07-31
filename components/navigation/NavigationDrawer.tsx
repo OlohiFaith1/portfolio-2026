@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { usePathname } from 'next/navigation'
 import { WORK_ENTERED_EVENT } from '@/lib/events'
@@ -40,7 +40,7 @@ export function NavigationDrawer() {
   // closedY must match so the drawer slides exactly flush to the top with only
   // the bookmark peeking — no white strip of DrawerContent visible above it.
   const [bookmarkH, setBookmarkH] = useState(74)
-  useEffect(() => {
+  useLayoutEffect(() => {
     const mq = window.matchMedia('(min-width: 1024px)')
     const update = () => setBookmarkH(mq.matches ? 74 : 54)
     update()
