@@ -1,7 +1,7 @@
 'use client'
 
-import { useRef, useLayoutEffect, useState } from 'react'
 import Image from 'next/image'
+import { PhoneMockupScale } from './PhoneMockupScale'
 
 const NATIVE_W = 408
 const NATIVE_H = 834
@@ -12,45 +12,10 @@ interface Props {
 }
 
 export function AzzaMockup({ className = 'h-[77vh]' }: Props) {
-  const wrapRef = useRef<HTMLDivElement>(null)
-  const [scale, setScale] = useState(1)
-
-  // useLayoutEffect so the scale is measured and applied before the browser
-  // paints — prevents the phone flashing at native size on first render.
-  // ResizeObserver covers viewport height changes that don't fire window resize
-  // (e.g. mobile browser chrome appearing/disappearing).
-  useLayoutEffect(() => {
-    const update = () => {
-      if (wrapRef.current) {
-        setScale(wrapRef.current.offsetHeight / NATIVE_H)
-      }
-    }
-    update()
-    const ro = new ResizeObserver(update)
-    if (wrapRef.current) ro.observe(wrapRef.current)
-    return () => ro.disconnect()
-  }, [])
-
   return (
-    <div
-      ref={wrapRef}
-      className={`relative ${className}`}
-      style={{ maxHeight: NATIVE_H, aspectRatio: `${NATIVE_W}/${NATIVE_H}` }}
-    >
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: NATIVE_W,
-          height: NATIVE_H,
-          transformOrigin: 'top left',
-          transform: `scale(${scale})`,
-        }}
-      >
-        <PhoneFrame />
-      </div>
-    </div>
+    <PhoneMockupScale nativeWidth={NATIVE_W} nativeHeight={NATIVE_H} className={className}>
+      <PhoneFrame />
+    </PhoneMockupScale>
   )
 }
 

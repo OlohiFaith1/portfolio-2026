@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import type { ComponentType, ReactNode, MouseEvent } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { AzzaMockup } from './AzzaMockup'
 import { AnimatedRightArrow } from './AnimatedRightArrow'
 
 export interface CaseStudySectionProps {
@@ -13,6 +13,13 @@ export interface CaseStudySectionProps {
   role: string
   year: string
   nextHref: string
+  Mockup: ComponentType<{ className?: string }>
+  /**
+   * When true, the case study isn't live yet: the name and phone mockup
+   * never navigate — instead they show a "Coming Soon" overlay on hover
+   * (desktop) or tap (touch), while the Next arrow keeps working normally.
+   */
+  comingSoon?: boolean
 }
 
 export function CaseStudySection({
@@ -21,8 +28,11 @@ export function CaseStudySection({
   role,
   year,
   nextHref,
+  Mockup,
+  comingSoon = false,
 }: CaseStudySectionProps) {
   const [hovered, setHovered] = useState(false)
+  const [showComingSoon, setShowComingSoon] = useState(false)
 
   const [hoverCapable, setHoverCapable] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false
@@ -35,46 +45,74 @@ export function CaseStudySection({
     return () => mq.removeEventListener('change', onChange)
   }, [])
 
-  const enterHover = () => { if (hoverCapable) setHovered(true) }
-  const leaveHover = () => { if (hoverCapable) setHovered(false) }
+  // Mockup hover: Azza tints the background; Mercado (comingSoon) darkens
+  // with a "Coming Soon" tag instead. Only one of the two states applies.
+  const enterMockupHover = () => {
+    if (!hoverCapable) return
+    if (comingSoon) setShowComingSoon(true)
+    else setHovered(true)
+  }
+  const leaveMockupHover = () => {
+    if (!hoverCapable) return
+    if (comingSoon) setShowComingSoon(false)
+    else setHovered(false)
+  }
+
+  // Touch devices have no hover, so tapping the name or mockup must show the
+  // same Coming Soon state directly. It auto-hides shortly after on touch;
+  // on hover-capable devices, mouseleave already governs visibility.
+  const hideTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const triggerComingSoon = () => {
+    setShowComingSoon(true)
+    if (hoverCapable) return
+    if (hideTimeout.current) clearTimeout(hideTimeout.current)
+    hideTimeout.current = setTimeout(() => setShowComingSoon(false), 2200)
+  }
+  useEffect(() => () => {
+    if (hideTimeout.current) clearTimeout(hideTimeout.current)
+  }, [])
 
   return (
     <section className="relative min-h-screen flex flex-col lg:items-center lg:justify-center overflow-hidden">
 
-      {/* Tint layer — covers dot-grid with #D8BAFF on phone hover */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        style={{ backgroundColor: '#D8BAFF' }}
-        initial={false}
-        animate={{ opacity: hovered ? 1 : 0 }}
-        transition={{ duration: 0.6, ease: 'easeInOut' }}
-      />
+      {!comingSoon && (
+        <>
+          {/* Tint layer — covers dot-grid with #D8BAFF on phone hover */}
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            style={{ backgroundColor: '#D8BAFF' }}
+            initial={false}
+            animate={{ opacity: hovered ? 1 : 0 }}
+            transition={{ duration: 0.6, ease: 'easeInOut' }}
+          />
 
-      {/*
-        Background artwork — Figma asset exported from "Hover on First Page" bg group.
-        Section overflow-hidden clips it at all viewport sizes.
-      */}
-      <motion.div
-        className="absolute pointer-events-none"
-        style={{
-          left: -323,
-          top: -232,
-          width: 1893,
-          height: 1520,
-          filter: 'blur(32px)',
-        }}
-        initial={false}
-        animate={{ opacity: hovered ? 1 : 0 }}
-        transition={{ duration: 0.6, ease: 'easeInOut' }}
-        aria-hidden="true"
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/azza/bg-artwork.svg"
-          alt=""
-          style={{ display: 'block', width: '100%', height: '100%' }}
-        />
-      </motion.div>
+          {/*
+            Background artwork — Figma asset exported from "Hover on First Page" bg group.
+            Section overflow-hidden clips it at all viewport sizes.
+          */}
+          <motion.div
+            className="absolute pointer-events-none"
+            style={{
+              left: -323,
+              top: -232,
+              width: 1893,
+              height: 1520,
+              filter: 'blur(32px)',
+            }}
+            initial={false}
+            animate={{ opacity: hovered ? 1 : 0 }}
+            transition={{ duration: 0.6, ease: 'easeInOut' }}
+            aria-hidden="true"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/azza/bg-artwork.svg"
+              alt=""
+              style={{ display: 'block', width: '100%', height: '100%' }}
+            />
+          </motion.div>
+        </>
+      )}
 
       {/* ── MOBILE layout (<md) ─────────────────────────────────────────────
           justify-evenly: equal gaps before/between/after all three items.
@@ -84,11 +122,11 @@ export function CaseStudySection({
 
         {/* 1. Project info */}
         <div className="flex flex-col">
-          <Link href={href}>
+          <PreviewTrigger comingSoon={comingSoon} href={href} onTrigger={triggerComingSoon}>
             <span className="font-display text-[24px] leading-[1.1] text-foreground">
               {name}
             </span>
-          </Link>
+          </PreviewTrigger>
           <span
             className="font-sans font-normal leading-[1.3] text-[#5a5a5a] mt-3"
             style={{ fontSize: 16, letterSpacing: '-0.16px', whiteSpace: 'pre-line' }}
@@ -105,14 +143,16 @@ export function CaseStudySection({
 
         {/* 2. Phone mockup */}
         <div className="flex justify-center">
-          <Link href={href}>
-            <div
-              onMouseEnter={enterHover}
-              onMouseLeave={leaveHover}
-            >
-              <AzzaMockup className="h-[55vh]" />
-            </div>
-          </Link>
+          <PreviewTrigger
+            comingSoon={comingSoon}
+            href={href}
+            onTrigger={triggerComingSoon}
+            onMouseEnter={enterMockupHover}
+            onMouseLeave={leaveMockupHover}
+            ariaLabel={comingSoon ? `${name} — coming soon` : undefined}
+          >
+            <Mockup className="h-[55vh]" />
+          </PreviewTrigger>
         </div>
 
         {/* 3. Next → */}
@@ -149,11 +189,11 @@ export function CaseStudySection({
 
         {/* 1. Project info */}
         <div className="flex flex-col mt-6 mb-6">
-          <Link href={href}>
+          <PreviewTrigger comingSoon={comingSoon} href={href} onTrigger={triggerComingSoon}>
             <span className="font-display text-[28px] leading-[1.1] text-foreground">
               {name}
             </span>
-          </Link>
+          </PreviewTrigger>
           <span
             className="font-sans font-normal leading-[1.3] text-[#5a5a5a] mt-3"
             style={{ fontSize: 16, letterSpacing: '-0.16px' }}
@@ -170,14 +210,16 @@ export function CaseStudySection({
 
         {/* 2. Phone mockup */}
         <div className="flex justify-center">
-          <Link href={href}>
-            <div
-              onMouseEnter={enterHover}
-              onMouseLeave={leaveHover}
-            >
-              <AzzaMockup className="h-[63vh]" />
-            </div>
-          </Link>
+          <PreviewTrigger
+            comingSoon={comingSoon}
+            href={href}
+            onTrigger={triggerComingSoon}
+            onMouseEnter={enterMockupHover}
+            onMouseLeave={leaveMockupHover}
+            ariaLabel={comingSoon ? `${name} — coming soon` : undefined}
+          >
+            <Mockup className="h-[63vh]" />
+          </PreviewTrigger>
         </div>
 
         <div className="flex-1" />
@@ -221,14 +263,14 @@ export function CaseStudySection({
           animate="rest"
           {...(hoverCapable ? { whileHover: 'hover' } : {})}
         >
-          <Link href={href}>
+          <PreviewTrigger comingSoon={comingSoon} href={href} onTrigger={triggerComingSoon}>
             <span
               className="font-display leading-[1.1] text-foreground"
               style={{ fontSize: 20 }}
             >
               {name}
             </span>
-          </Link>
+          </PreviewTrigger>
           <motion.span
             className="absolute left-0 w-full block origin-left"
             style={{ bottom: -2, height: 1, backgroundColor: 'currentColor' }}
@@ -253,17 +295,99 @@ export function CaseStudySection({
       </div>
 
       {/* Phone mockup — desktop only, centred by section's lg:items-center lg:justify-center */}
-      <Link href={href} className="hidden lg:block">
-        <div
-          onMouseEnter={enterHover}
-          onMouseLeave={leaveHover}
-        >
-          <AzzaMockup />
-        </div>
-      </Link>
+      <PreviewTrigger
+        comingSoon={comingSoon}
+        href={href}
+        onTrigger={triggerComingSoon}
+        onMouseEnter={enterMockupHover}
+        onMouseLeave={leaveMockupHover}
+        ariaLabel={comingSoon ? `${name} — coming soon` : undefined}
+        className="hidden lg:block"
+      >
+        <Mockup />
+      </PreviewTrigger>
 
       {/* Next-project arrow — right, desktop only */}
       <AnimatedRightArrow href={nextHref} />
+
+      {comingSoon && (
+        <>
+          {/* Dark scrim — mockup and name stay visible underneath */}
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            style={{ backgroundColor: 'rgba(20,20,20,0.55)' }}
+            initial={false}
+            animate={{ opacity: showComingSoon ? 1 : 0 }}
+            transition={{ duration: 0.4, ease: 'easeInOut' }}
+            aria-hidden="true"
+          />
+          <motion.div
+            className="absolute inset-0 flex items-center justify-center pointer-events-none"
+            initial={false}
+            animate={{ opacity: showComingSoon ? 1 : 0, scale: showComingSoon ? 1 : 0.96 }}
+            transition={{ duration: 0.4, ease: 'easeInOut' }}
+            aria-live="polite"
+          >
+            <span
+              className="font-sans font-medium rounded-full bg-white text-foreground shadow"
+              style={{ fontSize: 14, letterSpacing: '-0.16px', padding: '10px 22px' }}
+            >
+              Coming Soon
+            </span>
+          </motion.div>
+        </>
+      )}
     </section>
+  )
+}
+
+interface PreviewTriggerProps {
+  comingSoon: boolean
+  href: string
+  onTrigger: () => void
+  onMouseEnter?: () => void
+  onMouseLeave?: () => void
+  className?: string
+  ariaLabel?: string
+  children: ReactNode
+}
+
+/**
+ * Renders a normal navigating Link when the case study is live. When it's
+ * marked comingSoon, renders a non-navigating button that shows the Coming
+ * Soon state instead — used for both the name and the phone mockup.
+ */
+function PreviewTrigger({
+  comingSoon,
+  href,
+  onTrigger,
+  onMouseEnter,
+  onMouseLeave,
+  className,
+  ariaLabel,
+  children,
+}: PreviewTriggerProps) {
+  if (comingSoon) {
+    return (
+      <button
+        type="button"
+        onClick={(e: MouseEvent) => {
+          e.preventDefault()
+          onTrigger()
+        }}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        aria-label={ariaLabel}
+        className={`appearance-none bg-transparent border-0 p-0 m-0 text-left cursor-pointer ${className ?? ''}`}
+      >
+        {children}
+      </button>
+    )
+  }
+
+  return (
+    <Link href={href} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} className={className}>
+      {children}
+    </Link>
   )
 }
