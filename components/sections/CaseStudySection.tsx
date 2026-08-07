@@ -115,10 +115,12 @@ export function CaseStudySection({
       )}
 
       {/* ── MOBILE layout (<md) ─────────────────────────────────────────────
-          justify-evenly: equal gaps before/between/after all three items.
-          pt-[54px] offsets for the 54px bookmark so the first gap matches.
+          Fixed gap-y between the three items (rather than the viewport-
+          dependent gaps justify-evenly produced) so spacing stays consistent
+          across device heights; justify-center keeps the group balanced
+          within the remaining space. pt-[54px] offsets for the bookmark.
       ──────────────────────────────────────────────────────────────────── */}
-      <div className="md:hidden flex flex-col items-center justify-evenly w-full px-6 pt-[54px] h-[100svh]">
+      <div className="md:hidden flex flex-col items-center justify-center gap-y-12 w-full px-6 pt-[54px] h-[100svh]">
 
         {/* 1. Project info */}
         <div className="flex flex-col items-center text-center">
@@ -151,7 +153,7 @@ export function CaseStudySection({
             onMouseLeave={leaveMockupHover}
             ariaLabel={comingSoon ? `${name} — coming soon` : undefined}
           >
-            <Mockup className="h-[55vh]" />
+            <Mockup className="h-[48vh]" />
           </PreviewTrigger>
         </div>
 
