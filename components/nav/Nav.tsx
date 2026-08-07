@@ -6,15 +6,15 @@ import { usePathname } from 'next/navigation'
 import { WORK_ENTERED_EVENT, ENTER_WORK_EVENT } from '@/lib/events'
 
 const LINKS = [
-  { label: 'WORK',        href: '/work',       isWork: true },
-  { label: 'ABOUT',       href: '/about'                    },
-  { label: 'DISCOVERIES', href: '/discoveries'              },
-  { label: 'TRAVELS',     href: '/travels'                  },
-  { label: 'PLAYGROUND',  href: '/playground'               },
+  { label: 'Work',        href: '/work',       isWork: true },
+  { label: 'About',       href: '/about'                    },
+  { label: 'Discoveries', href: '/discoveries'              },
+  { label: 'Travels',     href: '/travels'                  },
+  { label: 'Playground',  href: '/playground'               },
 ]
 
-// Figma: Caption/Caption (M) — Rethink Sans Medium 16px, tracking -0.16px, #737373
-const ITEM = 'font-sans font-medium leading-[1.3] tracking-[-0.16px] text-[#737373] outline-none [-webkit-tap-highlight-color:transparent] text-[20px] sm:text-[13px] lg:text-[16px]'
+// Rethink Sans Regular, tracking -1%, #5a5a5a
+const ITEM = 'font-sans font-normal leading-[1.3] tracking-[-0.2px] sm:tracking-[-0.13px] lg:tracking-[-0.16px] text-[#5a5a5a] outline-none [-webkit-tap-highlight-color:transparent] text-[20px] sm:text-[13px] lg:text-[16px]'
 
 export function Nav() {
   const pathname = usePathname()

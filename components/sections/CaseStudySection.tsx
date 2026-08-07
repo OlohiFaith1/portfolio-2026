@@ -118,10 +118,10 @@ export function CaseStudySection({
           justify-evenly: equal gaps before/between/after all three items.
           pt-[54px] offsets for the 54px bookmark so the first gap matches.
       ──────────────────────────────────────────────────────────────────── */}
-      <div className="md:hidden flex flex-col justify-evenly w-full px-6 pt-[54px] h-[100svh]">
+      <div className="md:hidden flex flex-col items-center justify-evenly w-full px-6 pt-[54px] h-[100svh]">
 
         {/* 1. Project info */}
-        <div className="flex flex-col">
+        <div className="flex flex-col items-center text-center">
           <PreviewTrigger comingSoon={comingSoon} href={href} onTrigger={triggerComingSoon}>
             <span className="font-display text-[24px] leading-[1.1] text-foreground">
               {name}
@@ -159,7 +159,7 @@ export function CaseStudySection({
         <Link
           href={nextHref}
           aria-label="Next project"
-          className="flex items-center gap-2"
+          className="flex items-center justify-center gap-2"
         >
           <span
             className="font-sans font-normal leading-[1.3] text-foreground"

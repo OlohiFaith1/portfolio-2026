@@ -7,11 +7,11 @@ import { useNavigation } from '@/components/providers/NavigationProvider'
 import { WORK_ENTERED_EVENT, ENTER_WORK_EVENT } from '@/lib/events'
 
 const LINKS = [
-  { label: 'WORK',        href: '/work',       isWork: true  },
-  { label: 'ABOUT',       href: '/about'                     },
-  { label: 'DISCOVERIES', href: '/discoveries'               },
-  { label: 'TRAVELS',     href: '/travels'                   },
-  { label: 'PLAYGROUND',  href: '/playground'                },
+  { label: 'Work',        href: '/work',       isWork: true  },
+  { label: 'About',       href: '/about'                     },
+  { label: 'Discoveries', href: '/discoveries'               },
+  { label: 'Travels',     href: '/travels'                   },
+  { label: 'Playground',  href: '/playground'                },
 ]
 
 interface Props {
@@ -54,9 +54,9 @@ export function NavigationLinks({ mobile = false }: Props) {
   }
 
   function linkClass(link: typeof LINKS[0]) {
-    const base = 'font-sans font-medium text-[#262626] outline-none [-webkit-tap-highlight-color:transparent] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current'
-    const sizeDesktop = 'text-[16px] leading-[1.5] tracking-[-0.36px] whitespace-nowrap'
-    const sizeMobile = 'text-[24px] leading-[1.4] tracking-[-1px]'
+    const base = 'font-sans font-normal text-[#262626] outline-none [-webkit-tap-highlight-color:transparent] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current'
+    const sizeDesktop = 'text-[16px] leading-[1.5] tracking-[-0.16px] whitespace-nowrap'
+    const sizeMobile = 'text-[20px] leading-[1.4] tracking-[-0.2px]'
     const active = isActive(link) ? 'underline underline-offset-4 decoration-1' : ''
     return [base, mobile ? sizeMobile : sizeDesktop, active].filter(Boolean).join(' ')
   }
