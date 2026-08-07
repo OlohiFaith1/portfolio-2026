@@ -3,6 +3,7 @@
 import { useRef, useEffect, useCallback } from 'react'
 import type { ReactNode } from 'react'
 import { WORK_ENTERED_EVENT, ENTER_WORK_EVENT } from '@/lib/events'
+import { DraggableDotGrid } from './DraggableDotGrid'
 
 interface Props {
   landing: ReactNode
@@ -95,11 +96,16 @@ export function ScrollGate({ landing, work }: Props) {
           // Opaque background so the work section below is not visible through
           // the hero. Matches the body dot-pattern exactly.
           backgroundColor: 'var(--background)',
-          backgroundImage: 'radial-gradient(circle, #d8d8d8 1px, transparent 1px)',
-          backgroundSize: '28px 28px',
         }}
       >
-        {landing}
+        {/* Separate layer so dragging (desktop only) pans only the dots — the
+            landing content below is normal flow and never moves. LandingHero
+            has no clickable elements of its own, and its flex containers
+            span the full viewport even where visually empty, so without
+            pointer-events: none here they'd swallow every mousedown before
+            it ever reached the grid layer beneath. */}
+        <DraggableDotGrid />
+        <div style={{ position: 'relative', zIndex: 1, pointerEvents: 'none' }}>{landing}</div>
       </div>
 
       {/* Always at document y=0; revealed the moment the hero is hidden. */}
