@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { useNavigation } from '@/components/providers/NavigationProvider'
-import { WORK_ENTERED_EVENT, ENTER_WORK_EVENT } from '@/lib/events'
+import { WORK_ENTERED_EVENT } from '@/lib/events'
 
 const LINKS = [
   { label: 'Work',        href: '/work',       isWork: true  },
@@ -35,13 +35,18 @@ export function NavigationLinks({ mobile = false }: Props) {
     return link.isWork ? isWorkActive : pathname === link.href
   }
 
+  // Drawer "Work" always goes to the dedicated Work grid route — the landing
+  // page's own scroll-triggered one-by-one flow (Nav.tsx's separate pre-scroll
+  // bar) is untouched. Only skip navigation when the router is actually on
+  // /work already; being scrolled into the landing page's pseudo-work section
+  // (pathname still '/', ScrollGate only did a history.replaceState, not a
+  // real route change) must NOT short-circuit this into just closing the
+  // drawer — the grid still needs to actually mount. Everywhere else the Link
+  // navigates normally and NavigationDrawer's own pathname-change effect
+  // closes the drawer, same as every other link.
   const handleWork = (e: React.MouseEvent) => {
-    if (isWorkActive) {
+    if (pathname === '/work') {
       e.preventDefault()
-      close()
-    } else if (pathname === '/') {
-      e.preventDefault()
-      window.dispatchEvent(new CustomEvent(ENTER_WORK_EVENT))
       close()
     }
   }
