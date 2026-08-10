@@ -6,9 +6,13 @@ import { motion } from 'framer-motion'
 
 interface Props {
   href: string
+  /** Overrides the "Next" text color — e.g. white during a project's dark hover reveal. Undefined leaves it untouched. */
+  color?: string
+  /** Overrides the arrow icon asset — e.g. a white variant to match `color`. Defaults to the dark icon. */
+  arrowSrc?: string
 }
 
-export function AnimatedRightArrow({ href }: Props) {
+export function AnimatedRightArrow({ href, color, arrowSrc = '/arrow-right.svg' }: Props) {
   return (
     <Link
       href={href}
@@ -18,7 +22,7 @@ export function AnimatedRightArrow({ href }: Props) {
     >
       <span
         className="font-sans font-normal leading-[1.3] text-foreground"
-        style={{ fontSize: 16, letterSpacing: '-0.16px' }}
+        style={{ fontSize: 16, letterSpacing: '-0.16px', color, transition: 'color 0.6s ease-in-out' }}
       >
         Next
       </span>
@@ -31,7 +35,7 @@ export function AnimatedRightArrow({ href }: Props) {
         }}
       >
         <Image
-          src="/arrow-right.svg"
+          src={arrowSrc}
           alt=""
           width={33}
           height={12}

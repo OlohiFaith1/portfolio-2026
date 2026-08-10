@@ -22,7 +22,7 @@ export const WORK_PROJECTS: WorkProject[] = [
     name: 'Mercado',
     tagline: 'Helping merchants accept stablecoin payments.',
     href: '/work/mercado',
-    comingSoon: true,
+    comingSoon: false,
   },
   {
     slug: 'flyp',

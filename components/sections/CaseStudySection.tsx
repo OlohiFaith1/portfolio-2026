@@ -7,6 +7,35 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { AnimatedRightArrow } from './AnimatedRightArrow'
 
+/** Desktop-hover background reveal behind the mockup — tint color + a positioned artwork image. */
+export interface HoverArtwork {
+  src: string
+  /** Number = px. String is used verbatim (e.g. a calc() expression for viewport-relative placement). */
+  left: number | string
+  top: number | string
+  width: number
+  height: number
+  /** CSS blur radius in px applied to the artwork layer. Omit for none. */
+  blur?: number
+}
+
+/** Name/role/year text color while hovered — omit to leave text color untouched (Azza). */
+export interface HoverTextColors {
+  name: string
+  meta: string
+}
+
+// Azza's own hover values — kept as the defaults so its call site needs no props.
+const DEFAULT_HOVER_TINT_COLOR = '#D8BAFF'
+const DEFAULT_HOVER_ARTWORK: HoverArtwork = {
+  src: '/azza/bg-artwork.svg',
+  left: -323,
+  top: -232,
+  width: 1893,
+  height: 1520,
+  blur: 32,
+}
+
 export interface CaseStudySectionProps {
   href: string
   name: string
@@ -20,6 +49,13 @@ export interface CaseStudySectionProps {
    * (desktop) or tap (touch), while the Next arrow keeps working normally.
    */
   comingSoon?: boolean
+  /** Desktop-only hover reveal behind the mockup. Defaults to Azza's tint + artwork. */
+  hoverTintColor?: string
+  hoverArtwork?: HoverArtwork
+  /** Desktop-only hover reveal — project metadata text color. Omit to leave text color unchanged. */
+  hoverTextColors?: HoverTextColors
+  /** Desktop-only hover reveal — "Next" arrow icon override (e.g. a white variant matching hoverTextColors). Omit to leave it unchanged. */
+  hoverArrowSrc?: string
 }
 
 export function CaseStudySection({
@@ -30,6 +66,10 @@ export function CaseStudySection({
   nextHref,
   Mockup,
   comingSoon = false,
+  hoverTintColor = DEFAULT_HOVER_TINT_COLOR,
+  hoverArtwork = DEFAULT_HOVER_ARTWORK,
+  hoverTextColors,
+  hoverArrowSrc,
 }: CaseStudySectionProps) {
   const [hovered, setHovered] = useState(false)
   const [showComingSoon, setShowComingSoon] = useState(false)
@@ -45,8 +85,9 @@ export function CaseStudySection({
     return () => mq.removeEventListener('change', onChange)
   }, [])
 
-  // Mockup hover: Azza tints the background; Mercado (comingSoon) darkens
-  // with a "Coming Soon" tag instead. Only one of the two states applies.
+  // Mockup hover: live projects tint the background + reveal artwork; a
+  // comingSoon project darkens with a "Coming Soon" tag instead. Only one
+  // of the two states applies.
   const enterMockupHover = () => {
     if (!hoverCapable) return
     if (comingSoon) setShowComingSoon(true)
@@ -77,27 +118,27 @@ export function CaseStudySection({
 
       {!comingSoon && (
         <>
-          {/* Tint layer — covers dot-grid with #D8BAFF on phone hover */}
+          {/* Tint layer — covers dot-grid with the project's hover color on phone hover */}
           <motion.div
             className="absolute inset-0 pointer-events-none"
-            style={{ backgroundColor: '#D8BAFF' }}
+            style={{ backgroundColor: hoverTintColor }}
             initial={false}
             animate={{ opacity: hovered ? 1 : 0 }}
             transition={{ duration: 0.6, ease: 'easeInOut' }}
           />
 
           {/*
-            Background artwork — Figma asset exported from "Hover on First Page" bg group.
-            Section overflow-hidden clips it at all viewport sizes.
+            Background artwork — Figma asset exported from each project's own
+            "Hover" frame. Section overflow-hidden clips it at all viewport sizes.
           */}
           <motion.div
             className="absolute pointer-events-none"
             style={{
-              left: -323,
-              top: -232,
-              width: 1893,
-              height: 1520,
-              filter: 'blur(32px)',
+              left: hoverArtwork.left,
+              top: hoverArtwork.top,
+              width: hoverArtwork.width,
+              height: hoverArtwork.height,
+              filter: hoverArtwork.blur ? `blur(${hoverArtwork.blur}px)` : undefined,
             }}
             initial={false}
             animate={{ opacity: hovered ? 1 : 0 }}
@@ -106,7 +147,7 @@ export function CaseStudySection({
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/azza/bg-artwork.svg"
+              src={hoverArtwork.src}
               alt=""
               style={{ display: 'block', width: '100%', height: '100%' }}
             />
@@ -143,14 +184,14 @@ export function CaseStudySection({
           </span>
         </div>
 
-        {/* 2. Phone mockup */}
+        {/* 2. Phone mockup — no hover wiring: the reveal is desktop-only and this
+            layout only ever renders on touch/narrow viewports (see the lg:-only
+            PreviewTrigger below), so it must never be able to trigger it. */}
         <div className="flex justify-center">
           <PreviewTrigger
             comingSoon={comingSoon}
             href={href}
             onTrigger={triggerComingSoon}
-            onMouseEnter={enterMockupHover}
-            onMouseLeave={leaveMockupHover}
             ariaLabel={comingSoon ? `${name} — coming soon` : undefined}
           >
             <Mockup className="h-[48vh]" />
@@ -210,14 +251,12 @@ export function CaseStudySection({
           </span>
         </div>
 
-        {/* 2. Phone mockup */}
+        {/* 2. Phone mockup — no hover wiring, same reasoning as the mobile layout above. */}
         <div className="flex justify-center">
           <PreviewTrigger
             comingSoon={comingSoon}
             href={href}
             onTrigger={triggerComingSoon}
-            onMouseEnter={enterMockupHover}
-            onMouseLeave={leaveMockupHover}
             ariaLabel={comingSoon ? `${name} — coming soon` : undefined}
           >
             <Mockup className="h-[63vh]" />
@@ -268,7 +307,11 @@ export function CaseStudySection({
           <PreviewTrigger comingSoon={comingSoon} href={href} onTrigger={triggerComingSoon}>
             <span
               className="font-display leading-[1.1] text-foreground"
-              style={{ fontSize: 20 }}
+              style={{
+                fontSize: 20,
+                color: hoverTextColors ? (hovered ? hoverTextColors.name : undefined) : undefined,
+                transition: hoverTextColors ? 'color 0.6s ease-in-out' : undefined,
+              }}
             >
               {name}
             </span>
@@ -284,13 +327,26 @@ export function CaseStudySection({
 
         <span
           className="font-sans font-normal leading-[1.3] text-[#5a5a5a]"
-          style={{ fontSize: 16, letterSpacing: '-0.16px', width: 191, display: 'block', whiteSpace: 'pre-line' }}
+          style={{
+            fontSize: 16,
+            letterSpacing: '-0.16px',
+            width: 191,
+            display: 'block',
+            whiteSpace: 'pre-line',
+            color: hoverTextColors ? (hovered ? hoverTextColors.meta : undefined) : undefined,
+            transition: hoverTextColors ? 'color 0.6s ease-in-out' : undefined,
+          }}
         >
           {role}
         </span>
         <span
           className="font-sans font-normal leading-[1.3] text-[#5a5a5a] whitespace-nowrap"
-          style={{ fontSize: 16, letterSpacing: '-0.16px' }}
+          style={{
+            fontSize: 16,
+            letterSpacing: '-0.16px',
+            color: hoverTextColors ? (hovered ? hoverTextColors.meta : undefined) : undefined,
+            transition: hoverTextColors ? 'color 0.6s ease-in-out' : undefined,
+          }}
         >
           {year}
         </span>
@@ -310,7 +366,11 @@ export function CaseStudySection({
       </PreviewTrigger>
 
       {/* Next-project arrow — right, desktop only */}
-      <AnimatedRightArrow href={nextHref} />
+      <AnimatedRightArrow
+        href={nextHref}
+        color={hovered ? hoverTextColors?.name : undefined}
+        arrowSrc={hovered ? hoverArrowSrc : undefined}
+      />
 
       {comingSoon && (
         <>
