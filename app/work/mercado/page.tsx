@@ -1,34 +1,15 @@
-import { CaseStudySection } from '@/components/sections/CaseStudySection'
-import { MercadoMockup } from '@/components/sections/MercadoMockup'
+import { MercadoHero } from '@/components/sections/MercadoHero'
 
 export const metadata = { title: 'Mercado — Faith Olohijere' }
 
+// The Mercado case study — mirrors Azza's own case-study page structure
+// (app/work/azza/page.tsx): a sequence of sections stacked in a single
+// z-index:1 wrapper, starting with the hero. More sections get appended
+// below MercadoHero as the case study is built out.
 export default function MercadoPage() {
   return (
     <div style={{ position: 'relative', zIndex: 1 }}>
-      <CaseStudySection
-        href="/work/mercado"
-        name="Mercado"
-        role={"User Interface; Experience\n& Interaction Design"}
-        year="2025"
-        nextHref="/work"
-        Mockup={MercadoMockup}
-        hoverTintColor="#092B2D"
-        hoverArtwork={{
-          src: '/mercado/check-circle.svg',
-          // Figma positions this relative to the 1920px hover frame as
-          // 12.5% + 170px — kept as a calc() (not a flattened px value) so it
-          // stays proportionally placed instead of overflowing the section on
-          // narrower desktop viewports.
-          left: 'calc(12.5% + 170px)',
-          top: -10,
-          width: 1100,
-          height: 1100,
-          blur: 28,
-        }}
-        hoverTextColors={{ name: '#FFFFFF', meta: '#D4D4D4' }}
-        hoverArrowSrc="/mercado/arrow-right-white.svg"
-      />
+      <MercadoHero />
     </div>
   )
 }
