@@ -1,43 +1,45 @@
 'use client'
 
 import { useRef, useEffect, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 import type { ReactNode } from 'react'
-import { WORK_ENTERED_EVENT, ENTER_WORK_EVENT } from '@/lib/events'
+import { WORK_ENTERED_EVENT } from '@/lib/events'
 import { DraggableDotGrid } from './DraggableDotGrid'
 
 interface Props {
   landing: ReactNode
+  /**
+   * The Azza standalone preview — revealed in place (same route, hard-cut
+   * hero, no navigation) on desktop/tablet when the user scrolls/swipes past
+   * the hero. Mobile skips this entirely and navigates straight to the Work
+   * grid instead — see `enter()` below.
+   */
   work: ReactNode
 }
 
 export function ScrollGate({ landing, work }: Props) {
+  const router = useRouter()
   const heroRef = useRef<HTMLDivElement>(null)
   const gated = useRef(false)
-  const cleanupListeners = useRef<(() => void) | null>(null)
 
   const enter = useCallback(() => {
     if (gated.current) return
     gated.current = true
 
-    // Remove gesture listeners immediately — no need to keep them active.
-    cleanupListeners.current?.()
+    const isDesktop = window.matchMedia('(min-width: 640px)').matches
 
-    // Signal Nav and NavigationDrawer to update their work-entered state.
+    // Mobile: skip the inline Azza preview entirely, go straight to the grid.
+    if (!isDesktop) {
+      router.push('/work')
+      return
+    }
+
+    // Desktop/tablet: reveal the Azza preview in place — hard-cut hero, no
+    // animation, no real navigation away from '/'.
     window.dispatchEvent(new CustomEvent(WORK_ENTERED_EVENT))
-
-    // Hard-cut: remove the hero with no animation, no overlap.
     if (heroRef.current) heroRef.current.style.display = 'none'
-
-    // Reflect the work section in the URL without a history entry or page reload.
     window.history.replaceState(null, '', '/work')
-  }, [])
-
-  // Allow NavigationLinks (same page) to trigger entry via a custom event
-  useEffect(() => {
-    const handler = () => enter()
-    window.addEventListener(ENTER_WORK_EVENT, handler)
-    return () => window.removeEventListener(ENTER_WORK_EVENT, handler)
-  }, [enter])
+  }, [router])
 
   useEffect(() => {
     const onWheel = (e: WheelEvent) => {
@@ -62,21 +64,17 @@ export function ScrollGate({ landing, work }: Props) {
       }
     }
 
-    const cleanup = () => {
-      window.removeEventListener('wheel', onWheel)
-      window.removeEventListener('touchstart', onTouchStart)
-      window.removeEventListener('touchmove', onTouchMove)
-      window.removeEventListener('keydown', onKeyDown)
-    }
-
-    cleanupListeners.current = cleanup
-
     window.addEventListener('wheel', onWheel, { passive: true })
     window.addEventListener('touchstart', onTouchStart, { passive: true })
     window.addEventListener('touchmove', onTouchMove, { passive: true })
     window.addEventListener('keydown', onKeyDown)
 
-    return cleanup
+    return () => {
+      window.removeEventListener('wheel', onWheel)
+      window.removeEventListener('touchstart', onTouchStart)
+      window.removeEventListener('touchmove', onTouchMove)
+      window.removeEventListener('keydown', onKeyDown)
+    }
   }, [enter])
 
   return (
@@ -85,7 +83,8 @@ export function ScrollGate({ landing, work }: Props) {
         Hero is fixed (z=10), sitting above the work section but below Nav (z=50)
         and the drawer (z=100). It takes no space in the document flow, so the
         work section is always at document y=0. On the first downward gesture
-        the hero is hidden instantly — a hard cut with zero overlap.
+        (desktop/tablet only) the hero is hidden instantly — a hard cut with
+        zero overlap. Mobile never reaches this: it navigates away first.
       */}
       <div
         ref={heroRef}
@@ -108,7 +107,7 @@ export function ScrollGate({ landing, work }: Props) {
         <div style={{ position: 'relative', zIndex: 1, pointerEvents: 'none' }}>{landing}</div>
       </div>
 
-      {/* Always at document y=0; revealed the moment the hero is hidden. */}
+      {/* Always at document y=0; revealed the moment the hero is hidden (desktop/tablet only). */}
       {work}
     </>
   )

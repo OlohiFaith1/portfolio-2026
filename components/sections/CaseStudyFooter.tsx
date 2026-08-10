@@ -75,7 +75,7 @@ function SocialLinks({ variant }: { variant: 'desktop' | 'mobile' }) {
               aria-label={link.ariaLabel}
               target={link.external ? '_blank' : undefined}
               rel={link.external ? 'noopener noreferrer' : undefined}
-              className="font-sans text-neutral-400 hover:text-white transition-colors duration-200"
+              className="font-sans text-white"
               style={{ ...baseText, fontSize: 16, letterSpacing: '-0.16px', textDecoration: 'none' }}
             >
               {link.label}
@@ -109,6 +109,8 @@ export function CaseStudyFooter() {
     <>
       {/* ── MOBILE (<768px): normal in-flow footer ─────────────────────────
           Scrolls with the page — no fixed positioning, no z-index tricks.
+          Quote is desktop/tablet-only (see below) — mobile shows just the
+          social links.
       ──────────────────────────────────────────────────────────────────── */}
       <footer
         className="block md:hidden"
@@ -123,9 +125,6 @@ export function CaseStudyFooter() {
             paddingRight: 24,
           }}
         >
-          <div style={{ marginBottom: 48 }}>
-            <QuoteBlock align="left" />
-          </div>
           <SocialLinks variant="mobile" />
         </div>
       </footer>
