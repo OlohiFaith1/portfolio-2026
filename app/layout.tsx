@@ -5,7 +5,6 @@ import { Nav } from '@/components/nav/Nav'
 import { SmoothScrollProvider } from '@/components/providers/SmoothScrollProvider'
 import { NavigationProvider } from '@/components/providers/NavigationProvider'
 import { NavigationDrawer } from '@/components/navigation/NavigationDrawer'
-import { MenuHint } from '@/components/navigation/MenuHint'
 
 const pirata = Pirata_One({
   weight: '400',
@@ -40,7 +39,6 @@ export default function RootLayout({
           <SmoothScrollProvider>
             <Nav />
             <NavigationDrawer />
-            <MenuHint />
             <main>{children}</main>
           </SmoothScrollProvider>
         </NavigationProvider>

@@ -132,7 +132,7 @@ export function AboutContent() {
           <p className="m-0">
             My name is Faith, but I&apos;d love if you called me{' '}
             <span
-              className="font-medium cursor-default"
+              className="font-medium underline decoration-wavy decoration-[1.5px] underline-offset-[4px] decoration-[#262626]/35 cursor-default"
               {...hw('snow')}
             >
               Snow
@@ -143,7 +143,7 @@ export function AboutContent() {
           <p className="m-0">
             Growing up as an only child meant I had to get comfortable entertaining myself, and that&apos;s probably why I fell in love with{' '}
             <span
-              className="font-medium italic cursor-default"
+              className="font-medium underline decoration-wavy decoration-[1.5px] underline-offset-[4px] decoration-[#262626]/35 cursor-default"
               {...hw('books')}
             >
               books
@@ -162,7 +162,7 @@ export function AboutContent() {
           <p className="m-0">
             When I&apos;m not designing, I&apos;m usually building something I care about. I volunteer with{' '}
             <span
-              className="font-medium italic cursor-default"
+              className="font-medium underline decoration-wavy decoration-[1.5px] underline-offset-[4px] decoration-[#262626]/35 cursor-default"
               {...hw('sofadondo')}
             >
               SOFADONDO
@@ -176,7 +176,7 @@ export function AboutContent() {
               href="https://lorelane.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium italic text-inherit no-underline about-link"
+              className="font-medium text-inherit no-underline about-link"
             >
               Lorelane
             </a>
@@ -188,7 +188,7 @@ export function AboutContent() {
               href="https://www.freecodecamp.org/news/author/snowolohijere/"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium italic text-inherit no-underline about-link"
+              className="font-medium text-inherit no-underline about-link"
             >
               FreeCode Camp
             </a>
@@ -198,7 +198,7 @@ export function AboutContent() {
           <p className="m-0">
             And if I&apos;m away from my laptop, and I&apos;m not reading, you&apos;ll probably find me at the{' '}
             <span
-              className="font-medium italic cursor-default"
+              className="font-medium underline decoration-wavy decoration-[1.5px] underline-offset-[4px] decoration-[#262626]/35 cursor-default"
               {...hw('gym')}
             >
               gym

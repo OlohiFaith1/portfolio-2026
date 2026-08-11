@@ -105,7 +105,7 @@ export function AzzaStudy4() {
       ref={sectionRef}
       style={{
         backgroundColor: '#3430e9',
-        minHeight: '100svh',
+        height: '100svh',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -133,8 +133,14 @@ export function AzzaStudy4() {
 
       {/*
         Amount line: flex row so "NGN" and the number are independent elements.
-        The number span has a fixed minWidth (wide enough for the final value)
-        so "NGN" never shifts as digits accumulate during the count-up.
+        The number span has a fixed minWidth (tightly matching the final
+        value's rendered width, not just "roughly enough") so "NGN" never
+        shifts as digits accumulate during the count-up — since the value only
+        counts upward, the final value is always the widest point in the
+        sequence, so this floor is never actually reached before then.
+        Sized any wider than that, the leftover reserved space (invisible,
+        since text-align is left) sits only on the right of the digits, which
+        visually pulls the whole line left of the frame's true center.
         fontVariantNumeric: tabular-nums ensures equal digit widths,
         eliminating per-frame jitter from proportional numeral advances.
       */}
@@ -159,7 +165,7 @@ export function AzzaStudy4() {
           aria-live="off"
           style={{
             display: 'inline-block',
-            minWidth: '5.5em',
+            minWidth: '4.75em',
             textAlign: 'left',
           }}
         >

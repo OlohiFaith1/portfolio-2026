@@ -56,12 +56,6 @@ function Narrative() {
   }
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24, alignItems: 'flex-start' }}>
-      <span
-        className="font-display"
-        style={{ fontSize: 40, lineHeight: '48px', letterSpacing: '-0.8px', color: '#262626' }}
-      >
-        Our POS no get network...
-      </span>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 40, width: '100%' }}>
         <p className="font-sans" style={paraStyle}>
           The phrase above is a very common one in the Nigerian marketplace. You’ll hear it in
@@ -103,7 +97,7 @@ function Narrative() {
 // baked into the one exported asset — rendered as-is rather than
 // recomposited from layers.
 const imageAlt =
-  'A merchant holds a phone showing a completed 25 USDC collection in the Mercado app, next to the headline “The easier way to accept stablecoin payments.”'
+  'A merchant holds a phone showing a completed 25 USDC collection in the Mercado app, next to the headline “Our POS no get network...”'
 
 // Tablet/desktop: height is fixed to the viewport (not Figma's 1200px) per
 // spec, `object-fit: cover` keeps it undistorted and centred on the
