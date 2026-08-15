@@ -1,7 +1,6 @@
 'use client'
 
 import { useRef, useEffect, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
 import type { ReactNode } from 'react'
 import { WORK_ENTERED_EVENT } from '@/lib/events'
 import { DraggableDotGrid } from './DraggableDotGrid'
@@ -10,15 +9,16 @@ interface Props {
   landing: ReactNode
   /**
    * The Azza standalone preview — revealed in place (same route, hard-cut
-   * hero, no navigation) on desktop/tablet when the user scrolls/swipes past
-   * the hero. Mobile skips this entirely and navigates straight to the Work
-   * grid instead — see `enter()` below.
+   * hero, no navigation) at every breakpoint when the user scrolls/swipes
+   * past the hero. From there the user continues through the existing
+   * standalone case-study sequence (Azza → Mercado → SyncWatch → ...) via
+   * each case study's own "Next" navigation. The Work grid stays reachable
+   * separately, through the landing nav's own "Work" link.
    */
   work: ReactNode
 }
 
 export function ScrollGate({ landing, work }: Props) {
-  const router = useRouter()
   const heroRef = useRef<HTMLDivElement>(null)
   const gated = useRef(false)
 
@@ -26,20 +26,12 @@ export function ScrollGate({ landing, work }: Props) {
     if (gated.current) return
     gated.current = true
 
-    const isDesktop = window.matchMedia('(min-width: 640px)').matches
-
-    // Mobile: skip the inline Azza preview entirely, go straight to the grid.
-    if (!isDesktop) {
-      router.push('/work')
-      return
-    }
-
-    // Desktop/tablet: reveal the Azza preview in place — hard-cut hero, no
-    // animation, no real navigation away from '/'.
+    // Reveal the Azza preview in place — hard-cut hero, no animation, no
+    // real navigation away from '/'. Same behavior at every breakpoint.
     window.dispatchEvent(new CustomEvent(WORK_ENTERED_EVENT))
     if (heroRef.current) heroRef.current.style.display = 'none'
     window.history.replaceState(null, '', '/work')
-  }, [router])
+  }, [])
 
   useEffect(() => {
     const onWheel = (e: WheelEvent) => {
@@ -82,9 +74,9 @@ export function ScrollGate({ landing, work }: Props) {
       {/*
         Hero is fixed (z=10), sitting above the work section but below Nav (z=50)
         and the drawer (z=100). It takes no space in the document flow, so the
-        work section is always at document y=0. On the first downward gesture
-        (desktop/tablet only) the hero is hidden instantly — a hard cut with
-        zero overlap. Mobile never reaches this: it navigates away first.
+        work section is always at document y=0. On the first downward gesture,
+        at every breakpoint, the hero is hidden instantly — a hard cut with
+        zero overlap.
       */}
       <div
         ref={heroRef}
@@ -107,7 +99,7 @@ export function ScrollGate({ landing, work }: Props) {
         <div style={{ position: 'relative', zIndex: 1, pointerEvents: 'none' }}>{landing}</div>
       </div>
 
-      {/* Always at document y=0; revealed the moment the hero is hidden (desktop/tablet only). */}
+      {/* Always at document y=0; revealed the moment the hero is hidden. */}
       {work}
     </>
   )
