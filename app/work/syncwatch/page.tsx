@@ -1,6 +1,8 @@
 import { SyncWatchHero } from '@/components/sections/SyncWatchHero'
 import { SyncWatchStudy2 } from '@/components/sections/SyncWatchStudy2'
 import { SyncWatchStudy3 } from '@/components/sections/SyncWatchStudy3'
+import { SyncWatchStudy4 } from '@/components/sections/SyncWatchStudy4'
+import { SyncWatchStudy5 } from '@/components/sections/SyncWatchStudy5'
 
 export const metadata = { title: 'SyncWatch — Faith Olohijere' }
 
@@ -14,6 +16,8 @@ export default function SyncWatchPage() {
       <SyncWatchHero />
       <SyncWatchStudy2 />
       <SyncWatchStudy3 />
+      <SyncWatchStudy4 />
+      <SyncWatchStudy5 />
     </div>
   )
 }
