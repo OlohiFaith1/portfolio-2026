@@ -1,6 +1,6 @@
 const SOCIALS = [
   { label: 'X',    ariaLabel: 'X (Twitter)',  href: 'https://x.com/olohijerefaith' },
-  { label: 'LN',   ariaLabel: 'LinkedIn',     href: 'https://www.linkedin.com/in/faithijelekhai/' },
+  { label: 'LN',   ariaLabel: 'LinkedIn',     href: 'https://www.linkedin.com/in/faith-ijelekhai-57a96b213/' },
   { label: 'FCC',  ariaLabel: 'freeCodeCamp', href: 'https://www.freecodecamp.org/news/author/snowolohijere/' },
   { label: 'MAIL', ariaLabel: 'Send email',   href: 'mailto:olofaith3@gmail.com' },
 ]

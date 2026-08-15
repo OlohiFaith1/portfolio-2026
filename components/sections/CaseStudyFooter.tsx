@@ -26,7 +26,7 @@ const LINKS = [
   },
   {
     label: 'LinkedIn',
-    href: 'https://www.linkedin.com/in/faith-ijelekhai',
+    href: 'https://www.linkedin.com/in/faith-ijelekhai-57a96b213/',
     ariaLabel: "Faith's LinkedIn profile (opens in new tab)",
     external: true,
   },
