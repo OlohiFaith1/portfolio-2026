@@ -5,11 +5,9 @@ export const metadata = { title: 'SyncWatch — Faith Olohijere' }
 
 // The SyncWatch standalone preview — same role Azza's and Mercado's own
 // previews play (hover-interactive name/mockup teaser), reached from
-// Mercado's preview via "Next". comingSoon: true because the real case
-// study at /work/syncwatch hasn't been built yet (matches
-// lib/work-projects.ts, which already lists syncwatch as comingSoon) — the
-// name and mockup show a "Coming Soon" tag instead of navigating, while
-// "Next" still works normally.
+// Mercado's preview via "Next". The real case study now exists at
+// /work/syncwatch (matches lib/work-projects.ts, which lists syncwatch as
+// live), so this navigates normally like Azza's and Mercado's own covers.
 export default function SyncWatchPreviewPage() {
   return (
     <div style={{ position: 'relative', zIndex: 1 }}>
@@ -20,7 +18,6 @@ export default function SyncWatchPreviewPage() {
         year="2025"
         nextHref="/work"
         Mockup={SyncWatchMockup}
-        comingSoon
       />
     </div>
   )

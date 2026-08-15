@@ -42,8 +42,8 @@ export const WORK_PROJECTS: WorkProject[] = [
     slug: 'syncwatch',
     name: 'Syncwatch',
     tagline: 'Watch movies together, wherever you are.',
-    href: '',
-    comingSoon: true,
+    href: '/work/syncwatch',
+    comingSoon: false,
   },
   {
     slug: 'lnvc',
