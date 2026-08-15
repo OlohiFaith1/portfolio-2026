@@ -10,11 +10,13 @@ import { AnimatedRightArrow } from './AnimatedRightArrow'
 /** Desktop-hover background reveal behind the mockup — tint color + a positioned artwork image. */
 export interface HoverArtwork {
   src: string
-  /** Number = px. String is used verbatim (e.g. a calc() expression for viewport-relative placement). */
+  /** Number = px. String is used verbatim (e.g. a calc() expression, or a
+   *  percentage for a full-bleed artwork that should scale with the
+   *  section itself, for viewport-relative placement). */
   left: number | string
   top: number | string
-  width: number
-  height: number
+  width: number | string
+  height: number | string
   /** CSS blur radius in px applied to the artwork layer. Omit for none. */
   blur?: number
 }
