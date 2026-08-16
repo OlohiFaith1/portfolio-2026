@@ -218,7 +218,7 @@ function ScaledPrototype({ step }: { step: Step }) {
 function TextBlock() {
   const paraStyle: React.CSSProperties = { fontSize: 16, lineHeight: 1.5, letterSpacing: '-0.16px', color: '#262626', margin: 0 }
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 40, width: 335, maxWidth: '100%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 40, width: 333, maxWidth: '100%' }}>
       <p className="font-sans" style={paraStyle}>
         Create a watch party, choose what to watch, and share the invite with your friends.
       </p>
@@ -258,10 +258,15 @@ export function SyncWatchStudy4() {
       className="relative bg-white"
       style={{ backgroundImage: 'radial-gradient(circle, #d8d8d8 1px, transparent 1px)', backgroundSize: '28px 28px', overflowX: 'hidden' }}
     >
-      {/* Text — right-aligned at Figma's exact 159px/335px values on
-          desktop; reflows to a padded full-width block on tablet/mobile,
-          matching every other Mercado/SyncWatch section. */}
-      <div className="hidden lg:flex" style={{ justifyContent: 'flex-end', paddingTop: 170, paddingRight: 159 }}>
+      {/* Text — right inset (24px) matches the shared 8-column grid's own
+          margin (components/layout/Grid.tsx); width (333px, set on
+          TextBlock itself) matches its 2-column span — was
+          paddingRight:159/width:335, an arbitrary offset from the 1920px
+          Figma frame. Reflows to a padded full-width block on
+          tablet/mobile, matching every other Mercado/SyncWatch section.
+          The pink prototype band below is intentionally full-bleed and is
+          not part of this change. */}
+      <div className="hidden lg:flex" style={{ justifyContent: 'flex-end', paddingTop: 170, paddingRight: 24 }}>
         <TextBlock />
       </div>
       <div className="hidden md:block lg:hidden" style={{ paddingLeft: 48, paddingRight: 48, paddingTop: 80 }}>

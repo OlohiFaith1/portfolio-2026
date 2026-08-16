@@ -8,12 +8,14 @@
 // other Mercado section so far), so tablet/mobile reflow to a single
 // column in reading order.
 //
-// The mockup row is 1800px wide at Figma's 1920 reference with only 60px
-// side margins — fluid (`width: 100%` + fixed small padding) rather than
-// pinned at a fixed offset, so it scales safely down through the rest of
-// the `lg` range with no overflow risk. The text column (335px, right-
-// aligned at a fixed 159px from the edge) stays put throughout `lg` since
-// that padding is small enough to never threaten overflow on its own.
+// The mockup row and the text column both use the shared 8-column grid's
+// own 24px side margin (components/layout/Grid.tsx) — fluid (`width: 100%`
+// + fixed small padding) rather than pinned at a fixed offset, so the row
+// scales safely down through the rest of the `lg` range with no overflow
+// risk. The text column (333px, a 2-column span) stays put throughout `lg`
+// since that padding is small enough to never threaten overflow on its
+// own. Both were originally independent Figma-derived offsets (335px/159px
+// for the text, 1800px/60px for the row) — now unified on one margin.
 //
 // Each mockup is a single exported PNG (phone bezel + screen content
 // flattened together) rather than hand-recreated markup, matching the
@@ -121,21 +123,23 @@ export function MercadoStudy4() {
         overflowX: 'hidden',
       }}
     >
-      {/* Desktop — text column right-aligned at a fixed (safe, small) 159px
-          from the edge; the mockup row is fluid-width with fixed 60px
-          side margins so it scales through the rest of the lg range with
-          no overflow risk. */}
+      {/* Desktop — text column right-aligned at the grid's own 24px margin/
+          333px 2-column span (components/layout/Grid.tsx); the mockup row
+          shares the same 24px side margins, so it now shares the text
+          column's edge instead of its own independent 60px inset. Was
+          paddingRight:159/width:335 for the text and paddingLeft/Right:60
+          for the row — two unrelated margins in the same section. */}
       <div className="hidden lg:flex lg:flex-col" style={{ paddingTop: 120, paddingBottom: 120, gap: 120 }}>
-        <div style={{ display: 'flex', justifyContent: 'flex-end', paddingRight: 159 }}>
-          <div style={{ width: 335 }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', paddingRight: 24 }}>
+          <div style={{ width: 333 }}>
             <TextBlock />
           </div>
         </div>
-        <div style={{ paddingLeft: 60, paddingRight: 60 }}>
+        <div style={{ paddingLeft: 24, paddingRight: 24 }}>
           <MockupRow />
         </div>
-        <div style={{ display: 'flex', justifyContent: 'flex-end', paddingRight: 159 }}>
-          <div style={{ width: 335 }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', paddingRight: 24 }}>
+          <div style={{ width: 333 }}>
             <ClosingText />
           </div>
         </div>

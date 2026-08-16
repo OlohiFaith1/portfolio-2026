@@ -323,10 +323,12 @@ export function MercadoStudy5Client({ existingAssetSrcs }: { existingAssetSrcs: 
         overflowX: 'hidden',
       }}
     >
-      {/* Text — right-aligned at Figma's exact 94px/400px values on desktop
-          (safe throughout the lg range); reflows to a padded full-width
-          block on tablet/mobile, matching every other Mercado section. */}
-      <div className="hidden lg:flex" style={{ justifyContent: 'flex-end', paddingTop: 122, paddingRight: 94, paddingBottom: 72 }}>
+      {/* Text — right inset (24px) matches the shared 8-column grid's own
+          margin (components/layout/Grid.tsx) — was 94px, an arbitrary
+          offset from the 1920px Figma frame (safe throughout the lg range
+          either way). Reflows to a padded full-width block on
+          tablet/mobile, matching every other Mercado section. */}
+      <div className="hidden lg:flex" style={{ justifyContent: 'flex-end', paddingTop: 122, paddingRight: 24, paddingBottom: 72 }}>
         <TextBlock />
       </div>
       <div className="hidden md:block lg:hidden" style={{ paddingLeft: 48, paddingRight: 48, paddingTop: 80, paddingBottom: 48 }}>

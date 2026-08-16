@@ -253,11 +253,14 @@ export function MercadoStudy6() {
       className="relative bg-white"
       style={{ backgroundImage: 'radial-gradient(circle, #d8d8d8 1px, transparent 1px)', backgroundSize: '28px 28px', overflowX: 'hidden' }}
     >
-      {/* Text — right-aligned at Figma's exact 159px/335px values on
-          desktop; reflows to a padded full-width block on tablet/mobile,
-          matching every other Mercado section. */}
-      <div className="hidden lg:flex" style={{ justifyContent: 'flex-end', paddingTop: 120, paddingRight: 159 }}>
-        <div style={{ width: 335 }}>
+      {/* Text — right inset (24px) and width (333px) match the shared
+          8-column grid's own margin and 2-column span
+          (components/layout/Grid.tsx) — was paddingRight:159/width:335, an
+          arbitrary offset from the 1920px Figma frame; reflows to a padded
+          full-width block on tablet/mobile, matching every other Mercado
+          section. */}
+      <div className="hidden lg:flex" style={{ justifyContent: 'flex-end', paddingTop: 120, paddingRight: 24 }}>
+        <div style={{ width: 333 }}>
           <TextBlock />
         </div>
       </div>
@@ -270,14 +273,21 @@ export function MercadoStudy6() {
 
       {/* Band — a single instance at every breakpoint; only its side
           padding and vertical rhythm change (Figma's 60px/40px desktop
-          margins, and MercadoStudy4's tablet/mobile gap convention). */}
+          margins, and MercadoStudy4's tablet/mobile gap convention).
+          NOT grid-aligned intentionally: unlike this section's text
+          columns, Figma specifies asymmetric left/right margins here
+          (60/40, not 60/60) — flagged during the grid retrofit and left
+          as-is rather than forced to a symmetric 24px/24px, since
+          snapping it would erase a deliberate compositional choice, not
+          just correct an arbitrary offset. */}
       <div ref={bandWrapRef} className="px-6 md:px-12 lg:pl-[60px] lg:pr-[40px] mt-10 md:mt-12 lg:mt-[120px] mb-10 md:mb-12 lg:mb-[120px]">
         <Band spread={spread} prefersReducedMotion={prefersReducedMotion} />
       </div>
 
-      {/* Closing text — same right-aligned column as the intro. */}
-      <div className="hidden lg:flex" style={{ justifyContent: 'flex-end', paddingRight: 159, paddingBottom: 120 }}>
-        <div style={{ width: 335 }}>
+      {/* Closing text — same right-aligned, grid-matched column as the
+          intro. */}
+      <div className="hidden lg:flex" style={{ justifyContent: 'flex-end', paddingRight: 24, paddingBottom: 120 }}>
+        <div style={{ width: 333 }}>
           <ClosingText />
         </div>
       </div>

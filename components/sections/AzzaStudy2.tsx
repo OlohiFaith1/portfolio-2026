@@ -195,12 +195,16 @@ export function AzzaStudy2() {
         className="hidden lg:block"
         style={{ position: 'relative', minHeight: 1818, overflowX: 'hidden' }}
       >
+        {/* Right inset (24px) and width (333px) match the shared 8-column
+            grid's own margin and 2-column span (components/layout/Grid.tsx)
+            — was right:146/width:348, an arbitrary offset from the 1920px
+            Figma frame with no grid relationship. */}
         <div
           style={{
             position: 'absolute',
             top: 92,
-            right: 146,
-            width: 348,
+            right: 24,
+            width: 333,
             bottom: 80,
             display: 'flex',
             flexDirection: 'column',

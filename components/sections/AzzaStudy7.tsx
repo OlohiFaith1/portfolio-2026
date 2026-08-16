@@ -28,31 +28,36 @@ export function AzzaStudy7() {
     <section style={{ backgroundColor: '#ffffff' }}>
       {/* ── DESKTOP (≥1024px) — exact Figma layout ──────────────────────────── */}
       <div className="hidden lg:block" style={{ paddingTop: 179, paddingBottom: 138 }}>
-        {/* Image: 68px left margin, extends to right edge (1852px at 1920px viewport) */}
-        <div style={{ marginLeft: 68 }}>
+        {/* Image: left inset (24px) matches the shared 8-column grid's own
+            margin (components/layout/Grid.tsx) — was 68px, an arbitrary
+            offset from the 1920px Figma frame. Right edge stays flush with
+            the viewport (intentional partial bleed), unchanged. */}
+        <div style={{ marginLeft: 24 }}>
           <Image
             src="/azza/Pizza%20PNG.png"
             alt="Phone displaying an Azza cashback coupon on a pizza-themed tablecloth background"
             width={IMG_W}
             height={IMG_H}
-            sizes="calc(100vw - 68px)"
-            style={{ width: 'calc(100vw - 68px)', height: 'auto', display: 'block' }}
+            sizes="calc(100vw - 24px)"
+            style={{ width: 'calc(100vw - 24px)', height: 'auto', display: 'block' }}
             priority
           />
         </div>
 
-        {/* Text: 200px below image, 160px from left */}
+        {/* Text: 200px below image (unrelated to the grid, unchanged); left
+            inset (24px) and width (333px) match the grid's own margin and
+            2-column span — was left:160/width:335. */}
         <div
           style={{
             marginTop: 200,
-            paddingLeft: 160,
+            paddingLeft: 24,
             display: 'flex',
             flexDirection: 'column',
             gap: 40,
           }}
         >
           {PARAGRAPHS.map((text, i) => (
-            <p key={i} className="font-sans" style={{ ...TEXT_STYLE, width: 335 }}>
+            <p key={i} className="font-sans" style={{ ...TEXT_STYLE, width: 333 }}>
               {text}
             </p>
           ))}

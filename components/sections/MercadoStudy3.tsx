@@ -291,10 +291,14 @@ export function MercadoStudy3() {
         overflowX: 'hidden',
       }}
     >
-      {/* Text — left-aligned at Figma's exact 73px/99px offset on desktop;
-          reflows to a padded full-width block on tablet/mobile, matching
-          AzzaStudy2/MercadoStudy2's stacking convention. */}
-      <div className="hidden lg:block" style={{ paddingLeft: 73, paddingTop: 99, paddingBottom: 60 }}>
+      {/* Text — left inset (24px) matches the shared 8-column grid's own
+          margin (components/layout/Grid.tsx) — was 73px, an arbitrary
+          offset from the 1920px Figma frame, and didn't match the frame
+          below's own 60px margin either. Both now share the same 24px
+          inset. Vertical offsets (99px/60px) are unrelated to the grid and
+          stay as-is; reflows to a padded full-width block on
+          tablet/mobile, matching AzzaStudy2/MercadoStudy2's convention. */}
+      <div className="hidden lg:block" style={{ paddingLeft: 24, paddingTop: 99, paddingBottom: 60 }}>
         <TextBlock />
       </div>
       <div className="hidden md:block lg:hidden" style={{ paddingLeft: 48, paddingRight: 48, paddingTop: 80, paddingBottom: 48 }}>
@@ -307,8 +311,11 @@ export function MercadoStudy3() {
       {/* Frame — a single shared instance: the prototype inside carries
           real timer state, so unlike the text block above it must not be
           tripled per breakpoint. Only its wrapper's gutters vary by size,
-          via responsive classes rather than separate JSX blocks. */}
-      <div className="px-4 md:px-6 lg:px-[60px] pb-12 md:pb-16">
+          via responsive classes rather than separate JSX blocks. Desktop
+          side margin (lg:px-6 = 24px) now matches the grid margin and the
+          text block above — was lg:px-[60px], independent of the text's
+          own inset. */}
+      <div className="px-4 md:px-6 lg:px-6 pb-12 md:pb-16">
         <BlackFrame />
       </div>
     </section>

@@ -58,11 +58,16 @@ export function AzzaStudy5() {
           ))}
         </div>
 
-        {/* Text block: left-aligned at 160px, centered on a point 428.5px below section midpoint */}
+        {/* Text block: left inset (24px) and width (333px) match the shared
+            8-column grid's own margin and 2-column span
+            (components/layout/Grid.tsx) — was left:160/width:335, an
+            arbitrary offset from the 1920px Figma frame. Vertical position
+            (centered on a point 428.5px below section midpoint) is
+            unrelated to the grid and stays as-is. */}
         <div
           style={{
             position: 'absolute',
-            left: 160,
+            left: 24,
             top: 'calc(50% + 428.5px)',
             transform: 'translateY(-50%)',
             display: 'flex',
@@ -71,7 +76,7 @@ export function AzzaStudy5() {
           }}
         >
           {PARAGRAPHS.map((text, i) => (
-            <p key={i} className="font-sans" style={{ ...TEXT_STYLE, width: 335, fontSize: 18 }}>
+            <p key={i} className="font-sans" style={{ ...TEXT_STYLE, width: 333, fontSize: 18 }}>
               {text}
             </p>
           ))}

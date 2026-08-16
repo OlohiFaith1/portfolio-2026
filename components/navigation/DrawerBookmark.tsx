@@ -50,7 +50,11 @@ export function DrawerBookmark({ isOpen, onToggle, align }: Props) {
   }, [prefersReducedMotion])
 
   return (
-    <div className={`flex ${align === 'center' ? 'justify-center' : 'justify-end pr-2 lg:pr-[61px]'}`}>
+    // Desktop inset (lg:pr-6 = 24px) matches the shared grid's own side
+    // margin (components/layout/Grid.tsx), so the bookmark's right edge
+    // sits flush with the same line every grid-aligned section's content
+    // aligns to, rather than an unrelated fixed offset.
+    <div className={`flex ${align === 'center' ? 'justify-center' : 'justify-end pr-2 lg:pr-6'}`}>
       {/*
         pointer-events-auto overrides the parent motion div's pointer-events-none
         so the bookmark remains clickable in the closed state on non-landing pages.

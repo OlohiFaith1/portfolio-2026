@@ -114,16 +114,18 @@ export function SyncWatchStudy8() {
     >
       {/* Media row — two columns at Figma's exact proportional widths
           (1021:778, via matching flex-grow weights so they scale together
-          fluidly), same height, 49px/48px side margins, 24px gap. Below
-          `lg`, the columns stack vertically instead of shrinking in
-          place. */}
+          fluidly), same height, 24px side margins (matching the shared
+          grid's own margin — was an essentially-symmetric 49px/48px,
+          rounding-off the 1920px Figma frame rather than a deliberate
+          asymmetry) and 24px gap. Below `lg`, the columns stack vertically
+          instead of shrinking in place. */}
       <motion.div
         initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: prefersReducedMotion ? 0 : 0.6, ease: EASE }}
       >
-        <div className="hidden lg:flex" style={{ paddingLeft: 49, paddingRight: 48, paddingTop: 128, gap: 24 }}>
+        <div className="hidden lg:flex" style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 128, gap: 24 }}>
           {IMAGES.map((item) => (
             <MediaColumn key={item.src} item={item} flexBasis={`${item.flexWeight} 1 0%`} />
           ))}
@@ -140,11 +142,14 @@ export function SyncWatchStudy8() {
         </div>
       </motion.div>
 
-      {/* Closing text — right-aligned at Figma's exact 159px/335px values
-          on desktop; reflows to a padded full-width block on
-          tablet/mobile, matching SyncWatchStudy5/7's own convention. */}
-      <div className="hidden lg:flex" style={{ justifyContent: 'flex-end', paddingTop: 120, paddingRight: 159, paddingBottom: 120 }}>
-        <div style={{ width: 335 }}>
+      {/* Closing text — right inset (24px) and width (333px) match the
+          shared 8-column grid's own margin and 2-column span
+          (components/layout/Grid.tsx) — was paddingRight:159/width:335, an
+          arbitrary offset from the 1920px Figma frame; reflows to a padded
+          full-width block on tablet/mobile, matching SyncWatchStudy5/7's
+          own convention. */}
+      <div className="hidden lg:flex" style={{ justifyContent: 'flex-end', paddingTop: 120, paddingRight: 24, paddingBottom: 120 }}>
+        <div style={{ width: 333 }}>
           <ClosingText />
         </div>
       </div>

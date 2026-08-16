@@ -139,11 +139,14 @@ export function MercadoStudy2() {
         overflowX: 'hidden',
       }}
     >
-      {/* Project details — right-aligned at 348px/146px-from-edge on desktop
-          (Figma's exact values); reflows to a padded full-width block on
-          tablet/mobile, matching AzzaStudy2's stacking convention. */}
-      <div className="hidden lg:flex" style={{ justifyContent: 'flex-end', paddingTop: 104, paddingBottom: 120, paddingRight: 146 }}>
-        <div style={{ width: 348 }}>
+      {/* Project details — right inset (24px) and width (333px) match the
+          shared 8-column grid's own margin and 2-column span
+          (components/layout/Grid.tsx) — was paddingRight:146/width:348, an
+          arbitrary offset from the 1920px Figma frame; reflows to a padded
+          full-width block on tablet/mobile, matching AzzaStudy2's stacking
+          convention. */}
+      <div className="hidden lg:flex" style={{ justifyContent: 'flex-end', paddingTop: 104, paddingBottom: 120, paddingRight: 24 }}>
+        <div style={{ width: 333 }}>
           <ProjectDetails />
         </div>
       </div>
@@ -161,9 +164,10 @@ export function MercadoStudy2() {
         <SectionImageMobile />
       </div>
 
-      {/* Narrative — same right-aligned treatment as project details above. */}
-      <div className="hidden lg:flex" style={{ justifyContent: 'flex-end', paddingTop: 120, paddingBottom: 73, paddingRight: 146 }}>
-        <div style={{ width: 348 }}>
+      {/* Narrative — same right-aligned, grid-matched treatment as project
+          details above. */}
+      <div className="hidden lg:flex" style={{ justifyContent: 'flex-end', paddingTop: 120, paddingBottom: 73, paddingRight: 24 }}>
+        <div style={{ width: 333 }}>
           <Narrative />
         </div>
       </div>

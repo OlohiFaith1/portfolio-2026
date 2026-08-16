@@ -110,11 +110,14 @@ export function SyncWatchStudy7() {
         overflowX: 'hidden',
       }}
     >
-      {/* Supporting text — right-aligned at Figma's exact 159px/335px
-          values on desktop; reflows to a padded full-width block on
-          tablet/mobile, matching SyncWatchStudy5's own convention. */}
-      <div className="hidden lg:flex" style={{ justifyContent: 'flex-end', paddingTop: 127, paddingRight: 159 }}>
-        <div style={{ width: 335 }}>
+      {/* Supporting text — right inset (24px) and width (333px) match the
+          shared 8-column grid's own margin and 2-column span
+          (components/layout/Grid.tsx) — was paddingRight:159/width:335, an
+          arbitrary offset from the 1920px Figma frame; reflows to a padded
+          full-width block on tablet/mobile, matching SyncWatchStudy5's own
+          convention. */}
+      <div className="hidden lg:flex" style={{ justifyContent: 'flex-end', paddingTop: 127, paddingRight: 24 }}>
+        <div style={{ width: 333 }}>
           <SupportingText />
         </div>
       </div>
@@ -127,16 +130,17 @@ export function SyncWatchStudy7() {
 
       {/* Media row — three columns at Figma's exact proportional widths
           (760:496:496, via matching flex-grow weights so they scale
-          together fluidly), top-aligned, 60px side margins, 24px gaps.
-          Below `lg`, the columns stack vertically instead of shrinking in
-          place. */}
+          together fluidly), top-aligned, 24px side margins (matching the
+          shared grid's own margin — was 60px, independent of the text
+          column's own margin above) and 24px gaps. Below `lg`, the
+          columns stack vertically instead of shrinking in place. */}
       <motion.div
         initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: prefersReducedMotion ? 0 : 0.6, ease: EASE }}
       >
-        <div className="hidden lg:flex" style={{ alignItems: 'flex-start', paddingLeft: 60, paddingRight: 60, paddingTop: 85, paddingBottom: 120, gap: 24 }}>
+        <div className="hidden lg:flex" style={{ alignItems: 'flex-start', paddingLeft: 24, paddingRight: 24, paddingTop: 85, paddingBottom: 120, gap: 24 }}>
           {IMAGES.map((item) => (
             <MediaColumn key={item.src} item={item} flexBasis={`${item.flexWeight} 1 0%`} />
           ))}

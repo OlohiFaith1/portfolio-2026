@@ -96,11 +96,14 @@ export function SyncWatchStudy5() {
         overflowX: 'hidden',
       }}
     >
-      {/* Intro text — right-aligned at Figma's exact 159px/335px values on
-          desktop; reflows to a padded full-width block on tablet/mobile,
-          matching SyncWatchStudy2/4's own established convention. */}
-      <div className="hidden lg:flex" style={{ justifyContent: 'flex-end', paddingTop: 120, paddingRight: 159 }}>
-        <div style={{ width: 335 }}>
+      {/* Intro text — right inset (24px) and width (333px) match the
+          shared 8-column grid's own margin and 2-column span
+          (components/layout/Grid.tsx) — was paddingRight:159/width:335, an
+          arbitrary offset from the 1920px Figma frame; reflows to a padded
+          full-width block on tablet/mobile, matching SyncWatchStudy2/4's
+          own established convention. */}
+      <div className="hidden lg:flex" style={{ justifyContent: 'flex-end', paddingTop: 120, paddingRight: 24 }}>
+        <div style={{ width: 333 }}>
           <IntroText />
         </div>
       </div>
@@ -111,11 +114,12 @@ export function SyncWatchStudy5() {
         <IntroText />
       </div>
 
-      {/* Media row — three images side by side, 60px side margins and 21px
-          gaps on desktop (Figma's exact values). Below `lg`, three images
-          would be too cramped to read, so they stack vertically instead of
-          simply shrinking in place. */}
-      <div className="hidden lg:flex" style={{ paddingLeft: 60, paddingRight: 60, paddingTop: 110, paddingBottom: 120, gap: 21 }}>
+      {/* Media row — three images side by side, 24px side margins (matching
+          the shared grid's own margin — was 60px, independent of the text
+          column's own margin above) and 21px gaps on desktop. Below `lg`,
+          three images would be too cramped to read, so they stack
+          vertically instead of simply shrinking in place. */}
+      <div className="hidden lg:flex" style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 110, paddingBottom: 120, gap: 21 }}>
         {IMAGES.map((image) => (
           <MediaImage key={image.src} {...image} />
         ))}
@@ -131,9 +135,10 @@ export function SyncWatchStudy5() {
         ))}
       </div>
 
-      {/* Closing text — same right-aligned column as the intro text. */}
-      <div className="hidden lg:flex" style={{ justifyContent: 'flex-end', paddingRight: 159, paddingBottom: 120 }}>
-        <div style={{ width: 335 }}>
+      {/* Closing text — same right-aligned, grid-matched column as the
+          intro text. */}
+      <div className="hidden lg:flex" style={{ justifyContent: 'flex-end', paddingRight: 24, paddingBottom: 120 }}>
+        <div style={{ width: 333 }}>
           <ClosingText />
         </div>
       </div>

@@ -100,11 +100,14 @@ export function SyncWatchStudy2() {
         overflowX: 'hidden',
       }}
     >
-      {/* Project details — right-aligned at Figma's exact 146px/348px values
-          on desktop; reflows to a padded full-width block on tablet/mobile,
-          matching MercadoStudy2's own established convention. */}
-      <div className="hidden lg:flex" style={{ justifyContent: 'flex-end', paddingTop: 129, paddingRight: 146 }}>
-        <div style={{ width: 348 }}>
+      {/* Project details — right inset (24px) and width (333px) match the
+          shared 8-column grid's own margin and 2-column span
+          (components/layout/Grid.tsx) — was paddingRight:146/width:348, an
+          arbitrary offset from the 1920px Figma frame; reflows to a padded
+          full-width block on tablet/mobile, matching MercadoStudy2's own
+          established convention. */}
+      <div className="hidden lg:flex" style={{ justifyContent: 'flex-end', paddingTop: 129, paddingRight: 24 }}>
+        <div style={{ width: 333 }}>
           <ProjectDetails />
         </div>
       </div>
@@ -115,10 +118,12 @@ export function SyncWatchStudy2() {
         <ProjectDetails />
       </div>
 
-      {/* Image — full aspect-preserving width, 60px side margins on desktop
-          (Figma's exact values), edge-to-edge on tablet/mobile. Same
+      {/* Image — full aspect-preserving width, 24px side margins on desktop
+          matching the shared grid's own margin (was 60px, an arbitrary
+          offset from the 1920px Figma frame, independent of the text
+          column's own margin above), edge-to-edge on tablet/mobile. Same
           vertical rhythm (120px) above and below at every breakpoint. */}
-      <div className="hidden lg:block" style={{ paddingLeft: 60, paddingRight: 60, paddingTop: 120, paddingBottom: 120 }}>
+      <div className="hidden lg:block" style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 120, paddingBottom: 120 }}>
         <SectionImage />
       </div>
       <div className="hidden md:block lg:hidden" style={{ paddingTop: 64, paddingBottom: 64 }}>
@@ -128,9 +133,10 @@ export function SyncWatchStudy2() {
         <SectionImage />
       </div>
 
-      {/* Closing text — same right-aligned column as the project details. */}
-      <div className="hidden lg:flex" style={{ justifyContent: 'flex-end', paddingRight: 146, paddingBottom: 129 }}>
-        <div style={{ width: 348 }}>
+      {/* Closing text — same right-aligned, grid-matched column as the
+          project details. */}
+      <div className="hidden lg:flex" style={{ justifyContent: 'flex-end', paddingRight: 24, paddingBottom: 129 }}>
+        <div style={{ width: 333 }}>
           <Narrative />
         </div>
       </div>
