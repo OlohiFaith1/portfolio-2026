@@ -1,54 +1,66 @@
 export interface WorkProject {
   slug: string
   name: string
-  tagline: string
+  year: string
+  /** Matches Figma's "WORK" / "PROJECT" tag exactly — no other values. */
+  type: 'WORK' | 'PROJECT'
   /** Real case-study route. Only used when comingSoon is false. */
   href: string
   comingSoon: boolean
 }
 
 // Shared by the Work grid page (and reusable anywhere else project metadata
-// is needed) so names/taglines/routes live in exactly one place.
+// is needed) so names/years/routes live in exactly one place. Order and
+// year/type values match the redesigned Work Grid Figma frame (471:33025)
+// exactly — this is a positional layout (Azza large, Syncwatch/Mercado
+// stacked beside it, then Flyp/Silverbird/LNVC), not a generic auto-placed
+// list, so this array's order IS the render order.
 export const WORK_PROJECTS: WorkProject[] = [
   {
     slug: 'azza',
     name: 'Azza',
-    tagline: 'Turning chats to cashouts on WhatsApp.',
+    year: '2025',
+    type: 'WORK',
     href: '/work/azza',
+    comingSoon: false,
+  },
+  {
+    slug: 'syncwatch',
+    name: 'Syncwatch',
+    year: '2026',
+    type: 'WORK',
+    href: '/work/syncwatch',
     comingSoon: false,
   },
   {
     slug: 'mercado',
     name: 'Mercado',
-    tagline: 'Helping merchants accept stablecoin payments.',
+    year: '2025',
+    type: 'PROJECT',
     href: '/work/mercado',
     comingSoon: false,
   },
   {
     slug: 'flyp',
     name: 'Flyp',
-    tagline: 'Bringing motion to your work.',
+    year: '2025',
+    type: 'WORK',
     href: '',
     comingSoon: true,
   },
   {
     slug: 'silverbird',
     name: 'Silverbird Cinemas',
-    tagline: 'Making cinema ticketing easier to manage.',
+    year: '2025',
+    type: 'WORK',
     href: '',
     comingSoon: true,
   },
   {
-    slug: 'syncwatch',
-    name: 'Syncwatch',
-    tagline: 'Watch movies together, wherever you are.',
-    href: '/work/syncwatch',
-    comingSoon: false,
-  },
-  {
     slug: 'lnvc',
     name: 'LNVC',
-    tagline: 'Documenting Nigeria’s visual culture.',
+    year: '2025',
+    type: 'PROJECT',
     href: '',
     comingSoon: true,
   },

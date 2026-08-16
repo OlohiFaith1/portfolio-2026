@@ -1,23 +1,29 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import type { MouseEvent, ReactNode } from 'react'
+import type { CSSProperties, MouseEvent, ReactNode } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { motion } from 'framer-motion'
 import type { WorkProject } from '@/lib/work-projects'
 import { WorkCardVisual } from './WorkCardVisual'
 
 interface Props {
   project: WorkProject
-  /** True while a *different* card is hovered (desktop only) — blurs this one. */
-  blurred: boolean
-  onHoverChange: (hovered: boolean) => void
+  /** Cover box aspect ratio as a CSS `aspect-ratio` value — Azza's own
+   *  cover (921/666) differs from every other project's shared 3:2 box
+   *  (450/300), per the redesigned Work Grid Figma frame. */
+  aspectRatio: string
 }
 
-export function WorkCard({ project, blurred, onHoverChange }: Props) {
-  const { name, tagline, href, comingSoon } = project
+const HOVER_RADIUS = 32
+const RADIUS_TRANSITION = 'border-radius 0.35s ease-in-out'
+
+export function WorkCard({ project, aspectRatio }: Props) {
+  const { name, year, type, href, comingSoon } = project
   const [showComingSoon, setShowComingSoon] = useState(false)
+  // Desktop-hover-only — drives this card's own 32px radius reveal. Every
+  // card uses the exact same treatment; there is no per-project variant.
+  const [isHovered, setIsHovered] = useState(false)
 
   const [hoverCapable, setHoverCapable] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false
@@ -30,9 +36,9 @@ export function WorkCard({ project, blurred, onHoverChange }: Props) {
     return () => mq.removeEventListener('change', onChange)
   }, [])
 
-  // Blur is explicitly desktop-only (viewport, not just pointer type) so a
-  // touch tap on a narrow window never triggers it — matches the lg
-  // breakpoint used everywhere else in this app for desktop-specific UI.
+  // Desktop-only (viewport, not just pointer type) so a touch tap on a
+  // narrow window never triggers it — matches the lg breakpoint used
+  // everywhere else in this app for desktop-specific UI.
   const [isDesktop, setIsDesktop] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false
     return window.matchMedia('(min-width: 1024px)').matches
@@ -46,12 +52,12 @@ export function WorkCard({ project, blurred, onHoverChange }: Props) {
 
   const onMouseEnter = () => {
     if (!hoverCapable) return
-    if (isDesktop) onHoverChange(true)
+    if (isDesktop) setIsHovered(true)
     if (comingSoon) setShowComingSoon(true)
   }
   const onMouseLeave = () => {
     if (!hoverCapable) return
-    if (isDesktop) onHoverChange(false)
+    if (isDesktop) setIsHovered(false)
     if (comingSoon) setShowComingSoon(false)
   }
 
@@ -69,11 +75,7 @@ export function WorkCard({ project, blurred, onHoverChange }: Props) {
   }, [])
 
   return (
-    <div
-      className="flex flex-col items-start w-full gap-[10px] lg:gap-[20px]"
-      style={{ filter: blurred ? 'blur(8px)' : 'blur(0px)', opacity: blurred ? 0.6 : 1, transition: 'filter 0.3s ease-in-out, opacity 0.3s ease-in-out' }}
-    >
-      {/* Visual — eye icon and image/visual share the same destination/action */}
+    <div className="flex flex-col items-start w-full gap-[10px] lg:gap-[20px]">
       <Trigger
         comingSoon={comingSoon}
         href={href}
@@ -81,9 +83,19 @@ export function WorkCard({ project, blurred, onHoverChange }: Props) {
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
         ariaLabel={comingSoon ? `${name} — coming soon` : `View ${name} case study`}
-        className="relative w-full overflow-hidden block"
+        className="relative w-full block"
+        style={{
+          overflow: 'hidden',
+          borderRadius: isHovered ? HOVER_RADIUS : 0,
+          transition: RADIUS_TRANSITION,
+          transform: 'translateZ(0)',
+        }}
       >
-        <div className="w-full" style={{ aspectRatio: '648/400' }}>
+        {/* Desktop hover rounds the Trigger itself to exactly 32px, smoothly
+            — the cover image and the Coming Soon scrim/badge below all live
+            inside this one boundary, so they clip together with no
+            mismatch. No blur, no other effect. Identical for every project. */}
+        <div className="w-full" style={{ aspectRatio }}>
           <WorkCardVisual slug={project.slug} />
         </div>
 
@@ -115,21 +127,10 @@ export function WorkCard({ project, blurred, onHoverChange }: Props) {
         )}
       </Trigger>
 
-      {/* Title row — name · divider · tagline · eye icon */}
+      {/* Metadata row — name (left) · year + type tags (right). No
+          description/tagline and no separate eye-icon trigger — the
+          redesigned Figma metadata row contains only these three fields. */}
       <div className="flex items-center justify-between w-full">
-        <div className="flex items-center gap-2">
-          <span className="font-display uppercase leading-[1.1] text-[16px] lg:text-[18px] text-[#262626] whitespace-nowrap">
-            {name}
-          </span>
-          <span className="w-px h-[13px] lg:h-[26px] bg-[#e5e5e5]" aria-hidden="true" />
-          <span
-            className="font-sans font-medium leading-[1.3] text-[13px] lg:text-[16px] text-[#404040]"
-            style={{ letterSpacing: '-0.16px' }}
-          >
-            {tagline}
-          </span>
-        </div>
-
         <Trigger
           comingSoon={comingSoon}
           href={href}
@@ -137,10 +138,27 @@ export function WorkCard({ project, blurred, onHoverChange }: Props) {
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
           ariaLabel={comingSoon ? `${name} — coming soon` : `View ${name} case study`}
-          className="shrink-0 block"
+          className="block"
         >
-          <Image src="/work/eye-icon.svg" alt="" width={24} height={24} className="w-[13px] h-[13px] lg:w-6 lg:h-6" aria-hidden="true" />
+          <span className="font-display leading-[1.1] text-[16px] lg:text-[18px] text-[#262626] whitespace-nowrap">
+            {name}
+          </span>
         </Trigger>
+
+        <div className="flex items-center gap-[8px]">
+          <span
+            className="font-sans font-medium leading-[1.3] text-[12px] lg:text-[14px] text-[#404040] whitespace-nowrap border border-[#d4d4d4] rounded-[2px]"
+            style={{ letterSpacing: '-0.14px', padding: '4px 6px' }}
+          >
+            {year}
+          </span>
+          <span
+            className="font-sans font-medium leading-[1.3] text-[12px] lg:text-[14px] text-[#404040] whitespace-nowrap border border-[#d4d4d4] rounded-[2px]"
+            style={{ letterSpacing: '-0.14px', padding: '4px 6px' }}
+          >
+            {type}
+          </span>
+        </div>
       </div>
     </div>
   )
@@ -153,14 +171,15 @@ interface TriggerProps {
   onMouseEnter: () => void
   onMouseLeave: () => void
   className?: string
+  style?: CSSProperties
   ariaLabel: string
   children: ReactNode
 }
 
-// Same destination/action for the eye icon and the visual: real navigation
-// when live, or the Coming Soon treatment when not — mirrors CaseStudySection's
-// existing PreviewTrigger pattern.
-function Trigger({ comingSoon, href, onTrigger, onMouseEnter, onMouseLeave, className, ariaLabel, children }: TriggerProps) {
+// Same destination/action wherever it's used: real navigation when live, or
+// the Coming Soon treatment when not — mirrors CaseStudySection's existing
+// PreviewTrigger pattern.
+function Trigger({ comingSoon, href, onTrigger, onMouseEnter, onMouseLeave, className, style, ariaLabel, children }: TriggerProps) {
   if (comingSoon) {
     return (
       <button
@@ -173,6 +192,7 @@ function Trigger({ comingSoon, href, onTrigger, onMouseEnter, onMouseLeave, clas
         onMouseLeave={onMouseLeave}
         aria-label={ariaLabel}
         className={`appearance-none bg-transparent border-0 p-0 m-0 text-left cursor-pointer ${className ?? ''}`}
+        style={style}
       >
         {children}
       </button>
@@ -180,7 +200,7 @@ function Trigger({ comingSoon, href, onTrigger, onMouseEnter, onMouseLeave, clas
   }
 
   return (
-    <Link href={href} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} aria-label={ariaLabel} className={className}>
+    <Link href={href} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} aria-label={ariaLabel} className={className} style={style}>
       {children}
     </Link>
   )
