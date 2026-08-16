@@ -255,17 +255,6 @@ function ScaledComposition({
   )
 }
 
-function TextBlock() {
-  return (
-    <p
-      className="font-sans"
-      style={{ fontSize: 18, lineHeight: '28px', letterSpacing: '-0.36px', color: '#404040', margin: 0, width: 400, maxWidth: '100%' }}
-    >
-      A cohesive system, built for trust, reliability, and familiarity.
-    </p>
-  )
-}
-
 // existingAssetSrcs is computed server-side (MercadoStudy5.tsx checks the
 // filesystem, since a 'use client' module can't use `fs`) and identifies
 // which of the src paths in CARDS actually have a file on disk yet.
@@ -323,26 +312,17 @@ export function MercadoStudy5Client({ existingAssetSrcs }: { existingAssetSrcs: 
         overflowX: 'hidden',
       }}
     >
-      {/* Text — right inset (24px) matches the shared 8-column grid's own
-          margin (components/layout/Grid.tsx) — was 94px, an arbitrary
-          offset from the 1920px Figma frame (safe throughout the lg range
-          either way). Reflows to a padded full-width block on
-          tablet/mobile, matching every other Mercado section. */}
-      <div className="hidden lg:flex" style={{ justifyContent: 'flex-end', paddingTop: 122, paddingRight: 24, paddingBottom: 72 }}>
-        <TextBlock />
-      </div>
-      <div className="hidden md:block lg:hidden" style={{ paddingLeft: 48, paddingRight: 48, paddingTop: 80, paddingBottom: 48 }}>
-        <TextBlock />
-      </div>
-      <div className="md:hidden" style={{ paddingLeft: 24, paddingRight: 24, paddingTop: 64, paddingBottom: 40 }}>
-        <TextBlock />
-      </div>
-
       {/* Full bleed composition — a single scaled unit at every breakpoint,
           from full desktop width down to the narrowest mobile viewport, so
           the arrangement/bleed/relative card positions never change, only
-          the scale. */}
-      <div className="relative w-full overflow-hidden" style={{ aspectRatio: `${NATIVE_W} / ${NATIVE_H}`, backgroundColor: '#080808' }}>
+          the scale. Top margin (40px mobile / 48px tablet / 120px desktop)
+          replaces the vertical rhythm the removed intro text used to
+          provide, matching this case study's established top-of-section
+          spacing at each breakpoint. */}
+      <div
+        className="relative w-full overflow-hidden mt-10 md:mt-12 lg:mt-[120px]"
+        style={{ aspectRatio: `${NATIVE_W} / ${NATIVE_H}`, backgroundColor: '#080808' }}
+      >
         <ScaledComposition hasEntered={hasEntered} prefersReducedMotion={prefersReducedMotion} activeMiddleIndex={activeMiddleIndex} existingAssetSrcs={existingAssetSrcs} />
       </div>
     </section>

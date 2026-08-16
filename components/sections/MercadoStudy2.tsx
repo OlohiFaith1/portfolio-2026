@@ -68,21 +68,6 @@ function Narrative() {
           customers and the merchants who just want to get paid.
         </p>
         <p className="font-sans" style={paraStyle}>
-          Meanwhile, the use of stablecoins like USDT and USDC has been quietly growing. In 2024,
-          Nigeria received $59 billion in cryptocurrencies, leading Africa and ranking second
-          globally (
-          <a
-            href="https://cryptoassetbuyer.com/stablecoin-adoption-nigeria-beyond-bitcoin-naira-pair-2024/"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: '#14474b', textDecoration: 'underline' }}
-          >
-            CAB, 2025
-          </a>
-          ). But most merchants still find crypto tools confusing, risky, and full of strange
-          terms.
-        </p>
-        <p className="font-sans" style={paraStyle}>
           That’s where Mercado comes in, a simple mobile app that helps everyday merchants manage
           stablecoin payments like they would regular money, without worrying about very
           technical crypto jargon.
