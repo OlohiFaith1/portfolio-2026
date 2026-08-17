@@ -3,6 +3,7 @@
 import { WORK_PROJECTS } from '@/lib/work-projects'
 import { WorkCard } from './WorkCard'
 import { CaseStudyFooter } from './CaseStudyFooter'
+import { DraggableDotGrid } from './DraggableDotGrid'
 import { Grid } from '@/components/layout/Grid'
 
 // Redesigned Work Grid — Figma "Work Grid" (471:33025), a positional
@@ -38,8 +39,19 @@ const STANDARD_RATIO = '450/300'
 export function WorkGrid() {
   return (
     <>
+      {/* This wrapper's own solid background is load-bearing: CaseStudyFooter
+          sits fixed behind it at z-0 and is only meant to be revealed once
+          the user scrolls past the end of this section, so the occluding
+          layer has to stay tied to normal document flow (scrolls away
+          exactly at the true end) rather than being a separate
+          viewport-fixed layer, which would either hide the footer
+          permanently or let it bleed through early. DraggableDotGrid is
+          nested inside it instead — same dot color/size/spacing/drag
+          behavior as the landing page, painted on top of this same solid
+          backdrop, with the actual content given its own stacking above it. */}
       <div className="relative" style={{ zIndex: 1, backgroundColor: 'var(--background)' }}>
-        <div className="px-6 lg:px-0 pt-24 lg:pt-[138px] pb-16 lg:pb-[149px]">
+        <DraggableDotGrid />
+        <div className="relative px-6 lg:px-0 pt-24 lg:pt-[138px] pb-16 lg:pb-[149px]" style={{ zIndex: 1 }}>
           <Grid>
             <div className="lg:col-span-8">
               <h1 className="font-display uppercase leading-[1.1] text-[20px] lg:text-[24px] text-[#262626] mb-6 lg:mb-10">
