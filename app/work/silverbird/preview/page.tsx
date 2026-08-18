@@ -18,7 +18,7 @@ export default function SilverbirdPreviewPage() {
         name="Silverbird Cinemas"
         role={"Web Design,\nUser Experience and Interface Design"}
         year="2025"
-        nextHref="/work"
+        nextHref="/work/lnvc/preview"
         Mockup={SilverbirdMockup}
         comingSoon
       />
