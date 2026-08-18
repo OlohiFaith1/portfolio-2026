@@ -12,63 +12,79 @@ interface Props {
 }
 
 /**
- * Scales a fixed-size mockup frame to fit its container, measuring
+ * Scales a fixed-size mockup frame to fit both an intended height (via
+ * `className`, e.g. "h-[48vh]") and the real viewport width, measuring
  * synchronously before paint (useLayoutEffect) so it never flashes at
- * native size on first render. ResizeObserver covers viewport size changes
- * that don't fire window resize (e.g. mobile browser chrome appearing/
- * disappearing).
+ * native size on first render.
  *
- * Scale is capped by both height and width. For every existing consumer
- * (Azza/Mercado/SyncWatch's portrait phone mockups) the flex-centered
- * container always has more width than a height-driven scale needs, so
- * offsetWidth/nativeWidth is mathematically identical to the height-driven
- * ratio there — a no-op. It only starts binding for a mockup wider relative
- * to its height (e.g. a landscape browser-window frame), where it prevents
- * overflowing a narrow viewport instead of just relying on maxHeight.
+ * The intended height is read from an invisible, unconstrained "probe"
+ * element carrying the same className, rather than applying that height
+ * directly to the visible box. The visible box's own size is always fully
+ * JS-driven (explicit width/height from the computed scale), so it
+ * shrink-wraps tightly to its content even when width is the binding
+ * constraint — e.g. a landscape mockup on a narrow viewport — instead of
+ * reserving the full intended height with empty space left below a
+ * shorter, width-capped image.
  *
- * The width cap has to be a viewport unit, not a percentage: the section
- * that hosts this (CaseStudySection) centers its mobile/tablet content with
- * `align-items: center`, not `stretch`, so a flex/aspect-ratio child is
- * never actually constrained by its container's width — percentages here
- * resolve against nothing and get ignored. `calc(100vw - 48px)` matches
- * CaseStudySection's own `px-6` (24px) side padding on those layouts.
+ * Width is capped against the real viewport (window.innerWidth), not a
+ * measured DOM ancestor: CaseStudySection centers its mobile/tablet
+ * content with `align-items: center` (not `stretch`), so a flex child's
+ * own rendered width is never actually constrained by its container —
+ * reading any ancestor's offsetWidth there just reflects whatever that
+ * ancestor grew to fit around its own (unconstrained) content, not the
+ * true available space. The 48 matches CaseStudySection's own `px-6`
+ * (24px) side padding on those layouts.
+ *
+ * For every portrait consumer (Azza/Mercado/SyncWatch/Flyp's phone-shaped
+ * mockups) the height-driven target width is always far narrower than the
+ * viewport, so the width cap never binds there — a no-op. It only starts
+ * binding for a mockup wider relative to its height (e.g. a landscape
+ * screenshot), which is exactly when it's needed.
  */
 export function PhoneMockupScale({ nativeWidth, nativeHeight, className = '', children }: Props) {
-  const wrapRef = useRef<HTMLDivElement>(null)
+  const probeRef = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
 
   useLayoutEffect(() => {
     const update = () => {
-      if (wrapRef.current) {
-        const { offsetWidth, offsetHeight } = wrapRef.current
-        setScale(Math.min(offsetHeight / nativeHeight, offsetWidth / nativeWidth))
-      }
+      if (!probeRef.current) return
+      const targetHeight = probeRef.current.offsetHeight
+      const availableWidth = window.innerWidth - 48
+      setScale(Math.min(targetHeight / nativeHeight, availableWidth / nativeWidth))
     }
     update()
     const ro = new ResizeObserver(update)
-    if (wrapRef.current) ro.observe(wrapRef.current)
-    return () => ro.disconnect()
+    if (probeRef.current) ro.observe(probeRef.current)
+    window.addEventListener('resize', update)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('resize', update)
+    }
   }, [nativeWidth, nativeHeight])
 
   return (
-    <div
-      ref={wrapRef}
-      className={`relative ${className}`}
-      style={{ maxHeight: nativeHeight, maxWidth: 'calc(100vw - 48px)', aspectRatio: `${nativeWidth}/${nativeHeight}` }}
-    >
+    <>
       <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: nativeWidth,
-          height: nativeHeight,
-          transformOrigin: 'top left',
-          transform: `scale(${scale})`,
-        }}
-      >
-        {children}
+        ref={probeRef}
+        className={className}
+        style={{ visibility: 'hidden', position: 'absolute', width: 0, pointerEvents: 'none' }}
+        aria-hidden="true"
+      />
+      <div className="relative" style={{ width: nativeWidth * scale, height: nativeHeight * scale }}>
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: nativeWidth,
+            height: nativeHeight,
+            transformOrigin: 'top left',
+            transform: `scale(${scale})`,
+          }}
+        >
+          {children}
+        </div>
       </div>
-    </div>
+    </>
   )
 }

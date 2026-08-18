@@ -19,7 +19,7 @@ export default function FlypPreviewPage() {
         name="Flyp"
         role={"Product Design and\nMotion Ideation"}
         year="2025"
-        nextHref="/work"
+        nextHref="/work/silverbird/preview"
         Mockup={FlypMockup}
         comingSoon
       />
