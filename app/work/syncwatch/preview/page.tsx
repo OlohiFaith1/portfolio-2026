@@ -29,7 +29,7 @@ export default function SyncWatchPreviewPage() {
         name="SyncWatch"
         role={"User Experience and\nInterface Design"}
         year="2025"
-        nextHref="/work"
+        nextHref="/work/flyp/preview"
         Mockup={SyncWatchMockup}
         hoverTintColor="#0a0a0a"
         hoverArtwork={{
