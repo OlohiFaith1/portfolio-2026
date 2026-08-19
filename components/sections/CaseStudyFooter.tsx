@@ -14,7 +14,7 @@ const LINKS = [
   },
   {
     label: 'Resume',
-    href: 'https://drive.google.com/file/d/1AmhBOPDyqfbjLQfXfi6eIlme5IFPcqO4/view?usp=sharing',
+    href: 'https://drive.google.com/file/d/113db08By6ZZDhZIOnZxwofs3sUpyEEq5/view?usp=sharing',
     ariaLabel: "View Faith's resume (opens in new tab)",
     external: true,
   },

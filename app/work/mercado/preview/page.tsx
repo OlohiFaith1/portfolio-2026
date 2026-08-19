@@ -15,7 +15,7 @@ export default function MercadoPreviewPage() {
         name="Mercado"
         role={"User Interface; Experience\n& Interaction Design"}
         year="2025"
-        nextHref="/work/syncwatch/preview"
+        nextHref="/work/flyp/preview"
         Mockup={MercadoMockup}
         hoverTintColor="#092B2D"
         hoverArtwork={{

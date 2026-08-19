@@ -18,7 +18,7 @@ export default function LNVCPreviewPage() {
         name="LNVC"
         role="User Interface and Experience Design"
         year="2025"
-        nextHref="/work"
+        nextHref="/work/azza/preview"
         Mockup={LNVCMockup}
         comingSoon
       />
