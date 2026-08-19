@@ -20,6 +20,7 @@ export default function SilverbirdPreviewPage() {
         year="2025"
         nextHref="/work/lnvc/preview"
         Mockup={SilverbirdMockup}
+        mobileRoleMaxWidth={200}
         comingSoon
       />
     </div>

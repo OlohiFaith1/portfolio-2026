@@ -20,6 +20,7 @@ export default function LNVCPreviewPage() {
         year="2025"
         nextHref="/work/azza/preview"
         Mockup={LNVCMockup}
+        mobileRoleMaxWidth={200}
         comingSoon
       />
     </div>

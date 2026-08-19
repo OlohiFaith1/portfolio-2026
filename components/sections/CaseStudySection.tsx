@@ -58,6 +58,8 @@ export interface CaseStudySectionProps {
   hoverTextColors?: HoverTextColors
   /** Desktop-only hover reveal — "Next" arrow icon override (e.g. a white variant matching hoverTextColors). Omit to leave it unchanged. */
   hoverArrowSrc?: string
+  /** Mobile-only role text width cap (px) so it wraps onto its intended lines within the mobile column. Omit to leave it unconstrained (natural width). Desktop/tablet are unaffected. */
+  mobileRoleMaxWidth?: number
 }
 
 export function CaseStudySection({
@@ -72,6 +74,7 @@ export function CaseStudySection({
   hoverArtwork = DEFAULT_HOVER_ARTWORK,
   hoverTextColors,
   hoverArrowSrc,
+  mobileRoleMaxWidth,
 }: CaseStudySectionProps) {
   const [hovered, setHovered] = useState(false)
   const [showComingSoon, setShowComingSoon] = useState(false)
@@ -174,7 +177,12 @@ export function CaseStudySection({
           </PreviewTrigger>
           <span
             className="font-sans font-normal leading-[1.3] text-[#5a5a5a] mt-3"
-            style={{ fontSize: 16, letterSpacing: '-0.16px', whiteSpace: 'pre-line' }}
+            style={{
+              fontSize: 16,
+              letterSpacing: '-0.16px',
+              whiteSpace: 'pre-line',
+              maxWidth: mobileRoleMaxWidth,
+            }}
           >
             {role}
           </span>

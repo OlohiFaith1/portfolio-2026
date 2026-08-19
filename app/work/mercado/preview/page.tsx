@@ -13,7 +13,7 @@ export default function MercadoPreviewPage() {
       <CaseStudySection
         href="/work/mercado"
         name="Mercado"
-        role={"User Interface; Experience\n& Interaction Design"}
+        role={"User Interface, Experience\n& Interaction Design"}
         year="2025"
         nextHref="/work/flyp/preview"
         Mockup={MercadoMockup}
