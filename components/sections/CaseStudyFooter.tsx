@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useLayoutEffect, useState } from 'react'
+import { BackToTopButton } from './BackToTopButton'
 
 const QUOTE =
   `"You could rattle the stars," she whispered. "You could do anything, if only you dared. And deep down, you know it, too. That's what scares you most."`
@@ -117,7 +118,7 @@ export function CaseStudyFooter() {
         style={{ backgroundColor: '#080808', border: 'none' }}
       >
         <div
-          className="flex flex-col"
+          className="flex flex-row items-end justify-between"
           style={{
             paddingTop: 60,
             paddingBottom: 60,
@@ -126,6 +127,7 @@ export function CaseStudyFooter() {
           }}
         >
           <SocialLinks variant="mobile" />
+          <BackToTopButton />
         </div>
       </footer>
 
@@ -161,7 +163,10 @@ export function CaseStudyFooter() {
           }}
         >
           <QuoteBlock align="center" />
-          <SocialLinks variant="desktop" />
+          <div className="relative flex items-center justify-center w-full">
+            <SocialLinks variant="desktop" />
+            <BackToTopButton position="absolute" className="right-0 top-1/2 -translate-y-1/2" />
+          </div>
         </div>
       </footer>
     </>

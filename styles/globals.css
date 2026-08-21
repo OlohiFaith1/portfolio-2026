@@ -47,3 +47,35 @@ body {
     text-underline-offset: 3px;
   }
 }
+
+.back-to-top-button {
+  cursor: pointer;
+}
+
+/* Invisible hit-area expansion — keeps the visible circle at Figma's exact
+   40px while giving mobile a comfortable ~48px tap target. */
+.back-to-top-button::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+}
+
+.back-to-top-button:active {
+  opacity: 0.85;
+}
+
+.back-to-top-button:focus-visible {
+  outline: 2px solid #fafafa;
+  outline-offset: 3px;
+  border-radius: 9999px;
+}
+
+.back-to-top-circle {
+  transition: fill 0.2s ease-in-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .back-to-top-button:hover .back-to-top-circle {
+    fill: #ffffff;
+  }
+}
