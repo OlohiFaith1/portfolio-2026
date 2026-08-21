@@ -76,8 +76,8 @@ function SocialLinks({ variant }: { variant: 'desktop' | 'mobile' }) {
               aria-label={link.ariaLabel}
               target={link.external ? '_blank' : undefined}
               rel={link.external ? 'noopener noreferrer' : undefined}
-              className="font-sans text-white"
-              style={{ ...baseText, fontSize: 16, letterSpacing: '-0.16px', textDecoration: 'none' }}
+              className="font-sans text-white no-underline about-link"
+              style={{ ...baseText, fontSize: 16, letterSpacing: '-0.16px' }}
             >
               {link.label}
             </a>
