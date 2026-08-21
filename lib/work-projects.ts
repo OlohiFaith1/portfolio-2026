@@ -65,3 +65,12 @@ export const WORK_PROJECTS: WorkProject[] = [
     comingSoon: true,
   },
 ]
+
+// The case-study sequence (Azza → Syncwatch → Mercado → Flyp → Silverbird →
+// LNVC → back to Azza) is this same array's own order — no separate
+// ordering data needed. Used by NextProjectSection so every case study's
+// "Next Project" card stays in lockstep with the Work Grid by construction.
+export function getNextProject(currentSlug: string): WorkProject {
+  const index = WORK_PROJECTS.findIndex((p) => p.slug === currentSlug)
+  return WORK_PROJECTS[(index + 1) % WORK_PROJECTS.length]
+}

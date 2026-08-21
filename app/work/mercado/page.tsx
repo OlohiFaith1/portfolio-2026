@@ -4,6 +4,7 @@ import { MercadoStudy3 } from '@/components/sections/MercadoStudy3'
 import { MercadoStudy4 } from '@/components/sections/MercadoStudy4'
 import { MercadoStudy5 } from '@/components/sections/MercadoStudy5'
 import { MercadoStudy6 } from '@/components/sections/MercadoStudy6'
+import { NextProjectSection } from '@/components/sections/NextProjectSection'
 import { CaseStudyFooter } from '@/components/sections/CaseStudyFooter'
 
 export const metadata = { title: 'Mercado — Faith Olohijere' }
@@ -25,6 +26,7 @@ export default function MercadoPage() {
         <MercadoStudy4 />
         <MercadoStudy5 />
         <MercadoStudy6 />
+        <NextProjectSection currentSlug="mercado" />
       </div>
       <CaseStudyFooter />
     </>

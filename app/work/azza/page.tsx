@@ -6,6 +6,7 @@ import { AzzaStudy5 } from '@/components/sections/AzzaStudy5'
 import { AzzaStudy6 } from '@/components/sections/AzzaStudy6'
 import { AzzaStudy7 } from '@/components/sections/AzzaStudy7'
 import { AzzaStudy8 } from '@/components/sections/AzzaStudy8'
+import { NextProjectSection } from '@/components/sections/NextProjectSection'
 import { CaseStudyFooter } from '@/components/sections/CaseStudyFooter'
 
 export const metadata = { title: 'Azza — Case Study' }
@@ -28,6 +29,7 @@ export default function AzzaCaseStudy() {
         <AzzaStudy6 />
         <AzzaStudy7 />
         <AzzaStudy8 />
+        <NextProjectSection currentSlug="azza" />
       </div>
       <CaseStudyFooter />
     </>
