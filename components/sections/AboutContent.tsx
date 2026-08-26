@@ -60,9 +60,10 @@ const wavyUnderline =
   'font-medium underline decoration-wavy decoration-[1.5px] underline-offset-[4px] cursor-default'
 
 export function AboutContent() {
-  // Desktop-only (hover-capable + fine pointer — same detection pattern
-  // used throughout this codebase): gates whether hover listeners are
-  // attached at all, never the DOM tree shape itself.
+  // Hover-capable + fine pointer — same detection pattern used throughout
+  // this codebase: gates whether hover or tap listeners are attached,
+  // never the DOM tree shape itself. Hover-capable devices get the mouse
+  // enter/leave reveal; everything else falls back to tap-to-toggle.
   const [hoverCapable, setHoverCapable] = useState(() => {
     if (typeof window === 'undefined') return false
     return window.matchMedia('(hover: hover) and (pointer: fine)').matches
@@ -84,10 +85,9 @@ export function AboutContent() {
     return () => mq.removeEventListener('change', handler)
   }, [])
 
-  const onEnter = (word: HoverWord) => (e: React.MouseEvent<HTMLSpanElement>) => {
-    if (!hoverCapable) return
+  const showPreview = (word: HoverWord, target: HTMLElement) => {
     const p = PREVIEWS[word]
-    const rect = e.currentTarget.getBoundingClientRect()
+    const rect = target.getBoundingClientRect()
     const dh = displayHeight(p)
     let x = rect.left + rect.width / 2 - p.previewW / 2
     let y = rect.top - dh - 16
@@ -98,18 +98,34 @@ export function AboutContent() {
     setActiveWord(word)
   }
 
+  const onEnter = (word: HoverWord) => (e: React.MouseEvent<HTMLSpanElement>) => {
+    if (!hoverCapable) return
+    showPreview(word, e.currentTarget)
+  }
+
   const onLeave = () => setActiveWord(null)
 
+  // Touch/no-hover devices: tap toggles the same reveal a hover would show
+  // on desktop — a second tap on the active word closes it.
+  const onTap = (word: HoverWord) => (e: React.MouseEvent<HTMLSpanElement>) => {
+    if (hoverCapable) return
+    if (activeWord === word) {
+      setActiveWord(null)
+      return
+    }
+    showPreview(word, e.currentTarget)
+  }
+
   const hw = (word: HoverWord) =>
-    hoverCapable ? { onMouseEnter: onEnter(word), onMouseLeave: onLeave } : {}
+    hoverCapable ? { onMouseEnter: onEnter(word), onMouseLeave: onLeave } : { onClick: onTap(word) }
 
   return (
     <>
       {/* Dim + blur overlay — same treatment as the Playground lightbox
           (rgba(26,26,25,0.72) + blur(6px)), the one real precedent for a
-          full-page dim/blur reveal already in this design system. Desktop-
-          only by construction: activeWord only ever gets set when
-          hoverCapable, so this never fires on touch. */}
+          full-page dim/blur reveal already in this design system. Same
+          overlay for both input modes: activeWord is set on hover on
+          hover-capable devices, and on tap-to-toggle everywhere else. */}
       <div
         aria-hidden="true"
         className="fixed inset-0 z-40 pointer-events-none"

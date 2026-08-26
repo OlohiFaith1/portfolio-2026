@@ -30,7 +30,7 @@ export const CASE_STUDIES: Record<string, CaseStudyContent> = {
   azza: {
     year: '2025',
     org: 'Azza',
-    role: 'Coversational & Experience Design',
+    role: 'Conversational Design',
     title: 'Making on-chain finance feel as simple as texting',
     heroImage: {
       src: '/azza/Pizza%20PNG.png',
@@ -208,7 +208,7 @@ export const CASE_STUDIES: Record<string, CaseStudyContent> = {
           'Azza grew into a product users trusted by combining familiar UX patterns with continuous iteration.',
           [
             { text: 'In 2025, Azza processed ' },
-            { text: '$10M+ in onchain volume', bold: true },
+            { text: '$10M+ in onchain volume', href: 'https://x.com/useazza/status/2006471824197161260?s=20' },
             { text: ', reached ' },
             { text: '10,000+ users', bold: true },
             { text: ', completed ' },

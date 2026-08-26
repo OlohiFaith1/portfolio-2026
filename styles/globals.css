@@ -21,6 +21,10 @@
   --accent: #1f6f5c;
   --border: #eae7e3;
   --surface: #f4f2ef;
+  /* Foreground at partial opacity, dedicated to link underlines — kept
+     separate from --border (which drives sitewide dividers/card borders)
+     so underlines can read more clearly without darkening anything else. */
+  --link-underline: rgba(26, 26, 25, 0.32);
 }
 
 @theme inline {

@@ -102,13 +102,13 @@ export function LandingHero() {
 
         <p className="font-sans" style={{ margin: '14px 0 0', fontSize: 13.5, lineHeight: 1.72, color: 'var(--body)' }}>
           I&rsquo;ve spent the last four years designing across fintech, crypto, AI and civic tech.
-          Most recently, I was the founding product designer at{' '}
+          Most recently, I was a founding product designer at{' '}
           <a
             href="https://x.com/useazza"
             target="_blank"
             rel="noopener noreferrer"
             data-cursor="Open"
-            style={{ borderBottom: '1px solid var(--border)' }}
+            style={{ fontWeight: 500, borderBottom: '1px solid var(--link-underline)' }}
           >
             Azza
           </a>
@@ -122,7 +122,7 @@ export function LandingHero() {
             target="_blank"
             rel="noopener noreferrer"
             data-cursor="Open"
-            style={{ borderBottom: '1px solid var(--border)' }}
+            style={{ fontWeight: 500, borderBottom: '1px solid var(--link-underline)' }}
           >
             Blocverse
           </a>

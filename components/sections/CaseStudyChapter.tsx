@@ -105,7 +105,7 @@ function Paragraph({ p, marginTop }: { p: CaseStudyParagraph; marginTop: number 
             target="_blank"
             rel="noopener noreferrer"
             data-cursor="Open"
-            style={{ color: 'inherit', fontWeight: 500, borderBottom: '1px solid var(--border)' }}
+            style={{ color: 'inherit', fontWeight: 500, borderBottom: '2px solid var(--link-underline)' }}
           >
             {seg.text}
           </a>
