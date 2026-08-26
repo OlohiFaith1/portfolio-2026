@@ -68,6 +68,14 @@ export function AboutContent() {
     if (typeof window === 'undefined') return false
     return window.matchMedia('(hover: hover) and (pointer: fine)').matches
   })
+  // hoverCapable's real value is already known during the client's very
+  // first render (unlike the server, which always sees `false`), so any
+  // markup that forks on it directly would mismatch during hydration. This
+  // gate keeps that fork's first paint identical to the server's, only
+  // flipping the mobile layout on after hydration has finished.
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+  const useMobileLayout = mounted && !hoverCapable
   const [activeWord, setActiveWord] = useState<HoverWord | null>(null)
   // Keeps the last image mounted so it fades out rather than popping.
   const [previewImg, setPreviewImg] = useState<Preview | null>(null)
@@ -128,52 +136,114 @@ export function AboutContent() {
           hover-capable devices, and on tap-to-toggle everywhere else. */}
       <div
         aria-hidden="true"
-        className="fixed inset-0 z-40 pointer-events-none"
+        className="fixed inset-0 z-40"
         style={{
           backgroundColor: 'rgba(26,26,25,0.72)',
           backdropFilter: activeWord ? 'blur(6px)' : 'blur(0px)',
           WebkitBackdropFilter: activeWord ? 'blur(6px)' : 'blur(0px)',
           opacity: activeWord ? 1 : 0,
+          // On touch devices this becomes the "tap outside to close" target
+          // once a preview is open — the image sits above it (z-50) and
+          // captures its own taps first, so tapping the image never reaches
+          // this layer. Untouched on hover-capable devices (stays inert).
+          pointerEvents: useMobileLayout && activeWord ? 'auto' : 'none',
           transition: 'opacity 0.3s ease, backdrop-filter 0.3s ease',
+        }}
+        onClick={() => {
+          if (useMobileLayout) setActiveWord(null)
         }}
       />
 
-      {/* Floating image preview */}
-      <div
-        aria-hidden="true"
-        className="fixed z-50 pointer-events-none"
-        style={{
-          left: previewPos.x,
-          top: previewPos.y,
-          width: previewImg?.previewW ?? 420,
-          opacity: activeWord ? 1 : 0,
-          transform: activeWord ? 'scale(1)' : 'scale(0.95)',
-          transformOrigin: 'center bottom',
-          transition: 'opacity 0.2s ease, transform 0.2s ease',
-        }}
-      >
-        {previewImg && (
-          <>
-            <Image
-              src={previewImg.src}
-              alt=""
-              width={previewImg.previewW}
-              height={displayHeight(previewImg)}
-              className="w-full h-auto block"
-              style={{ borderRadius: 12, boxShadow: '0 20px 60px rgba(26,26,25,0.35)' }}
-              sizes={`${previewImg.previewW}px`}
-            />
-            {previewImg.caption && (
-              <div
-                className="font-mono text-center"
-                style={{ marginTop: 10, fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#efedea' }}
-              >
-                {previewImg.caption}
-              </div>
-            )}
-          </>
-        )}
-      </div>
+      {/* Floating image preview — desktop keeps the original word-anchored
+          popup untouched; touch devices get a separate, centered/responsive
+          layout below so the revealed image always fits the viewport. */}
+      {!useMobileLayout ? (
+        <div
+          aria-hidden="true"
+          className="fixed z-50 pointer-events-none"
+          style={{
+            left: previewPos.x,
+            top: previewPos.y,
+            width: previewImg?.previewW ?? 420,
+            opacity: activeWord ? 1 : 0,
+            transform: activeWord ? 'scale(1)' : 'scale(0.95)',
+            transformOrigin: 'center bottom',
+            transition: 'opacity 0.2s ease, transform 0.2s ease',
+          }}
+        >
+          {previewImg && (
+            <>
+              <Image
+                src={previewImg.src}
+                alt=""
+                width={previewImg.previewW}
+                height={displayHeight(previewImg)}
+                className="w-full h-auto block"
+                style={{ borderRadius: 12, boxShadow: '0 20px 60px rgba(26,26,25,0.35)' }}
+                sizes={`${previewImg.previewW}px`}
+              />
+              {previewImg.caption && (
+                <div
+                  className="font-mono text-center"
+                  style={{ marginTop: 10, fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#efedea' }}
+                >
+                  {previewImg.caption}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      ) : (
+        <div
+          aria-hidden="true"
+          className="fixed inset-0 z-50 pointer-events-none flex items-center justify-center"
+          style={{ padding: '56px 24px' }}
+        >
+          {previewImg && (
+            <div
+              style={{
+                // Only this box (sized to the image) is clickable — taps on
+                // it are "on the image" and must not close the preview;
+                // taps anywhere else in the padded viewport fall through to
+                // the overlay above, which closes it.
+                pointerEvents: activeWord ? 'auto' : 'none',
+                opacity: activeWord ? 1 : 0,
+                transform: activeWord ? 'scale(1)' : 'scale(0.95)',
+                transition: 'opacity 0.2s ease, transform 0.2s ease',
+              }}
+            >
+              <Image
+                src={previewImg.src}
+                alt=""
+                width={previewImg.previewW}
+                height={displayHeight(previewImg)}
+                className="block"
+                style={{
+                  width: 'auto',
+                  height: 'auto',
+                  // Never larger than the same previewW used for the desktop
+                  // popup — without this cap, a wide-but-touch viewport
+                  // (e.g. a tablet) would let 84vw exceed the intended
+                  // design size instead of only ever scaling it down.
+                  maxWidth: `min(84vw, ${previewImg.previewW}px)`,
+                  maxHeight: '72vh',
+                  borderRadius: 12,
+                  boxShadow: '0 20px 60px rgba(26,26,25,0.35)',
+                }}
+                sizes="84vw"
+              />
+              {previewImg.caption && (
+                <div
+                  className="font-mono text-center"
+                  style={{ marginTop: 10, fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#efedea' }}
+                >
+                  {previewImg.caption}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="relative" style={{ backgroundColor: 'var(--background)' }}>
         <DraggableDotGrid />
