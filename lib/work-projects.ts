@@ -7,6 +7,13 @@ export interface WorkProject {
   /** Real case-study route. Only used when comingSoon is false. */
   href: string
   comingSoon: boolean
+  /** Shows the same "Coming Soon" hover tag as `comingSoon`, without its
+   *  navigation-disabling behavior — for projects with a real, working
+   *  case study that's still being finished. */
+  comingSoonTag?: boolean
+  /** One-line description for the index page's Selected Work grid (Claude
+   *  Design "Snow — Portfolio v2"). Real copy for all six projects. */
+  line?: string
 }
 
 // Shared by the Work grid page (and reusable anywhere else project metadata
@@ -23,6 +30,7 @@ export const WORK_PROJECTS: WorkProject[] = [
     type: 'WORK',
     href: '/work/azza',
     comingSoon: false,
+    line: 'A stablecoin payments platform for everyday transactions across Africa.',
   },
   {
     slug: 'syncwatch',
@@ -31,6 +39,8 @@ export const WORK_PROJECTS: WorkProject[] = [
     type: 'WORK',
     href: '/work/syncwatch',
     comingSoon: false,
+    comingSoonTag: true,
+    line: 'A social experience for watching movies together, from anywhere.',
   },
   {
     slug: 'mercado',
@@ -39,6 +49,8 @@ export const WORK_PROJECTS: WorkProject[] = [
     type: 'PROJECT',
     href: '/work/mercado',
     comingSoon: false,
+    comingSoonTag: true,
+    line: 'A stablecoin payment experience built for merchants.',
   },
   {
     slug: 'flyp',
@@ -47,6 +59,7 @@ export const WORK_PROJECTS: WorkProject[] = [
     type: 'WORK',
     href: '',
     comingSoon: true,
+    line: 'A Figma plugin for exporting motion, made simpler.',
   },
   {
     slug: 'silverbird',
@@ -55,6 +68,7 @@ export const WORK_PROJECTS: WorkProject[] = [
     type: 'WORK',
     href: '',
     comingSoon: true,
+    line: 'A platform for managing cinema ticketing and operations.',
   },
   {
     slug: 'lnvc',
@@ -63,6 +77,7 @@ export const WORK_PROJECTS: WorkProject[] = [
     type: 'PROJECT',
     href: '',
     comingSoon: true,
+    line: 'A digital archive celebrating Nigerian visual culture.',
   },
 ]
 

@@ -1,95 +1,137 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+import { useEffect, useRef } from 'react'
+import Image from 'next/image'
 import { motion, useReducedMotion } from 'framer-motion'
-import { AnimatedArrow } from './AnimatedArrow'
+import { EASE_RISE, EASE_SIGN } from '@/lib/motion'
 
-// Fade in + rise a few pixels — runs once on mount, respects prefers-reduced-motion
-function useFadeUp(delay = 0) {
-  const reduced = useReducedMotion()
-  if (reduced) return {}
-  return {
-    initial: { opacity: 0, y: 8 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6, ease: [0.25, 0, 0.1, 1] as const, delay },
-  }
+// Claude Design "Snow — Portfolio v2" index hero — signature + live Lagos
+// clock, then avatar/name/role, and a three-paragraph bio.
+const SIGNATURE_PATH =
+  'M10 30C10 16 18 8 25 9c6 1 3 9-3 13-6 4-8 6-6 9 2 3 8 2 12-1 2-2 4-6 5-9 0 4-1 8 0 10 1-9 5-12 9-10 3 2 2 7 2 10 2-3 4-9 8-10 4-1 8 2 7 6-1 4-6 5-8 2-2-3 0-7 4-8 3 0 5 1 6 3 1 3 2 6 4 7 2 1 3-5 4-9 1 5 1 8 3 9 2 1 4-5 5-9 1 5 2 8 5 8 6 0 12-4 15-10 1-4-3-5-5-1-2 4 3 16-9 19-14 3-40 3-56-3'
+
+function useClock() {
+  const clockRef = useRef<HTMLSpanElement>(null)
+  useEffect(() => {
+    const tick = () => {
+      if (!clockRef.current) return
+      const t = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Africa/Lagos',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      }).format(new Date())
+      clockRef.current.textContent = `Lagos, NG · ${t}`
+    }
+    tick()
+    const id = setInterval(tick, 1000)
+    return () => clearInterval(id)
+  }, [])
+  return clockRef
 }
 
 export function LandingHero() {
-  const router = useRouter()
-  const nameAnim     = useFadeUp(0)
-  const subtitleAnim = useFadeUp(0.18)
-
-  // Mobile-only: tapping the scroll prompt takes you straight to the Work
-  // grid. Desktop/tablet leaves this prompt purely decorative — its own
-  // scroll/swipe gesture (handled in ScrollGate) goes to the Azza standalone
-  // preview instead, so the two must stay independent rather than sharing
-  // one destination.
-  const handleScrollPromptTap = () => {
-    router.push('/work')
-  }
+  const reduced = useReducedMotion()
+  const clockRef = useClock()
 
   return (
-    <section className="h-[100svh] flex flex-col">
-
-      {/* ── Vertically centered hero text ─────────────────────────────── */}
-      {/* Figma: Hero Text group, gap 19px, centered */}
-      <div className="flex-1 flex flex-col justify-start sm:flex-row sm:items-center sm:justify-center px-6 pt-[calc(13svh+194px)] sm:pt-0 lg:pt-[123px]">
-        <div className="flex flex-col items-center gap-[19px] text-center">
-
-          {/* Figma: Headings/Heading 4 — Pirata One 24px, #1e1e1e, lh 1.1, w 321px */}
-          <motion.h1
-            {...nameAnim}
-            className="font-display text-[24px] leading-[1.1] text-foreground max-w-full sm:w-[321px]"
-          >
-            Ijelekhai Faith Olohijere
-          </motion.h1>
-
-          {/* Mobile: "(Vibecoding all my ideas)" is its own line with extra
-              top spacing, separating it from "Product Designer" above it.
-              Desktop/tablet keeps the single-paragraph version, unchanged. */}
-          <motion.div
-            {...subtitleAnim}
-            className="sm:hidden flex flex-col items-center gap-[10px] font-sans font-normal text-[16px] leading-[1.3] tracking-[-0.2px] text-[#5a5a5a]"
-          >
-            <p>Product Designer</p>
-            <p>(Vibecoding all my ideas)</p>
-          </motion.div>
-          <motion.p
-            {...subtitleAnim}
-            className="hidden sm:block font-sans font-normal text-[16px] leading-[1.3] tracking-[-0.16px] text-[#5a5a5a]"
-          >
-            Product Designer (Vibecoding all my ideas)
-          </motion.p>
-
-        </div>
-      </div>
-
-      {/* ── Scroll prompt — text static, arrow animated ──────────────── */}
-      {/* Rethink Sans Regular, #1e1e1e, tracking -1% — sized to match the other landing-page text.
-          Mobile is a real tappable button (pointer-events-auto overrides the
-          pointer-events:none ScrollGate puts on this whole tree so
-          DraggableDotGrid's drag layer stays reachable underneath); desktop/
-          tablet stays the original inert div — unchanged, still purely
-          decorative there, with its own wheel/keydown gesture (in ScrollGate)
-          leading to the Azza preview instead of the Work grid. */}
-      <button
-        type="button"
-        onClick={handleScrollPromptTap}
-        className="sm:hidden pointer-events-auto appearance-none bg-transparent border-0 p-0 m-0 cursor-pointer w-full pb-[6svh] flex flex-col items-center gap-5"
+    <section className="w-full max-w-[620px] mx-auto px-6 pt-16">
+      {/* Signature + live clock */}
+      <div
+        className="flex justify-between items-center gap-4 flex-wrap font-mono text-[11px] tracking-[0.04em]"
+        style={{ color: 'var(--muted)' }}
       >
-        <p className="font-sans font-normal text-[16px] leading-[1.3] tracking-[-0.2px] text-foreground">
-          Scroll to see my work.
-        </p>
-        <AnimatedArrow />
-      </button>
-      <div className="hidden sm:flex pb-[6svh] md:pb-14 flex-col items-center gap-5">
-        <p className="font-sans font-normal text-[16px] leading-[1.3] tracking-[-0.16px] text-foreground">
-          Scroll to see my work.
-        </p>
-        <AnimatedArrow />
+        <svg
+          viewBox="0 0 112 46"
+          width="94"
+          height="34"
+          fill="none"
+          stroke="var(--foreground)"
+          strokeWidth={2}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          role="img"
+          aria-label="Snow"
+          style={{ display: 'block', overflow: 'visible' }}
+        >
+          <motion.path
+            pathLength={100}
+            d={SIGNATURE_PATH}
+            initial={reduced ? false : { strokeDasharray: 100, strokeDashoffset: 100 }}
+            animate={reduced ? undefined : { strokeDashoffset: 0 }}
+            transition={reduced ? undefined : { duration: 1.8, ease: EASE_SIGN, delay: 0.25 }}
+          />
+        </svg>
+        <span ref={clockRef}>Lagos, NG · —:—:—</span>
       </div>
 
+      {/* Avatar / name / role / tagline / bio */}
+      <motion.div
+        initial={reduced ? false : { opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: EASE_RISE }}
+        style={{ paddingTop: 40 }}
+      >
+        <div className="flex items-center gap-[14px]">
+          <div
+            className="relative shrink-0 rounded-full overflow-hidden"
+            style={{ width: 52, height: 52, background: 'var(--surface)' }}
+          >
+            <Image
+              src="/images/about/About%20Header%20Image.png"
+              alt=""
+              fill
+              sizes="52px"
+              className="object-cover"
+            />
+          </div>
+          <div className="min-w-0">
+            <div className="font-sans font-medium text-[19px] tracking-[-0.015em] text-foreground">
+              Faith Olohijere
+            </div>
+            <div className="mt-[3px] font-sans text-[12.5px]" style={{ color: 'var(--muted)' }}>
+              Digital Product Designer
+            </div>
+          </div>
+        </div>
+
+        <p className="font-sans" style={{ margin: '26px 0 0', fontSize: 13.5, lineHeight: 1.72, color: 'var(--body)' }}>
+          I&rsquo;m a product designer, learning design engineering.
+        </p>
+
+        <p className="font-sans" style={{ margin: '14px 0 0', fontSize: 13.5, lineHeight: 1.72, color: 'var(--body)' }}>
+          I&rsquo;ve spent the last four years designing across fintech, crypto, AI and civic tech.
+          Most recently, I was the founding product designer at{' '}
+          <a
+            href="https://x.com/useazza"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-cursor="Open"
+            style={{ borderBottom: '1px solid var(--border)' }}
+          >
+            Azza
+          </a>
+          , where I helped shape products around stablecoins and digital payments.
+        </p>
+
+        <p className="font-sans" style={{ margin: '14px 0 0', fontSize: 13.5, lineHeight: 1.72, color: 'var(--body)' }}>
+          Before that, I worked at{' '}
+          <a
+            href="https://x.com/blocverse_"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-cursor="Open"
+            style={{ borderBottom: '1px solid var(--border)' }}
+          >
+            Blocverse
+          </a>
+          , designing products across fintech and crypto. These days, I&rsquo;m pursuing an MBA,
+          building more with code, and finding out what happens past the Figma file.
+        </p>
+
+        <div style={{ marginTop: 44, height: 2, borderRadius: 999, background: 'var(--border)' }} />
+      </motion.div>
     </section>
   )
 }

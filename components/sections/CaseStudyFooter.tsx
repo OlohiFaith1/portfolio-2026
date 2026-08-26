@@ -1,94 +1,232 @@
 'use client'
 
-import { useRef, useLayoutEffect, useState } from 'react'
+import { useEffect, useRef, useLayoutEffect, useState } from 'react'
 import { BackToTopButton } from './BackToTopButton'
 
-const QUOTE =
-  `"You could rattle the stars," she whispered. "You could do anything, if only you dared. And deep down, you know it, too. That's what scares you most."`
-
-const LINKS = [
-  {
-    label: 'Email',
-    href: 'mailto:olofaith3@gmail.com',
-    ariaLabel: 'Send an email to Faith',
-    external: false,
-  },
-  {
-    label: 'Resume',
-    href: 'https://drive.google.com/file/d/113db08By6ZZDhZIOnZxwofs3sUpyEEq5/view?usp=sharing',
-    ariaLabel: "View Faith's resume (opens in new tab)",
-    external: true,
-  },
-  {
-    label: 'X(Twitter)',
-    href: 'https://x.com/olohijerefaith',
-    ariaLabel: "Faith's profile on X, formerly Twitter (opens in new tab)",
-    external: true,
-  },
-  {
-    label: 'LinkedIn',
-    href: 'https://www.linkedin.com/in/faith-ijelekhai-57a96b213/',
-    ariaLabel: "Faith's LinkedIn profile (opens in new tab)",
-    external: true,
-  },
-]
-
-const baseText: React.CSSProperties = {
-  fontWeight: 400,
-  lineHeight: 1.3,
-  margin: 0,
+// Claude Design "Snow — Portfolio v2" footer ("Connect"). The Resume
+// destination is preserved exactly as it already was. LinkedIn/Dribbble
+// are real existing/design-provided links; the design's own footer omits
+// X(Twitter) entirely, so this list is intentionally 4 items, not 5.
+const RESUME_HREF = 'https://drive.google.com/file/d/113db08By6ZZDhZIOnZxwofs3sUpyEEq5/view?usp=sharing'
+const LINKEDIN_HREF = 'https://www.linkedin.com/in/faith-ijelekhai-57a96b213/'
+const DRIBBBLE_HREF = 'https://dribbble.com/Faith-olohijere3'
+const READING = {
+  title: 'Throne of Glass',
+  author: 'Sarah J. Maas',
+  href: 'https://www.amazon.com/Throne-Glass-Sarah-J-Maas/dp/1619630346',
+  // The real cover Amazon serves for this exact listing (read directly off
+  // the product page's #landingImage `data-old-hires`), hotlinked rather
+  // than downloaded/re-hosted — same principle as href already pointing
+  // straight at Amazon.
+  coverSrc: 'https://m.media-amazon.com/images/I/81REJ3+rUOL._SL1500_.jpg',
 }
 
-// Shared quote block — desktop/tablet (centered) vs mobile (left-aligned)
-function QuoteBlock({ align }: { align: 'center' | 'left' }) {
-  const centered = align === 'center'
+const pillBase: React.CSSProperties = {
+  border: 'none',
+  borderRadius: 999,
+  padding: '9px 15px',
+  fontSize: 11,
+  letterSpacing: '0.02em',
+  transition: 'background 200ms ease',
+  textDecoration: 'none',
+  cursor: 'pointer',
+}
+
+function Pill({
+  href,
+  external,
+  onClick,
+  children,
+  mono,
+}: {
+  href?: string
+  external?: boolean
+  onClick?: () => void
+  children: React.ReactNode
+  mono?: boolean
+}) {
+  const [hovered, setHovered] = useState(false)
+  const [hoverCapable, setHoverCapable] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false
+    return window.matchMedia('(hover: hover) and (pointer: fine)').matches
+  })
+  useEffect(() => {
+    const mq = window.matchMedia('(hover: hover) and (pointer: fine)')
+    const onChange = (e: MediaQueryListEvent) => setHoverCapable(e.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+  const style: React.CSSProperties = {
+    ...pillBase,
+    background: hovered ? '#e9e6e1' : 'var(--surface)',
+    color: mono ? 'var(--foreground)' : 'var(--body)',
+    fontFamily: mono ? 'var(--font-mono)' : undefined,
+  }
+  const handlers = {
+    onMouseEnter: () => hoverCapable && setHovered(true),
+    onMouseLeave: () => hoverCapable && setHovered(false),
+  }
+
+  if (onClick) {
+    return (
+      <button type="button" onClick={onClick} style={style} {...handlers}>
+        {children}
+      </button>
+    )
+  }
   return (
-    <div
-      className={`flex flex-col ${centered ? 'items-center text-center' : 'items-start text-left'}`}
-      style={{ gap: centered ? 40 : 28 }}
-    >
-      <p
-        className={`font-sans text-white ${centered ? 'lg:max-w-[440px]' : ''}`}
-        style={{ ...baseText, fontSize: 16, letterSpacing: '-0.16px' }}
+    <a href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined} style={style} {...handlers}>
+      {children}
+    </a>
+  )
+}
+
+function FooterContent() {
+  const [copied, setCopied] = useState(false)
+  const [bookHover, setBookHover] = useState(false)
+  const [scrollable, setScrollable] = useState(true)
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const [hoverCapable, setHoverCapable] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false
+    return window.matchMedia('(hover: hover) and (pointer: fine)').matches
+  })
+  useEffect(() => {
+    const mq = window.matchMedia('(hover: hover) and (pointer: fine)')
+    const onChange = (e: MediaQueryListEvent) => setHoverCapable(e.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+
+  useEffect(() => {
+    const measure = () => setScrollable(document.documentElement.scrollHeight > window.innerHeight + 40)
+    measure()
+    window.addEventListener('resize', measure)
+    return () => window.removeEventListener('resize', measure)
+  }, [])
+
+  useEffect(() => () => {
+    if (toastTimer.current) clearTimeout(toastTimer.current)
+  }, [])
+
+  const copyEmail = async () => {
+    const done = () => {
+      setCopied(true)
+      if (toastTimer.current) clearTimeout(toastTimer.current)
+      toastTimer.current = setTimeout(() => setCopied(false), 1800)
+    }
+    try {
+      await navigator.clipboard.writeText('olofaith3@gmail.com')
+    } catch {
+      // clipboard API unavailable — still confirm visually, nothing to retry
+    }
+    done()
+  }
+
+  return (
+    // Bottom padding clears the fixed nav pill (bottom:22px, ~50px tall) so
+    // its own bottom row never sits underneath it.
+    <div className="w-full max-w-[620px] mx-auto" style={{ padding: '36px 24px 96px' }}>
+      <div className="font-mono text-[10px] tracking-[0.14em] uppercase" style={{ color: 'var(--muted)' }}>
+        Connect
+      </div>
+      <p className="font-sans" style={{ margin: '12px 0 16px', fontSize: 13.5, lineHeight: 1.72, color: 'var(--body)' }}>
+        Always up for talking about product, books, or anything someone is genuinely excited about. Email is best.
+      </p>
+
+      <div className="flex flex-wrap" style={{ gap: 8 }}>
+        <Pill onClick={copyEmail} mono>
+          olofaith3@gmail.com
+        </Pill>
+        <Pill href={RESUME_HREF} external>
+          Resume
+        </Pill>
+        <Pill href={LINKEDIN_HREF} external>
+          LinkedIn
+        </Pill>
+        <Pill href={DRIBBBLE_HREF} external>
+          Dribbble
+        </Pill>
+      </div>
+
+      <div
+        className="flex items-baseline flex-wrap"
+        style={{ gap: 10, marginTop: 40, paddingTop: 24, borderTop: '1px solid var(--border)' }}
       >
-        {QUOTE}
-      </p>
-      <p className="font-sans" style={{ ...baseText, fontSize: 16, letterSpacing: '-0.16px' }}>
-        <span className="text-neutral-500">–Sarah .J. Maas, </span>
-        <span className="text-white">Throne of Glass</span>
-      </p>
+        <span className="font-mono text-[9.5px] tracking-[0.12em] uppercase" style={{ color: 'var(--muted)' }}>
+          Currently reading
+        </span>
+        <span className="relative inline-block">
+          {bookHover && (
+            <span
+              className="absolute pointer-events-none"
+              style={{ bottom: 'calc(100% + 12px)', left: '50%', transform: 'translateX(-50%)', zIndex: 40, width: 108 }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={READING.coverSrc}
+                alt={`${READING.title} book cover`}
+                style={{
+                  display: 'block',
+                  width: '100%',
+                  aspectRatio: '2 / 3',
+                  borderRadius: 8,
+                  objectFit: 'cover',
+                  background: 'var(--surface)',
+                  boxShadow: '0 8px 26px rgba(26,26,25,0.16)',
+                }}
+              />
+            </span>
+          )}
+          <a
+            href={READING.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-cursor="Open"
+            onMouseEnter={() => hoverCapable && setBookHover(true)}
+            onMouseLeave={() => hoverCapable && setBookHover(false)}
+            style={{ fontSize: 13, color: 'var(--body)', borderBottom: '1px solid transparent', transition: 'border-color 200ms ease, color 200ms ease' }}
+          >
+            {READING.title}
+          </a>
+        </span>
+        <span style={{ fontSize: 12, color: 'var(--muted)' }}>{READING.author}</span>
+      </div>
+
+      <div className="flex items-center justify-between flex-wrap" style={{ gap: 16, marginTop: 32 }}>
+        <div className="font-mono text-[9.5px] tracking-[0.08em] uppercase" style={{ color: 'var(--muted)' }}>
+          Snow — Faith Olohijere · V2
+        </div>
+        {scrollable && <BackToTopButton />}
+      </div>
+
+      {copied && (
+        <div
+          role="status"
+          className="fixed left-1/2 -translate-x-1/2 font-mono text-[10px] tracking-[0.1em] uppercase rounded-full"
+          style={{ bottom: 84, zIndex: 40, padding: '9px 15px', background: 'var(--foreground)', color: 'var(--background)' }}
+        >
+          Email copied
+        </div>
+      )}
     </div>
   )
 }
 
-// Shared social links — desktop/tablet horizontal row vs mobile vertical stack
-function SocialLinks({ variant }: { variant: 'desktop' | 'mobile' }) {
-  return (
-    <nav aria-label="Social links">
-      <ul
-        className={variant === 'mobile' ? 'flex flex-col items-start' : 'flex items-center'}
-        style={{ margin: 0, padding: 0, listStyle: 'none', gap: variant === 'desktop' ? 72 : 24 }}
-      >
-        {LINKS.map((link) => (
-          <li key={link.label}>
-            <a
-              href={link.href}
-              aria-label={link.ariaLabel}
-              target={link.external ? '_blank' : undefined}
-              rel={link.external ? 'noopener noreferrer' : undefined}
-              className="font-sans text-white no-underline about-link"
-              style={{ ...baseText, fontSize: 16, letterSpacing: '-0.16px' }}
-            >
-              {link.label}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
-  )
+interface CaseStudyFooterProps {
+  /** Renders as a plain, always-in-flow footer at every breakpoint instead
+   *  of the fixed bottom-drawer reveal below. The reveal trick depends on
+   *  the content above it reliably exceeding the viewport's height — true
+   *  for every tall, fixed-content case-study/list page this component is
+   *  normally used on, but not guaranteed for a lighter page like the
+   *  homepage (short viewport, wide monitor, zoomed-out browser), where it
+   *  can bleed through mid-content instead of only revealing at the true
+   *  end of the page. Opt in per page rather than changing the default,
+   *  so every other call site's behavior is untouched. */
+  alwaysInFlow?: boolean
 }
 
-export function CaseStudyFooter() {
+export function CaseStudyFooter({ alwaysInFlow = false }: CaseStudyFooterProps) {
   const fixedFooterRef = useRef<HTMLElement>(null)
   const [spacerH, setSpacerH] = useState(0)
 
@@ -97,6 +235,7 @@ export function CaseStudyFooter() {
   // On mobile the fixed footer is display:none so offsetHeight returns 0
   // and the spacer collapses — no effect on the in-flow mobile footer.
   useLayoutEffect(() => {
+    if (alwaysInFlow) return
     const el = fixedFooterRef.current
     if (!el) return
     const update = () => setSpacerH(el.offsetHeight)
@@ -104,70 +243,35 @@ export function CaseStudyFooter() {
     const ro = new ResizeObserver(update)
     ro.observe(el)
     return () => ro.disconnect()
-  }, [])
+  }, [alwaysInFlow])
+
+  if (alwaysInFlow) {
+    return (
+      <footer style={{ backgroundColor: 'var(--background)', border: 'none' }}>
+        <FooterContent />
+      </footer>
+    )
+  }
 
   return (
     <>
-      {/* ── MOBILE (<768px): normal in-flow footer ─────────────────────────
-          Scrolls with the page — no fixed positioning, no z-index tricks.
-          Quote is desktop/tablet-only (see below) — mobile shows just the
-          social links.
-      ──────────────────────────────────────────────────────────────────── */}
-      <footer
-        className="block md:hidden"
-        style={{ backgroundColor: '#080808', border: 'none' }}
-      >
-        <div
-          className="flex flex-row items-end justify-between"
-          style={{
-            paddingTop: 60,
-            paddingBottom: 60,
-            paddingLeft: 24,
-            paddingRight: 24,
-          }}
-        >
-          <SocialLinks variant="mobile" />
-          <BackToTopButton />
-        </div>
+      {/* Mobile: normal in-flow footer — no fixed positioning. */}
+      <footer className="block md:hidden" style={{ backgroundColor: 'var(--background)', border: 'none' }}>
+        <FooterContent />
       </footer>
 
-      {/* ── DESKTOP + TABLET (≥768px): fixed bottom-drawer footer ──────────
-          Sits at z-index 0; the case study content wrapper (z-index 1) covers
-          it while in the viewport. Scrolling past the end reveals it.
-          Spacer adds the scroll distance needed for a full reveal.
-      ──────────────────────────────────────────────────────────────────── */}
+      {/* Desktop/tablet: fixed bottom-drawer footer — sits at z-index 0, the
+          case-study content wrapper (z-index 1) covers it while in the
+          viewport, revealed once the user scrolls past the last section.
+          This reveal mechanism is unchanged from before; only the content
+          inside changed. */}
       <div className="hidden md:block" style={{ height: spacerH }} aria-hidden="true" />
-
       <footer
         ref={fixedFooterRef}
         className="hidden md:block"
-        style={{
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          zIndex: 0,
-          backgroundColor: '#080808',
-          border: 'none',
-          boxShadow: '0 -2px 0 0 #080808',
-        }}
+        style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 0, backgroundColor: 'var(--background)', border: 'none' }}
       >
-        <div
-          className="flex flex-col items-center justify-between"
-          style={{
-            height: '90vh',
-            paddingTop: 100,
-            paddingBottom: 72,
-            paddingLeft: 48,
-            paddingRight: 48,
-          }}
-        >
-          <QuoteBlock align="center" />
-          <div className="relative flex items-center justify-center w-full">
-            <SocialLinks variant="desktop" />
-            <BackToTopButton position="absolute" className="right-0 top-1/2 -translate-y-1/2" />
-          </div>
-        </div>
+        <FooterContent />
       </footer>
     </>
   )

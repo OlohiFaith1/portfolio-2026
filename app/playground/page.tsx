@@ -1,7 +1,7 @@
-import { WipPage } from '@/components/sections/WipPage'
+import { PlaygroundFeed } from '@/components/sections/PlaygroundFeed'
 
 export const metadata = { title: 'Playground — Faith Olohijere' }
 
 export default function PlaygroundPage() {
-  return <WipPage />
+  return <PlaygroundFeed />
 }

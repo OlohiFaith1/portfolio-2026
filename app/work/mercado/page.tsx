@@ -1,31 +1,34 @@
-import { MercadoHero } from '@/components/sections/MercadoHero'
-import { MercadoStudy2 } from '@/components/sections/MercadoStudy2'
-import { MercadoStudy3 } from '@/components/sections/MercadoStudy3'
-import { MercadoStudy4 } from '@/components/sections/MercadoStudy4'
-import { MercadoStudy5 } from '@/components/sections/MercadoStudy5'
-import { MercadoStudy6 } from '@/components/sections/MercadoStudy6'
+import { CaseStudyProgressRail } from '@/components/sections/CaseStudyProgressRail'
+import { CaseStudyHero } from '@/components/sections/CaseStudyHero'
+import { CaseStudyChapter } from '@/components/sections/CaseStudyChapter'
 import { NextProjectSection } from '@/components/sections/NextProjectSection'
 import { CaseStudyFooter } from '@/components/sections/CaseStudyFooter'
+import { CASE_STUDIES, getReadingTime } from '@/lib/case-studies'
 
 export const metadata = { title: 'Mercado — Faith Olohijere' }
 
-// The Mercado case study — mirrors Azza's own case-study page structure
-// (app/work/azza/page.tsx) exactly, including the shared footer:
-//
-// z-index: 1 makes this layer paint above the fixed footer (z-index: 0).
-// Each section's opaque background covers the footer while in the viewport.
-// Scrolling past the end reveals the footer underneath — no JS animation,
-// purely scroll-driven via natural stacking and the spacer in CaseStudyFooter.
+// Claude Design "Snow — Portfolio v2" case-study format — see
+// app/work/azza/page.tsx for the shared structural notes.
 export default function MercadoPage() {
+  const content = CASE_STUDIES.mercado
   return (
     <>
-      <div style={{ position: 'relative', zIndex: 1 }}>
-        <MercadoHero />
-        <MercadoStudy2 />
-        <MercadoStudy3 />
-        <MercadoStudy4 />
-        <MercadoStudy5 />
-        <MercadoStudy6 />
+      <CaseStudyProgressRail />
+      <div className="relative" style={{ zIndex: 1, backgroundColor: 'var(--background)' }}>
+        <main className="mx-auto w-full max-w-[620px]" style={{ padding: '64px 26px 0' }}>
+          <CaseStudyHero
+            year={content.year}
+            org={content.org}
+            role={content.role}
+            title={content.title}
+            readTime={getReadingTime(content)}
+            heroImage={content.heroImage}
+            stats={content.stats}
+          />
+          {content.chapters.map((chapter) => (
+            <CaseStudyChapter key={chapter.no} chapter={chapter} />
+          ))}
+        </main>
         <NextProjectSection currentSlug="mercado" />
       </div>
       <CaseStudyFooter />

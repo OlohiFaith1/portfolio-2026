@@ -1,66 +1,55 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
-import { WORK_ENTERED_EVENT } from '@/lib/events'
+import { usePathname } from 'next/navigation'
 
-// Rethink Sans Regular, tracking -1%, #5a5a5a
-const ITEM = 'font-sans font-normal leading-[1.3] tracking-[-0.2px] sm:tracking-[-0.13px] lg:tracking-[-0.16px] text-[#5a5a5a] outline-none [-webkit-tap-highlight-color:transparent] text-[16px] sm:text-[13px] lg:text-[16px]'
+// Claude Design "Snow — Portfolio v2" primary navigation — a fixed, centered
+// bottom pill bar. This is the site's ONLY navigation now (replaces the old
+// pre-work landing pill + NavigationDrawer), always visible on every route.
+// The design's version toggles content within a single client-state tab;
+// here each tab is a real route so deep-linking/back-forward/refresh all
+// keep working — "active" is derived from the current pathname rather than
+// local state.
+const TABS = [
+  { label: 'Work', href: '/work', isActive: (p: string) => p.startsWith('/work') },
+  { label: 'Playground', href: '/playground', isActive: (p: string) => p === '/playground' },
+  { label: 'Writing', href: '/writing', isActive: (p: string) => p === '/writing' },
+  { label: 'About', href: '/about', isActive: (p: string) => p === '/about' },
+] as const
 
 export function Nav() {
   const pathname = usePathname()
-  const router = useRouter()
-  const [workEntered, setWorkEntered] = useState(false)
-
-  // Listen for the work section being entered on this page
-  useEffect(() => {
-    const handler = () => setWorkEntered(true)
-    window.addEventListener(WORK_ENTERED_EVENT, handler)
-    return () => window.removeEventListener(WORK_ENTERED_EVENT, handler)
-  }, [])
-
-  // When the user navigates back to '/' (e.g. via a home link), reset so the
-  // landing nav shows with the hero. Deferred so the setState happens inside a
-  // callback, not synchronously in the effect body (react-hooks/set-state-in-effect).
-  useEffect(() => {
-    if (pathname !== '/') return
-    const id = setTimeout(() => setWorkEntered(false), 0)
-    return () => clearTimeout(id)
-  }, [pathname])
-
-  // Only visible on the landing page before the work section is entered
-  if (pathname !== '/' || workEntered) return null
-
-  // Always goes to the Work grid, on every breakpoint — independent from
-  // ScrollGate's own scroll/swipe gesture, which has its own (breakpoint-
-  // specific) destination logic.
-  const handleWork = (e: React.MouseEvent) => {
-    e.preventDefault()
-    router.push('/work')
-  }
 
   return (
-    // pointer-events-none on the full-width fixed header so only the nav
-    // items themselves block clicks (not the empty space around them).
-    // Centered at every breakpoint — only three short items now, so it reads
-    // as a single grouped signature rather than a spread-out link bar.
-    <header className="fixed top-[5svh] sm:top-[102px] left-0 right-0 z-50 flex justify-center px-6 pointer-events-none">
-      <nav
-        aria-label="Landing navigation"
-        className="flex flex-row items-center gap-x-4 sm:gap-x-5 lg:gap-x-6 pointer-events-auto"
-      >
-        <button type="button" onClick={handleWork} className={ITEM}>
-          Work
-        </button>
-        {/* Visual separator only — not a link, not focusable */}
-        <span aria-hidden="true" className={ITEM}>
-          ❄️
-        </span>
-        <Link href="/about" className={ITEM}>
-          About
-        </Link>
-      </nav>
-    </header>
+    <nav
+      aria-label="Primary"
+      className="fixed bottom-[22px] left-1/2 -translate-x-1/2 z-30 flex gap-[3px] p-[5px] rounded-full"
+      style={{
+        background: 'rgba(251,250,249,0.86)',
+        backdropFilter: 'blur(16px)',
+        boxShadow: '0 1px 2px rgba(26,26,25,0.06), 0 8px 26px rgba(26,26,25,0.10)',
+      }}
+    >
+      {TABS.map((tab) => {
+        const active = tab.isActive(pathname)
+        return (
+          <Link
+            key={tab.href}
+            href={tab.href}
+            data-magnet="7"
+            aria-current={active ? 'page' : undefined}
+            className="rounded-full font-mono text-[10.5px] tracking-[0.1em] uppercase"
+            style={{
+              padding: '9px 16px',
+              background: active ? 'var(--foreground)' : 'transparent',
+              color: active ? 'var(--background)' : 'var(--muted)',
+              transition: 'background 220ms ease, color 220ms ease, transform 320ms cubic-bezier(0.34,1.56,0.64,1)',
+            }}
+          >
+            {tab.label}
+          </Link>
+        )
+      })}
+    </nav>
   )
 }

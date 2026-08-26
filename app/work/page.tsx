@@ -1,7 +1,7 @@
-import { WorkGrid } from '@/components/sections/WorkGrid'
+import { redirect } from 'next/navigation'
 
-export const metadata = { title: 'Work — Faith Olohijere' }
-
+// /work no longer renders its own separate homepage-like page — its
+// content (project grid + Experiments) now lives on the homepage itself.
 export default function WorkPage() {
-  return <WorkGrid />
+  redirect('/')
 }

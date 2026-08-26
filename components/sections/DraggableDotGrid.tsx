@@ -2,9 +2,11 @@
 
 import { useEffect, useRef, useState } from 'react'
 
-// Matches the dot-grid values in globals.css / ScrollGate's hero background.
-const DOT_COLOR = '#d8d8d8'
-const TILE = 28
+// Matches the dot-grid values in globals.css's own body pattern exactly —
+// the Claude Design's dark dots at 7% opacity over #fbfaf9, flattened to
+// one solid color the same way, rather than layering a separate opacity.
+const DOT_COLOR = '#ebeae9'
+const TILE = 24
 
 /**
  * Separate background layer behind the landing hero content. On desktop,
@@ -72,7 +74,7 @@ export function DraggableDotGrid() {
         position: 'absolute',
         inset: 0,
         zIndex: 0,
-        backgroundImage: `radial-gradient(circle, ${DOT_COLOR} 1px, transparent 1px)`,
+        backgroundImage: `radial-gradient(circle, ${DOT_COLOR} 0.9px, transparent 0.9px)`,
         backgroundSize: `${TILE}px ${TILE}px`,
         backgroundPosition: `${offset.x}px ${offset.y}px`,
         cursor: isDesktop ? (dragging ? 'grabbing' : 'grab') : 'default',

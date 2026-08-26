@@ -1,34 +1,36 @@
-import { AzzaHero } from '@/components/sections/AzzaHero'
-import { AzzaStudy2 } from '@/components/sections/AzzaStudy2'
-import { AzzaStudy3 } from '@/components/sections/AzzaStudy3'
-import { AzzaStudy4 } from '@/components/sections/AzzaStudy4'
-import { AzzaStudy5 } from '@/components/sections/AzzaStudy5'
-import { AzzaStudy6 } from '@/components/sections/AzzaStudy6'
-import { AzzaStudy7 } from '@/components/sections/AzzaStudy7'
-import { AzzaStudy8 } from '@/components/sections/AzzaStudy8'
+import { CaseStudyProgressRail } from '@/components/sections/CaseStudyProgressRail'
+import { CaseStudyHero } from '@/components/sections/CaseStudyHero'
+import { CaseStudyChapter } from '@/components/sections/CaseStudyChapter'
 import { NextProjectSection } from '@/components/sections/NextProjectSection'
 import { CaseStudyFooter } from '@/components/sections/CaseStudyFooter'
+import { CASE_STUDIES, getReadingTime } from '@/lib/case-studies'
 
-export const metadata = { title: 'Azza — Case Study' }
+export const metadata = { title: 'Azza — Faith Olohijere' }
 
-export default function AzzaCaseStudy() {
+// Claude Design "Snow — Portfolio v2" case-study format — a single narrow
+// editorial column (Hero + four Premise/Approach/Detail/Outcome chapters),
+// replacing the previous full-bleed, brand-color, per-project bespoke
+// build. Real content only — see lib/case-studies.ts for sourcing notes.
+export default function AzzaPage() {
+  const content = CASE_STUDIES.azza
   return (
     <>
-      {/*
-        z-index: 1 makes this layer paint above the fixed footer (z-index: 0).
-        Each section's opaque background covers the footer while in the viewport.
-        Scrolling past the end reveals the footer underneath — no JS animation,
-        purely scroll-driven via natural stacking and the spacer in CaseStudyFooter.
-      */}
-      <div style={{ position: 'relative', zIndex: 1 }}>
-        <AzzaHero />
-        <AzzaStudy2 />
-        <AzzaStudy3 />
-        <AzzaStudy4 />
-        <AzzaStudy5 />
-        <AzzaStudy6 />
-        <AzzaStudy7 />
-        <AzzaStudy8 />
+      <CaseStudyProgressRail />
+      <div className="relative" style={{ zIndex: 1, backgroundColor: 'var(--background)' }}>
+        <main className="mx-auto w-full max-w-[620px]" style={{ padding: '64px 26px 0' }}>
+          <CaseStudyHero
+            year={content.year}
+            org={content.org}
+            role={content.role}
+            title={content.title}
+            readTime={getReadingTime(content)}
+            heroImage={content.heroImage}
+            stats={content.stats}
+          />
+          {content.chapters.map((chapter) => (
+            <CaseStudyChapter key={chapter.label} chapter={chapter} />
+          ))}
+        </main>
         <NextProjectSection currentSlug="azza" />
       </div>
       <CaseStudyFooter />

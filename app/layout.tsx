@@ -1,21 +1,23 @@
 import type { Metadata } from 'next'
-import { Pirata_One, Rethink_Sans } from 'next/font/google'
+import { Geist, Geist_Mono } from 'next/font/google'
 import '@/styles/globals.css'
 import { Nav } from '@/components/nav/Nav'
 import { SmoothScrollProvider } from '@/components/providers/SmoothScrollProvider'
-import { NavigationProvider } from '@/components/providers/NavigationProvider'
-import { NavigationDrawer } from '@/components/navigation/NavigationDrawer'
+import { ContextualCursor } from '@/components/interaction/ContextualCursor'
+import { MagneticHover } from '@/components/interaction/MagneticHover'
+import { Preloader } from '@/components/preloader/Preloader'
 
-const pirata = Pirata_One({
-  weight: '400',
+const geist = Geist({
+  weight: 'variable',
   subsets: ['latin'],
-  variable: '--font-pirata',
+  variable: '--font-geist',
   display: 'swap',
 })
 
-const rethink = Rethink_Sans({
+const geistMono = Geist_Mono({
+  weight: 'variable',
   subsets: ['latin'],
-  variable: '--font-rethink',
+  variable: '--font-geist-mono',
   display: 'swap',
 })
 
@@ -33,15 +35,19 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${pirata.variable} ${rethink.variable}`}>
+    <html lang="en" className={`${geist.variable} ${geistMono.variable}`}>
       <body className="font-sans antialiased">
-        <NavigationProvider>
-          <SmoothScrollProvider>
-            <Nav />
-            <NavigationDrawer />
-            <main>{children}</main>
-          </SmoothScrollProvider>
-        </NavigationProvider>
+        {/* Mounted once at the root so it guards the true first entry point
+            into the site regardless of which route that is (not just `/`),
+            and — via its own module-scoped "already played" guard — never
+            replays on client-side navigation between routes. */}
+        <Preloader />
+        <SmoothScrollProvider>
+          <Nav />
+          <ContextualCursor />
+          <MagneticHover />
+          <main>{children}</main>
+        </SmoothScrollProvider>
       </body>
     </html>
   )

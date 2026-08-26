@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# local browser-automation tooling (not part of the app)
+/chrome/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
