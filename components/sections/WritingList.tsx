@@ -10,8 +10,8 @@ import { CaseStudyFooter } from './CaseStudyFooter'
 // attempt, including a mirror reader), so those two descriptions are
 // derived from the article's own title/premise instead of invented detail.
 // Images are each article's real featured/cover image, downloaded locally
-// — omitted (not faked) for the two Medium entries, since Medium's block
-// also prevented reading their og:image.
+// for all five (the two Medium covers and the Substack cover were saved
+// manually, since Medium's block also prevented reading their og:image).
 const WRITING = [
   {
     title: 'How to Use Viewing Patterns in Your Website Designs',
@@ -25,7 +25,7 @@ const WRITING = [
     title: 'I recently reviewed 5 AI-Native UX Design tools in 50 Minutes (2026)',
     source: 'Medium',
     description: 'A rapid, hands-on look at five AI-native UX design tools, testing what each one is actually like to use in a single sitting.',
-    image: null,
+    image: '/images/writing/Medium%201.webp',
     href: 'https://medium.com/design-bootcamp/i-recently-reviewed-5-ai-native-ux-design-tools-in-50-minutes-2026-80f403db65f8',
   },
   {
@@ -40,14 +40,14 @@ const WRITING = [
     title: 'The Power of Personalizing User Experience',
     source: 'Medium',
     description: 'On why tailoring an experience to the individual user builds stronger engagement and trust than one-size-fits-all design.',
-    image: null,
+    image: '/images/writing/Medium%202.webp',
     href: 'https://medium.com/ux-planet/the-power-of-personalizing-user-experience-a88e2f3bee29',
   },
   {
     title: 'Curiosity; a gift for day zero',
     source: 'Substack',
     description: 'A personal reflection on moving through months of creative burnout and rediscovering excitement for design through curiosity.',
-    image: null,
+    image: '/images/writing/Substack%201.webp',
     href: 'https://olohijerefaith.substack.com/p/curiosity-a-gift-for-day-zero',
   },
 ] as const
