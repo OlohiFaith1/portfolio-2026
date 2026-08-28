@@ -195,7 +195,7 @@ function FooterContent() {
 
       <div className="flex items-center justify-between flex-wrap" style={{ gap: 16, marginTop: 32 }}>
         <div className="font-mono text-[9.5px] tracking-[0.08em] uppercase" style={{ color: 'var(--muted)' }}>
-          Snow — Faith Olohijere · V2
+          DESIGNED + BUILT BY SNOW (2026)
         </div>
         {scrollable && <BackToTopButton />}
       </div>
