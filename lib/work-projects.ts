@@ -39,7 +39,6 @@ export const WORK_PROJECTS: WorkProject[] = [
     type: 'WORK',
     href: '/work/syncwatch',
     comingSoon: false,
-    comingSoonTag: true,
     line: 'A social experience for watching movies together, from anywhere.',
   },
   {

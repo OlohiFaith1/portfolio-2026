@@ -109,3 +109,37 @@ body {
     color: var(--background) !important;
   }
 }
+
+/* Very subtle CRT scanline flicker for PreloaderTV's screen content —
+   a gentle opacity pulse on the scanline layer only, not the images
+   underneath, so it reads as a quiet screen shimmer rather than a glitch.
+   Paired with a slow one-line vertical drift so the scanlines feel like
+   they're gently rolling rather than a static overlay. */
+@keyframes preloader-tv-flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+@keyframes preloader-tv-scanline-move {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 2px; }
+}
+
+.preloader-tv-flicker {
+  animation: preloader-tv-flicker 2.4s ease-in-out infinite, preloader-tv-scanline-move 5s linear infinite;
+}
+
+/* Extremely subtle brightness wobble for PreloaderTV's screen images —
+   the "old CRT that isn't perfectly stable" imperfection, layered on top
+   of each image's own static color grade (kept here, not inline, so this
+   animation can drive the same `filter` property without a JS/CSS fight). */
+@keyframes preloader-tv-brightness {
+  0%, 100% { filter: contrast(1.05) saturate(0.85) brightness(0.94); }
+  38% { filter: contrast(1.05) saturate(0.85) brightness(0.965); }
+  50% { filter: contrast(1.05) saturate(0.85) brightness(0.9); }
+  62% { filter: contrast(1.05) saturate(0.85) brightness(0.955); }
+}
+
+.preloader-tv-brightness {
+  animation: preloader-tv-brightness 3.6s ease-in-out infinite;
+}

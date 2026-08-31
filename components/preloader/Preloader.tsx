@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { EASE_PEEL, EASE_RISE, cssEase } from '@/lib/motion'
+import { PreloaderTV } from './PreloaderTV'
 
 // Claude Design "Snow — Portfolio v2" peel loader: a solid accent-color
 // panel that holds, then slides up and off-screen, revealing the real page
@@ -10,7 +11,10 @@ import { EASE_PEEL, EASE_RISE, cssEase } from '@/lib/motion'
 // / `load` event (not a fake timer) with an 8s safety net, plus a minimum
 // hold so a fast load never just flashes past, and it still swallows wheel/
 // touch/keyboard input while visible so an impatient scroll can't skip it.
-const MIN_HOLD_MS = 900
+// The hold is long enough for PreloaderTV (rendered inline below, as part
+// of this same panel) to cycle through several images before the panel
+// peels away — PreloaderTV has no say in any of this timing.
+const MIN_HOLD_MS = 4200
 const PEEL_DURATION_MS = 650
 const SAFETY_MS = 8000
 
@@ -117,6 +121,27 @@ export function Preloader() {
         pointerEvents: exiting ? 'none' : 'auto',
       }}
     >
+      {/* Sits on this same green panel from the very first frame — not a
+          separate layer or entrance, just another child of the panel this
+          component already renders. Absolutely positioned so it drops out
+          of the flex column above and can't shift the text row's own
+          flex-end layout. Moves with the panel automatically (no transition
+          of its own to write) since the peel transform above applies to
+          this whole panel, TV included. */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          pointerEvents: 'none',
+        }}
+      >
+        <PreloaderTV />
+      </div>
+
       <div
         className="font-mono"
         style={{

@@ -327,12 +327,12 @@ export const CASE_STUDIES: Record<string, CaseStudyContent> = {
 
   syncwatch: {
     year: '2026',
-    org: 'Independent',
+    org: 'SyncWatch',
     role: 'User Experience & Interface Design',
-    title: "Watch together, even when you're apart",
+    title: 'Watch together, wherever you are',
     heroImage: {
-      src: '/images/syncwatch/Billboard.png',
-      alt: "A roadside billboard mockup reading 'Watch together, even when you're apart.' beside the SyncWatch logo, over a photo of two people looking at a phone together",
+      src: '/images/syncwatch/SyncWatch 1.png',
+      alt: 'A woman smiling at her laptop screen at night, with the SyncWatch logo mark overlaid in the center of the frame',
     },
     stats: [
       { value: 'Real-time', label: 'Synced playback' },
@@ -341,48 +341,101 @@ export const CASE_STUDIES: Record<string, CaseStudyContent> = {
     ],
     chapters: [
       {
-        no: '01',
-        label: 'Premise',
-        head: 'Too many tools just to press play at the same time',
-        body: 'Watching a movie remotely usually means juggling a video call, a streaming platform, and messages just to stay in sync. SyncWatch brings the experience together, from creating a party and inviting friends to watching, chatting, and reacting in real time.',
-        figure: {
-          src: '/images/Syncwatch 2 Image.png',
-          alt: 'SyncWatch onboarding screens for signing in and selecting a streaming service, alongside two user quotes about wanting to watch movies together virtually',
-          caption: 'Signing in and choosing a streaming service.',
-        },
+        no: '',
+        label: 'The Backstory',
+        head: 'Making Virtual Watch Parties Feel Good',
+        body: [
+          'Watching a movie remotely shouldn’t mean juggling a streaming platform, a video call, and a group chat just to stay in sync.',
+          'SyncWatch is a mobile app that lets people watch movies together on their preferred streaming platforms while keeping playback synchronized across devices.',
+          'As the UX & Interface Designer, I designed the experience from creating a watch party to choosing a movie, inviting friends, and getting everyone into the same synchronized viewing experience.',
+        ],
+        syncwatchLogoFlicker: true,
       },
       {
-        no: '02',
-        label: 'Approach',
-        head: 'A watch party in three steps',
-        body: 'Create a watch party, choose what to watch, and share the invite with your friends. Once everyone is in, SyncWatch keeps playback synchronized across every device — no separate call, no manual "pause... okay go" over text.',
-        figure: {
-          src: '/images/syncwatch/Syncwatch 4 Image(2).png',
-          alt: 'SyncWatch modal offering to create a watch party for "The Unforgivable"',
-          caption: 'Starting a watch party.',
-        },
+        no: '',
+        label: 'The Problem',
+        head: 'Watching together had become a coordination problem',
+        body: [
+          'Watching a movie with friends remotely often means moving between different apps just to recreate something that happens naturally in the same room. Different apps handle the movie, the conversation, and the messages, and at some point everyone falls out of sync.',
+          'I wanted to explore whether the experience could feel more connected by bringing the important parts of a watch party into one place, while still letting people watch on the streaming platforms they already use.',
+        ],
+        parts: [
+          {
+            type: 'gallery',
+            layout: 'column',
+            crop: false,
+            images: [
+              {
+                src: '/images/syncwatch/SyncWatch 5 Image (1).png',
+                alt: 'Ten circular party-guest avatars overlaid on a photo of someone holding a remote control beside a bowl of popcorn',
+                width: 2344,
+                height: 1656,
+              },
+              {
+                src: '/images/syncwatch/SyncWatch 5 Image (2).png',
+                alt: 'A SyncWatch watch-party screen with synced video playback and live chat messages, overlaid on a photo of two friends laughing together outdoors',
+                width: 2344,
+                height: 1656,
+              },
+              {
+                src: '/images/syncwatch/SyncWatch 5 Image (3).png',
+                alt: 'A SyncWatch modal for sharing a watch-party invite code, with guests shown waiting to join, overlaid on a photo of a living room',
+                width: 2344,
+                height: 1656,
+              },
+            ],
+          },
+        ],
       },
       {
-        no: '03',
-        label: 'Detail',
-        head: 'The lobby, and the summary after',
-        body: 'The party lobby shows who’s ready before the movie starts, while in-watch chat and reactions let everyone stay connected without leaving the experience. When the movie ends, the party doesn’t just disappear — a summary brings the session back together, showing what was watched, how long the party lasted, and everyone who joined.',
-        figure: {
-          src: '/images/syncwatch/SyncWatch 5 Image (1).png',
-          alt: 'Ten circular party-guest avatars overlaid on a photo of someone holding a remote control beside a bowl of popcorn',
-          caption: 'Who’s in the party, before it starts.',
-        },
+        no: '',
+        label: 'Testing',
+        head: 'Does the party flow make sense?',
+        body: [
+          'I tested the core journey from creating a watch party to getting friends into the room. The goal was simple: could someone understand what to do without needing instructions?',
+          'This helped me identify where the experience needed clearer cues, particularly around choosing a movie, inviting friends, and knowing when everyone was ready to start.',
+        ],
+        blocks: [
+          {
+            // Mobile screen recording, shown with the same phone-mockup +
+            // background-frame treatment as Azza's video chapters.
+            video: { src: '/images/syncwatch/testing1.mov' },
+          },
+          {
+            head: 'Does it still feel like watching together?',
+            body: [
+              'The second part was less about completing tasks and more about the feeling of the experience. I looked at how chat, reactions, the lobby, and synchronized playback could support the social side of watching without becoming distractions.',
+              'The challenge was finding the right balance between watching the movie and being present with everyone else. The interface needed to stay quiet when the movie was playing, while still giving the group ways to react and connect.',
+            ],
+          },
+          {
+            video: { src: '/images/syncwatch/testing2.mov' },
+          },
+        ],
       },
       {
-        no: '04',
+        no: '',
         label: 'Outcome',
-        head: 'Where it landed',
-        body: 'SyncWatch started with a simple idea: making it easier to watch movies with friends, even when you’re not in the same place. I explored how synchronized playback, watch parties, chat, and shared moments could come together without making the experience complicated. The goal was to make watching together feel natural and social, while making the distance between friends feel a little smaller.',
-        figure: {
-          src: '/images/syncwatch/Syncwatch 8 (Image 1).png',
-          alt: 'A four-screen sequence of a SyncWatch watch party in session: the party lobby before starting, synchronized video playback with live messages, a friend replying in chat, and the end-of-party summary with an option to host another party',
-          caption: 'SyncWatch, in session.',
-        },
+        head: 'Making distance feel a little smaller',
+        body: [
+          'SyncWatch became an exploration of what a remote movie night could feel like when the experience is designed to make it easy for people to share moments with their loved ones.',
+          'I brought synchronized playback, chat, and shared session summaries into one experience, making remote movie nights feel less complicated while preserving the social moments that make watching together feel like watching together.',
+        ],
+        parts: [
+          {
+            type: 'gallery',
+            layout: 'column',
+            crop: false,
+            images: [
+              {
+                src: '/images/Syncwatch 2 Image.png',
+                alt: 'SyncWatch onboarding screens for signing in and selecting a streaming service, alongside two user quotes about wanting to watch movies together virtually',
+                width: 7200,
+                height: 3060,
+              },
+            ],
+          },
+        ],
       },
     ],
   },

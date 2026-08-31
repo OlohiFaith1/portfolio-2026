@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { AzzaYouPaidAnimation } from './AzzaYouPaidAnimation'
 import { AzzaCouponCarousel } from './AzzaCouponCarousel'
+import { SyncWatchLogoFlicker } from './SyncWatchLogoFlicker'
 
 // A paragraph is either plain text, or a sequence of segments so a
 // paragraph can carry inline links (e.g. "we entered the [X](url) and
@@ -34,6 +35,14 @@ export interface CaseStudyBlock {
   body?: CaseStudyParagraph[]
   image?: CaseStudyFigure
   imageFirst?: boolean
+  /** Renders this block's media as a phone-mockup video — the same
+   *  screen-recording → device-frame → background-frame treatment Azza's
+   *  video chapters use (see VideoStack/PhoneMockup below) — instead of a
+   *  static figure. */
+  video?: CaseStudyVideoClip
+  /** Background fill behind the phone mockup, passed through to VideoStack
+   *  (defaults to var(--surface), same as every other block/part usage). */
+  videoBackground?: string
 }
 
 export interface CaseStudyCreditGroup {
@@ -81,6 +90,9 @@ export interface CaseStudyChapterData {
   /** Renders the restored "You paid" count-up animation, framed like this
    *  chapter's other figures, directly after the primary body. */
   youPaidAnimation?: boolean
+  /** Renders the restored SyncWatch black/white logo flicker loop, framed
+   *  like this chapter's other figures, directly after the primary body. */
+  syncwatchLogoFlicker?: boolean
   /** Further ordered content appended after `blocks` (see CaseStudyPart). */
   parts?: CaseStudyPart[]
 }
@@ -137,6 +149,16 @@ function Paragraphs({ body }: { body: string | CaseStudyParagraph[] }) {
 // tall assets show completely instead of having their top/bottom cropped
 // into a landscape box.
 function FigureImage({ figure, crop = true }: { figure: CaseStudyFigure; crop?: boolean }) {
+  // A figure slot with no src yet (an image queued to be added later) —
+  // render the same bordered/rounded surface every other figure sits in,
+  // without an <Image>, since next/image requires a non-empty src.
+  if (!figure.src) {
+    return (
+      <div style={{ marginTop: 24 }}>
+        <div className="relative w-full" style={{ aspectRatio: '3 / 2', borderRadius: 12, overflow: 'hidden', background: 'var(--surface)' }} />
+      </div>
+    )
+  }
   if (!crop && figure.width && figure.height) {
     return (
       <div style={{ marginTop: 24 }}>
@@ -404,7 +426,7 @@ function ChapterPart({ part }: { part: CaseStudyPart }) {
 // Claude Design "Snow — Portfolio v2" case-study chapter — one of four
 // (Premise/Approach/Detail/Outcome), reused across every case study.
 export function CaseStudyChapter({ chapter }: { chapter: CaseStudyChapterData }) {
-  const { no, label, head, body, quote, figure, blocks, parts, youPaidAnimation } = chapter
+  const { no, label, head, body, quote, figure, blocks, parts, youPaidAnimation, syncwatchLogoFlicker } = chapter
   return (
     <section style={{ paddingTop: 48 }}>
       <div className="font-mono" style={{ fontSize: 9.5, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--muted)' }}>
@@ -421,6 +443,11 @@ export function CaseStudyChapter({ chapter }: { chapter: CaseStudyChapterData })
       {youPaidAnimation && (
         <div style={{ marginTop: 24 }}>
           <AzzaYouPaidAnimation />
+        </div>
+      )}
+      {syncwatchLogoFlicker && (
+        <div style={{ marginTop: 24 }}>
+          <SyncWatchLogoFlicker />
         </div>
       )}
       {quote && (
@@ -444,6 +471,7 @@ export function CaseStudyChapter({ chapter }: { chapter: CaseStudyChapterData })
           )}
           {block.body && <Paragraphs body={block.body} />}
           {!block.imageFirst && block.image && <FigureImage figure={block.image} />}
+          {block.video && <VideoStack videos={[block.video]} background={block.videoBackground} />}
         </div>
       ))}
       {parts?.map((part, i) => (
