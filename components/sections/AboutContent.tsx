@@ -5,12 +5,56 @@ import Image from 'next/image'
 import { DraggableDotGrid } from './DraggableDotGrid'
 
 // Claude Design "Snow — Portfolio v2" About section.
-const EXPERIENCE = [
-  { org: 'Azza', role: 'Founding Product Designer', years: '2024–2026' },
-  { org: 'Blocverse', role: 'Product Designer', years: '2023–2026' },
-  { org: 'Metafide', role: 'Product Designer', years: '2025–2026' },
-  { org: 'Genesys', role: 'Product Design Intern', years: '2021–2022' },
-] as const
+interface ExperienceEntry {
+  org: string
+  role: string
+  years: string
+  /** One or more paragraphs — editorial/story-driven, not bullet points,
+   *  reusing the same body-copy treatment as the bio paragraphs above.
+   *  Azza's prominence (most substantial role) comes from having the most
+   *  paragraphs, not from any distinct styling — every entry shares the
+   *  same typography. */
+  body: string[]
+}
+
+const EXPERIENCE: ExperienceEntry[] = [
+  {
+    org: 'Azza',
+    role: 'Founding Product Designer',
+    years: '2024–2026',
+    body: [
+      'In late 2024, I joined the engineering team at Blocverse to turn an earlier idea (making financial transactions possible through WhatsApp) into our hackathon submission, Azza DeFi, which became one of the winners of the Base Around The World hackathon.',
+      'As Founding Product Designer, I led design for Azza, a WhatsApp-based cross-border payment product enabling crypto and stablecoin transactions across 5+ countries, serving 15K+ users and processing $20M+ in transaction volume.',
+      'In collaboration with the rest of the team, I designed the core product experience, conversational flows, the assets used on the bot like receipts, transaction statements, cashback cards, Merchant and Admin Dashboards, Azza for Business, and more. I also worked with Ella on Azza’s visual identity, design systems, and processes.',
+      'Because we were a small team, I wore multiple hats: I led the biweekly newsletter and hosted biweekly Twitter Spaces. Newsletter views grew by 1,775.5% and subscribers by 152.9%, helping drive product visibility and discovery.',
+      'Working at Azza, and Blocverse by extension, was one of the most important experiences of my career. I learned a lot from the people, the meaningful work we did, and the opportunity to build something from the ground up.',
+    ],
+  },
+  {
+    org: 'Blocverse',
+    role: 'Product Designer',
+    years: '2023–2026',
+    body: [
+      'In early 2023, I joined Blocverse (led by Toochukwu Okoro) as a contract designer, working with Peter AjaNwachukwu to design wallets, financial products, and real-asset management platforms. By late 2023, I became the team’s only full-time designer, working across different products, hackathons, and running Dev Circle, a program helping early-career developers and designers build and ship live products.',
+    ],
+  },
+  {
+    org: 'Metafide',
+    role: 'Product Designer',
+    years: '2025',
+    body: [
+      'In 2025, I joined Metafide AI as a contract Product Designer, working across product and marketing design under Head of Design Adrian Roman to standardize design processes and workflows. I loved working on the product and, especially, with such a diverse group of exceptionally talented people.',
+    ],
+  },
+  {
+    org: 'Genesys',
+    role: 'Product Design Intern',
+    years: '2021–2022',
+    body: [
+      'In 2021, in a bid to get better at design, I joined Genesys Tech Hub’s Learnable 21 to learn product design, working with mentors including Jerry Uke, Eliezer Ajah, Udochi Kaduru, and David Kaduru. I completed the internship in 2022 and went on to freelance.',
+    ],
+  },
+]
 
 const TOOLS = ['Figma', 'Cursor', 'ChatGPT', 'Framer', 'Linear', 'Miro', 'Trello', 'Claude']
 const INTERESTS = ['Epic fantasy', 'Design engineering', 'Books', 'Design', 'Research', 'Teaching']
@@ -281,20 +325,20 @@ export function AboutContent() {
             <div style={{ marginTop: 40 }}>
               <Eyebrow>Experience</Eyebrow>
             </div>
-            <div className="flex flex-col" style={{ gap: 2, marginTop: 14 }}>
-              {EXPERIENCE.map((e) => (
-                <div key={e.org} className="flex justify-between items-center" style={{ gap: 16, padding: '13px 0' }}>
-                  <span>
-                    <span className="block font-sans font-medium text-foreground" style={{ fontSize: 16.5, letterSpacing: '-0.015em' }}>
-                      {e.org}
-                    </span>
-                    <span className="block font-sans" style={{ marginTop: 4, fontSize: 12.5, lineHeight: 1.65, color: 'var(--muted)' }}>
-                      {e.role}
-                    </span>
+            <div className="flex flex-col" style={{ marginTop: 14 }}>
+              {EXPERIENCE.map((e, i) => (
+                <div key={e.org} style={{ marginTop: i === 0 ? 0 : 36 }}>
+                  <span className="block font-sans font-medium text-foreground" style={{ fontSize: 16.5, letterSpacing: '-0.015em' }}>
+                    {e.org}
                   </span>
-                  <span className="whitespace-nowrap" style={{ fontSize: 10, color: 'var(--muted)' }}>
-                    {e.years}
+                  <span className="block font-sans font-medium" style={{ marginTop: 4, fontSize: 12.5, lineHeight: 1.65, color: 'var(--muted)' }}>
+                    {e.role} · {e.years}
                   </span>
+                  {e.body.map((p, pi) => (
+                    <p key={pi} className="font-sans" style={{ margin: '14px 0 0', fontSize: 13.5, lineHeight: 1.72, color: 'var(--body)' }}>
+                      {p}
+                    </p>
+                  ))}
                 </div>
               ))}
             </div>

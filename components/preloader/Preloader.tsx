@@ -8,15 +8,20 @@ import { PreloaderTV } from './PreloaderTV'
 // panel that holds, then slides up and off-screen, revealing the real page
 // underneath — replacing the old dot-grid-reveal choreography. The engine
 // underneath is unchanged from before: gated on the real `document.readyState`
-// / `load` event (not a fake timer) with an 8s safety net, plus a minimum
-// hold so a fast load never just flashes past, and it still swallows wheel/
+// / `load` event (not a fake timer) with a safety net, plus a minimum hold
+// so a fast load never just flashes past, and it still swallows wheel/
 // touch/keyboard input while visible so an impatient scroll can't skip it.
 // The hold is long enough for PreloaderTV (rendered inline below, as part
-// of this same panel) to cycle through several images before the panel
+// of this same panel) to cycle through a couple of images before the panel
 // peels away — PreloaderTV has no say in any of this timing.
-const MIN_HOLD_MS = 4200
+// Total time from mount to fully revealed page must stay ≤3s, so
+// MIN_HOLD_MS and SAFETY_MS are both capped well under that ceiling to
+// leave room for the ~30ms poll interval and the peel transition itself:
+// worst case is max(MIN_HOLD_MS, SAFETY_MS) + ~30ms poll slack +
+// PEEL_DURATION_MS, which must never exceed 3000ms.
+const MIN_HOLD_MS = 2200
 const PEEL_DURATION_MS = 650
-const SAFETY_MS = 8000
+const SAFETY_MS = 2200
 
 type Phase = 'loading' | 'exiting' | 'done'
 
