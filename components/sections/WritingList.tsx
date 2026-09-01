@@ -64,7 +64,37 @@ export function WritingList() {
             </div>
             <p className="font-sans" style={{ margin: '12px 0 16px', fontSize: 13.5, lineHeight: 1.72, color: 'var(--body)' }}>
               I write about design, technology, and the things I&rsquo;m curious about. My articles are mostly
-              published on freeCodeCamp, Medium, and Substack.
+              published on{' '}
+              <a
+                href="https://www.freecodecamp.org/news/author/snowolohijere/"
+                target="_blank"
+                rel="noopener noreferrer"
+                data-cursor="Open"
+                style={{ fontWeight: 500, borderBottom: '1px solid var(--link-underline)' }}
+              >
+                freeCodeCamp
+              </a>
+              ,{' '}
+              <a
+                href="https://medium.com/@olofaith"
+                target="_blank"
+                rel="noopener noreferrer"
+                data-cursor="Open"
+                style={{ fontWeight: 500, borderBottom: '1px solid var(--link-underline)' }}
+              >
+                Medium
+              </a>
+              , and{' '}
+              <a
+                href="https://substack.com/@olohijerefaith"
+                target="_blank"
+                rel="noopener noreferrer"
+                data-cursor="Open"
+                style={{ fontWeight: 500, borderBottom: '1px solid var(--link-underline)' }}
+              >
+                Substack
+              </a>
+              .
             </p>
             <div className="flex flex-col" style={{ gap: 2 }}>
               {WRITING.map((w) => (

@@ -5,19 +5,18 @@ import { BackToTopButton } from './BackToTopButton'
 
 // Claude Design "Snow — Portfolio v2" footer ("Connect"). The Resume
 // destination is preserved exactly as it already was. LinkedIn/Dribbble
-// are real existing/design-provided links; the design's own footer omits
-// X(Twitter) entirely, so this list is intentionally 4 items, not 5.
+// are real existing/design-provided links; X (Twitter) was added
+// alongside them, before LinkedIn.
 const RESUME_HREF = 'https://drive.google.com/file/d/113db08By6ZZDhZIOnZxwofs3sUpyEEq5/view?usp=sharing'
+const TWITTER_HREF = 'https://x.com/olohijerefaith'
 const LINKEDIN_HREF = 'https://www.linkedin.com/in/faith-ijelekhai-57a96b213/'
 const DRIBBBLE_HREF = 'https://dribbble.com/Faith-olohijere3'
 const READING = {
   title: 'Throne of Glass',
   author: 'Sarah J. Maas',
-  href: 'https://www.amazon.com/Throne-Glass-Sarah-J-Maas/dp/1619630346',
   // The real cover Amazon serves for this exact listing (read directly off
   // the product page's #landingImage `data-old-hires`), hotlinked rather
-  // than downloaded/re-hosted — same principle as href already pointing
-  // straight at Amazon.
+  // than downloaded/re-hosted.
   coverSrc: 'https://m.media-amazon.com/images/I/81REJ3+rUOL._SL1500_.jpg',
 }
 
@@ -131,7 +130,7 @@ function FooterContent() {
         Connect
       </div>
       <p className="font-sans" style={{ margin: '12px 0 16px', fontSize: 13.5, lineHeight: 1.72, color: 'var(--body)' }}>
-        Always up for talking about product, books, or anything someone is genuinely excited about. Email is best.
+        Always up for talking about product, books, advocacy, food recipes, and great user experience. Email is best.
       </p>
 
       <div className="flex flex-wrap" style={{ gap: 8 }}>
@@ -140,6 +139,9 @@ function FooterContent() {
         </Pill>
         <Pill href={RESUME_HREF} external>
           Resume
+        </Pill>
+        <Pill href={TWITTER_HREF} external>
+          X (Twitter)
         </Pill>
         <Pill href={LINKEDIN_HREF} external>
           LinkedIn
@@ -178,17 +180,13 @@ function FooterContent() {
               />
             </span>
           )}
-          <a
-            href={READING.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-cursor="Open"
+          <span
             onMouseEnter={() => hoverCapable && setBookHover(true)}
             onMouseLeave={() => hoverCapable && setBookHover(false)}
             style={{ fontSize: 13, color: 'var(--body)', borderBottom: '1px solid transparent', transition: 'border-color 200ms ease, color 200ms ease' }}
           >
             {READING.title}
-          </a>
+          </span>
         </span>
         <span style={{ fontSize: 12, color: 'var(--muted)' }}>{READING.author}</span>
       </div>

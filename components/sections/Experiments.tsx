@@ -15,7 +15,7 @@ export function Experiments() {
         Experiments
       </div>
       <p className="font-sans" style={{ margin: '12px 0 18px', fontSize: 13.5, lineHeight: 1.72, color: 'var(--body)' }}>
-        Little projects I built with vibecoding.
+        Little projects I build with vibecoding.
       </p>
       <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: 10 }}>
         {LAB.map((item) => (

@@ -104,7 +104,7 @@ export function LandingHero() {
           I&rsquo;ve spent the last four years designing across fintech, crypto, AI and civic tech.
           Most recently, I was a founding product designer at{' '}
           <a
-            href="https://x.com/useazza"
+            href="https://www.useazza.com/"
             target="_blank"
             rel="noopener noreferrer"
             data-cursor="Open"
