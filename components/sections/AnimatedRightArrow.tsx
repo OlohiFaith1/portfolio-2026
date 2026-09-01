@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 
 interface Props {
   href: string
@@ -13,6 +13,7 @@ interface Props {
 }
 
 export function AnimatedRightArrow({ href, color, arrowSrc = '/arrow-right.svg' }: Props) {
+  const reduced = useReducedMotion()
   return (
     <Link
       href={href}
@@ -27,12 +28,12 @@ export function AnimatedRightArrow({ href, color, arrowSrc = '/arrow-right.svg' 
         Next
       </span>
       <motion.div
-        animate={{ x: [0, 9, 0] }}
-        transition={{
-          duration: 1.8,
-          ease: 'easeInOut',
-          repeat: Infinity,
-        }}
+        animate={reduced ? {} : { x: [0, 9, 0] }}
+        transition={
+          reduced
+            ? { duration: 0 }
+            : { duration: 1.8, ease: 'easeInOut', repeat: Infinity }
+        }
       >
         <Image
           src={arrowSrc}

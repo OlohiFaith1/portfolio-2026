@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { DraggableDotGrid } from './DraggableDotGrid'
 import { CaseStudyFooter } from './CaseStudyFooter'
@@ -85,11 +85,33 @@ const DESKTOP_MASONRY = buildMasonryColumns(FEED, DESKTOP_COLUMNS)
 
 export function PlaygroundFeed() {
   const [lightbox, setLightbox] = useState<FeedItem | null>(null)
+  // The tile that opened the lightbox, so closing it can return focus
+  // there instead of dropping a keyboard user back at the top of the page.
+  const lastTriggerRef = useRef<HTMLButtonElement | null>(null)
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null)
+
+  const closeLightbox = () => {
+    setLightbox(null)
+    lastTriggerRef.current?.focus()
+  }
 
   useEffect(() => {
     if (!lightbox) return
+    // Move focus into the dialog as soon as it opens, matching what
+    // sighted users already see happen visually.
+    closeButtonRef.current?.focus()
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setLightbox(null)
+      if (e.key === 'Escape') {
+        closeLightbox()
+        return
+      }
+      // Minimal focus trap: the close button is the dialog's only real
+      // control, so Tab/Shift+Tab just keep focus on it rather than
+      // letting it escape to the page underneath while the dialog is open.
+      if (e.key === 'Tab') {
+        e.preventDefault()
+        closeButtonRef.current?.focus()
+      }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -99,7 +121,10 @@ export function PlaygroundFeed() {
     <button
       key={item.title}
       type="button"
-      onClick={() => setLightbox(item)}
+      onClick={(e) => {
+        lastTriggerRef.current = e.currentTarget
+        setLightbox(item)
+      }}
       data-cursor="Expand"
       className="block"
       style={{ margin: 0, padding: 0, border: 'none', borderRadius: 10, background: 'var(--surface)', cursor: 'zoom-in', ...style }}
@@ -139,9 +164,9 @@ export function PlaygroundFeed() {
           {/* Text stays in the same narrow, readable column every other
               page uses. */}
           <section className="mx-auto w-full max-w-[620px] px-6" style={{ paddingTop: 20 }}>
-            <div className="font-mono text-[10px] tracking-[0.14em] uppercase" style={{ color: 'var(--muted)' }}>
+            <h1 className="font-mono text-[10px] tracking-[0.14em] uppercase" style={{ color: 'var(--muted)', margin: 0 }}>
               Playground
-            </div>
+            </h1>
             <p className="font-sans" style={{ margin: '12px 0 0', fontSize: 13.5, lineHeight: 1.72, color: 'var(--body)' }}>
               This is a collection of experiments I did, challenges I joined, unfinished ideas, and things that never shipped.
             </p>
@@ -164,9 +189,10 @@ export function PlaygroundFeed() {
 
       {lightbox && (
         <div
-          onClick={() => setLightbox(null)}
+          onClick={closeLightbox}
           role="dialog"
           aria-modal="true"
+          aria-label={lightbox.title}
           className="fixed inset-0 flex items-center justify-center"
           style={{
             zIndex: 60,
@@ -176,6 +202,32 @@ export function PlaygroundFeed() {
             cursor: 'zoom-out',
           }}
         >
+          <button
+            type="button"
+            ref={closeButtonRef}
+            onClick={closeLightbox}
+            aria-label="Close"
+            className="appearance-none border-0 flex items-center justify-center"
+            style={{
+              position: 'fixed',
+              top: 24,
+              right: 24,
+              zIndex: 61,
+              width: 36,
+              height: 36,
+              padding: 0,
+              margin: 0,
+              borderRadius: '50%',
+              background: 'rgba(255,255,255,0.14)',
+              color: '#efedea',
+              cursor: 'pointer',
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
           <div style={{ width: 'min(760px, 100%)' }}>
             <div
               className="font-mono"

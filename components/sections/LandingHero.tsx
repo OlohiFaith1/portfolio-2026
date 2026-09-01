@@ -87,9 +87,9 @@ export function LandingHero() {
             />
           </div>
           <div className="min-w-0">
-            <div className="font-sans font-medium text-[19px] tracking-[-0.015em] text-foreground">
+            <h1 className="font-sans font-medium text-[19px] tracking-[-0.015em] text-foreground" style={{ margin: 0 }}>
               Faith Olohijere
-            </div>
+            </h1>
             <div className="mt-[3px] font-sans text-[12.5px]" style={{ color: 'var(--muted)' }}>
               Digital Product Designer
             </div>

@@ -105,6 +105,23 @@ export function Preloader() {
     }
   }, [phase])
 
+  // The listeners above stop wheel/touch/keyboard from reaching the real
+  // page, but assistive tech doesn't necessarily go through those events —
+  // a screen reader's virtual cursor can still browse to and activate real
+  // content sitting under the (visually opaque) preloader. `inert` closes
+  // that gap the same way for every input mode at once, without changing
+  // anything about the preloader's own timing or appearance.
+  useEffect(() => {
+    const el = document.getElementById('site-content')
+    if (!el) return
+    if (phase === 'done') {
+      el.removeAttribute('inert')
+    } else {
+      el.setAttribute('inert', '')
+    }
+    return () => el.removeAttribute('inert')
+  }, [phase])
+
   if (phase === 'done') return null
 
   const exiting = phase === 'exiting'

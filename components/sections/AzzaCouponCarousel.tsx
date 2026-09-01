@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useLayoutEffect, useState } from 'react'
+import { useRef, useLayoutEffect, useEffect, useState } from 'react'
 
 // Restored from the original AzzaStudy8 section (commit 63358b0, since
 // removed when the case study moved to the Snow/Claude Design format): a
@@ -63,6 +63,11 @@ const KEYFRAMES = `
 export function AzzaCouponCarousel() {
   const wrapRef = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
+  // Starts false (matching SSR, where matchMedia doesn't exist) and is only
+  // ever corrected post-mount, deferred via setTimeout so the setState
+  // happens inside a callback rather than synchronously in the effect body
+  // (react-hooks/set-state-in-effect) — same pattern Preloader.tsx uses.
+  const [reducedMotion, setReducedMotion] = useState(false)
 
   useLayoutEffect(() => {
     const update = () => {
@@ -72,6 +77,13 @@ export function AzzaCouponCarousel() {
     const ro = new ResizeObserver(update)
     if (wrapRef.current) ro.observe(wrapRef.current)
     return () => ro.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const t = window.setTimeout(() => {
+      setReducedMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+    }, 0)
+    return () => window.clearTimeout(t)
   }, [])
 
   return (
@@ -118,6 +130,10 @@ export function AzzaCouponCarousel() {
               alignItems: 'center',
               gap: VGAP,
               animation: `azza8-marquee ${DURATION}s linear infinite`,
+              // Reduced motion pauses the marquee on whatever frame it's on
+              // rather than swapping in a different layout — the vouchers
+              // stay fully visible, just static.
+              animationPlayState: reducedMotion ? 'paused' : 'running',
             }}
           >
             {[...VOUCHERS, ...VOUCHERS].map((v, i) => (

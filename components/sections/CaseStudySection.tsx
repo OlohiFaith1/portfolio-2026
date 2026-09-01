@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import type { ComponentType, ReactNode, MouseEvent } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { AnimatedRightArrow } from './AnimatedRightArrow'
 
 /** Desktop-hover background reveal behind the mockup — tint color + a positioned artwork image. */
@@ -76,6 +76,7 @@ export function CaseStudySection({
   hoverArrowSrc,
   mobileRoleMaxWidth,
 }: CaseStudySectionProps) {
+  const reduced = useReducedMotion()
   const [hovered, setHovered] = useState(false)
   const [showComingSoon, setShowComingSoon] = useState(false)
 
@@ -202,7 +203,7 @@ export function CaseStudySection({
             comingSoon={comingSoon}
             href={href}
             onTrigger={triggerComingSoon}
-            ariaLabel={comingSoon ? `${name} — coming soon` : undefined}
+            ariaLabel={comingSoon ? `${name} — coming soon` : `View ${name} case study`}
           >
             <Mockup className="h-[48vh]" />
           </PreviewTrigger>
@@ -221,8 +222,8 @@ export function CaseStudySection({
             Next
           </span>
           <motion.div
-            animate={{ x: [0, 7, 0] }}
-            transition={{ duration: 1.8, ease: 'easeInOut', repeat: Infinity }}
+            animate={reduced ? {} : { x: [0, 7, 0] }}
+            transition={reduced ? { duration: 0 } : { duration: 1.8, ease: 'easeInOut', repeat: Infinity }}
           >
             <Image
               src="/arrow-right.svg"
@@ -267,7 +268,7 @@ export function CaseStudySection({
             comingSoon={comingSoon}
             href={href}
             onTrigger={triggerComingSoon}
-            ariaLabel={comingSoon ? `${name} — coming soon` : undefined}
+            ariaLabel={comingSoon ? `${name} — coming soon` : `View ${name} case study`}
           >
             <Mockup className="h-[63vh]" />
           </PreviewTrigger>
@@ -288,8 +289,8 @@ export function CaseStudySection({
             Next
           </span>
           <motion.div
-            animate={{ x: [0, 7, 0] }}
-            transition={{ duration: 1.8, ease: 'easeInOut', repeat: Infinity }}
+            animate={reduced ? {} : { x: [0, 7, 0] }}
+            transition={reduced ? { duration: 0 } : { duration: 1.8, ease: 'easeInOut', repeat: Infinity }}
           >
             <Image
               src="/arrow-right.svg"
@@ -369,7 +370,7 @@ export function CaseStudySection({
         onTrigger={triggerComingSoon}
         onMouseEnter={enterMockupHover}
         onMouseLeave={leaveMockupHover}
-        ariaLabel={comingSoon ? `${name} — coming soon` : undefined}
+        ariaLabel={comingSoon ? `${name} — coming soon` : `View ${name} case study`}
         className="hidden lg:block"
       >
         <Mockup />
@@ -458,7 +459,7 @@ function PreviewTrigger({
   }
 
   return (
-    <Link href={href} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} className={className}>
+    <Link href={href} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} aria-label={ariaLabel} className={className}>
       {children}
     </Link>
   )

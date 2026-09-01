@@ -59,9 +59,9 @@ export function WritingList() {
         <DraggableDotGrid />
         <div className="relative mx-auto w-full max-w-[620px]" style={{ zIndex: 1, padding: '64px 26px 80px' }}>
           <section style={{ paddingTop: 20 }}>
-            <div className="font-mono text-[10px] tracking-[0.14em] uppercase" style={{ color: 'var(--muted)' }}>
+            <h1 className="font-mono text-[10px] tracking-[0.14em] uppercase" style={{ color: 'var(--muted)', margin: 0 }}>
               Writing
-            </div>
+            </h1>
             <p className="font-sans" style={{ margin: '12px 0 16px', fontSize: 13.5, lineHeight: 1.72, color: 'var(--body)' }}>
               I write about design, technology, and the things I&rsquo;m curious about. My articles are mostly
               published on{' '}
@@ -117,12 +117,12 @@ export function WritingList() {
                     <div className="font-mono text-[9px] tracking-[0.1em] uppercase" style={{ color: 'var(--muted)' }}>
                       {w.source}
                     </div>
-                    <div
+                    <h2
                       className="font-sans font-medium text-foreground"
-                      style={{ marginTop: 3, fontSize: 15.5, lineHeight: 1.35, letterSpacing: '-0.015em' }}
+                      style={{ margin: 0, marginTop: 3, fontSize: 15.5, lineHeight: 1.35, letterSpacing: '-0.015em' }}
                     >
                       {w.title}
-                    </div>
+                    </h2>
                     <p
                       className="font-sans"
                       style={{

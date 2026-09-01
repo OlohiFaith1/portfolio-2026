@@ -183,6 +183,14 @@ function FooterContent() {
           <span
             onMouseEnter={() => hoverCapable && setBookHover(true)}
             onMouseLeave={() => hoverCapable && setBookHover(false)}
+            // Touch devices have no hover: tapping toggles the same reveal
+            // instead — a second tap hides it again, matching the
+            // tap-to-toggle pattern already used elsewhere in this codebase
+            // (see AboutContent.tsx's word-hover previews).
+            onClick={() => {
+              if (hoverCapable) return
+              setBookHover((v) => !v)
+            }}
             style={{ fontSize: 13, color: 'var(--body)', borderBottom: '1px solid transparent', transition: 'border-color 200ms ease, color 200ms ease' }}
           >
             {READING.title}

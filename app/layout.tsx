@@ -21,12 +21,32 @@ const geistMono = Geist_Mono({
   display: 'swap',
 })
 
+const TITLE = 'Ijelekhai Faith Olohijere | Product Designer & Design Engineer'
+const DESCRIPTION =
+  'Product designer crafting thoughtful digital experiences while exploring AI and design engineering.'
+
 export const metadata: Metadata = {
-  // TODO: replace with production domain once live
-  metadataBase: new URL('https://example.com'),
-  title: 'Ijelekhai Faith Olohijere | Product Designer & Design Engineer',
-  description:
-    'Product designer crafting thoughtful digital experiences while exploring AI and design engineering.',
+  // README.md documents this as the live production domain.
+  metadataBase: new URL('https://snowolohijere.com'),
+  title: TITLE,
+  description: DESCRIPTION,
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    url: '/',
+    siteName: 'Faith Olohijere — Snow',
+    // Reuses the existing About page portrait rather than a dedicated
+    // og:image asset — the closest thing this site already has to a
+    // "face" for link previews.
+    images: ['/images/about/About%20Header%20Image.png'],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ['/images/about/About%20Header%20Image.png'],
+  },
 }
 
 export default function RootLayout({
@@ -43,10 +63,16 @@ export default function RootLayout({
             replays on client-side navigation between routes. */}
         <Preloader />
         <SmoothScrollProvider>
-          <Nav />
-          <ContextualCursor />
-          <MagneticHover />
-          <main>{children}</main>
+          {/* id targeted by Preloader.tsx to toggle `inert` while it's
+              covering the screen — a plain, unstyled div, so it changes
+              nothing about layout (Nav/ContextualCursor are both
+              position:fixed, unaffected by their parent's box). */}
+          <div id="site-content">
+            <Nav />
+            <ContextualCursor />
+            <MagneticHover />
+            <main>{children}</main>
+          </div>
         </SmoothScrollProvider>
       </body>
     </html>

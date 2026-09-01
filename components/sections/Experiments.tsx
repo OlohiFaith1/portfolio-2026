@@ -11,9 +11,9 @@ const LAB = [
 export function Experiments() {
   return (
     <section style={{ paddingTop: 60 }}>
-      <div className="font-mono text-[10px] tracking-[0.14em] uppercase" style={{ color: 'var(--muted)' }}>
+      <h2 className="font-mono text-[10px] tracking-[0.14em] uppercase" style={{ color: 'var(--muted)', margin: 0 }}>
         Experiments
-      </div>
+      </h2>
       <p className="font-sans" style={{ margin: '12px 0 18px', fontSize: 13.5, lineHeight: 1.72, color: 'var(--body)' }}>
         Little projects I build with vibecoding.
       </p>

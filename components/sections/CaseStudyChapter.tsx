@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { AzzaYouPaidAnimation } from './AzzaYouPaidAnimation'
 import { AzzaCouponCarousel } from './AzzaCouponCarousel'
 import { SyncWatchLogoFlicker } from './SyncWatchLogoFlicker'
+import { CaseStudyInlineVideo } from './CaseStudyInlineVideo'
 
 // A paragraph is either plain text, or a sequence of segments so a
 // paragraph can carry inline links (e.g. "we entered the [X](url) and
@@ -24,6 +25,13 @@ export interface CaseStudyFigure {
    *  aspect ratio instead of being cover-cropped into the standard 3:2 box. */
   width?: number
   height?: number
+  /** Renders this figure as a natural-aspect-ratio video (CaseStudyInlineVideo)
+   *  instead of an image — autoplays only while scrolled into view, loops,
+   *  muted, no controls, never cover-cropped. Requires width/height (the
+   *  video's own real intrinsic pixel dimensions) so its aspect ratio is
+   *  known upfront instead of shifting layout once metadata loads. `src`
+   *  is unused when this is set. */
+  video?: string
 }
 
 // An additional heading/body/image grouping within a chapter, after its
@@ -149,6 +157,9 @@ function Paragraphs({ body }: { body: string | CaseStudyParagraph[] }) {
 // tall assets show completely instead of having their top/bottom cropped
 // into a landscape box.
 function FigureImage({ figure, crop = true }: { figure: CaseStudyFigure; crop?: boolean }) {
+  if (figure.video && figure.width && figure.height) {
+    return <CaseStudyInlineVideo src={figure.video} width={figure.width} height={figure.height} caption={figure.caption} />
+  }
   // A figure slot with no src yet (an image queued to be added later) —
   // render the same bordered/rounded surface every other figure sits in,
   // without an <Image>, since next/image requires a non-empty src.
@@ -221,8 +232,8 @@ function Gallery({ images, layout = 'row', crop = true }: { images: CaseStudyFig
 function PhoneMockup({ videoSrc }: { videoSrc: string }) {
   return (
     <div style={{ position: 'relative', width: '100%', maxWidth: 240, aspectRatio: '367 / 750' }}>
-      <Image src="/azza/hero/phone-shadow.png" alt="" fill style={{ objectFit: 'contain', opacity: 0.7 }} />
-      <Image src="/azza/hero/phone-frame.png" alt="" fill style={{ objectFit: 'contain' }} />
+      <Image src="/azza/hero/phone-shadow.png" alt="" fill sizes="240px" style={{ objectFit: 'contain', opacity: 0.7 }} />
+      <Image src="/azza/hero/phone-frame.png" alt="" fill sizes="240px" style={{ objectFit: 'contain' }} />
       <div
         style={{
           position: 'absolute',

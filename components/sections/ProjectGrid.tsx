@@ -15,9 +15,9 @@ import { WorkCardVisual } from './WorkCardVisual'
 export function ProjectGrid({ heading }: { heading: string }) {
   return (
     <section style={{ paddingTop: 44 }}>
-      <div className="font-mono text-[10px] tracking-[0.14em] uppercase" style={{ color: 'var(--muted)' }}>
+      <h2 className="font-mono text-[10px] tracking-[0.14em] uppercase" style={{ color: 'var(--muted)', margin: 0 }}>
         {heading}
-      </div>
+      </h2>
       {/* One project per row below lg (deterministic — not auto-fit, which
           could incidentally fit 2 at in-between widths and cause overflow
           combined with the -10px pullback below); exactly two per row at

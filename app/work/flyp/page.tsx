@@ -5,12 +5,14 @@ import { NextProjectSection } from '@/components/sections/NextProjectSection'
 import { CaseStudyFooter } from '@/components/sections/CaseStudyFooter'
 import { CASE_STUDIES, getReadingTime } from '@/lib/case-studies'
 
-export const metadata = { title: 'SyncWatch — Faith Olohijere' }
+export const metadata = { title: 'Flyp — Faith Olohijere' }
 
 // Claude Design "Snow — Portfolio v2" case-study format — see
-// app/work/azza/page.tsx for the shared structural notes.
-export default function SyncWatchPage() {
-  const content = CASE_STUDIES.syncwatch
+// app/work/azza/page.tsx for the shared structural notes. Cover image and
+// the Challenge/Solution image galleries are pending real Flyp assets —
+// see lib/case-studies.ts's flyp entry for how those slots stay empty.
+export default function FlypPage() {
+  const content = CASE_STUDIES.flyp
   return (
     <>
       <CaseStudyProgressRail />
@@ -30,7 +32,7 @@ export default function SyncWatchPage() {
             <CaseStudyChapter key={chapter.label} chapter={chapter} />
           ))}
         </div>
-        <NextProjectSection currentSlug="syncwatch" />
+        <NextProjectSection currentSlug="flyp" />
       </div>
       <CaseStudyFooter />
     </>

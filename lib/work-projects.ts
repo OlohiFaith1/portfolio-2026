@@ -17,11 +17,10 @@ export interface WorkProject {
 }
 
 // Shared by the Work grid page (and reusable anywhere else project metadata
-// is needed) so names/years/routes live in exactly one place. Order and
-// year/type values match the redesigned Work Grid Figma frame (471:33025)
-// exactly — this is a positional layout (Azza large, Syncwatch/Mercado
-// stacked beside it, then Flyp/Silverbird/LNVC), not a generic auto-placed
-// list, so this array's order IS the render order.
+// is needed) so names/years/routes live in exactly one place. This is a
+// positional layout, not a generic auto-placed list, so this array's order
+// IS the render order — Flyp was moved directly before Mercado (was
+// Mercado, Flyp), everything else keeps its original position.
 export const WORK_PROJECTS: WorkProject[] = [
   {
     slug: 'azza',
@@ -42,6 +41,15 @@ export const WORK_PROJECTS: WorkProject[] = [
     line: 'A social experience for watching movies together, from anywhere.',
   },
   {
+    slug: 'flyp',
+    name: 'Flyp',
+    year: '2025',
+    type: 'WORK',
+    href: '/work/flyp',
+    comingSoon: false,
+    line: 'A Figma plugin for exporting motion, made simpler.',
+  },
+  {
     slug: 'mercado',
     name: 'Mercado',
     year: '2025',
@@ -50,15 +58,6 @@ export const WORK_PROJECTS: WorkProject[] = [
     comingSoon: false,
     comingSoonTag: true,
     line: 'A stablecoin payment experience built for merchants.',
-  },
-  {
-    slug: 'flyp',
-    name: 'Flyp',
-    year: '2025',
-    type: 'WORK',
-    href: '',
-    comingSoon: true,
-    line: 'A Figma plugin for exporting motion, made simpler.',
   },
   {
     slug: 'silverbird',
@@ -80,7 +79,7 @@ export const WORK_PROJECTS: WorkProject[] = [
   },
 ]
 
-// The case-study sequence (Azza → Syncwatch → Mercado → Flyp → Silverbird →
+// The case-study sequence (Azza → Syncwatch → Flyp → Mercado → Silverbird →
 // LNVC → back to Azza) is this same array's own order — no separate
 // ordering data needed. Used by NextProjectSection so every case study's
 // "Next Project" card stays in lockstep with the Work Grid by construction.

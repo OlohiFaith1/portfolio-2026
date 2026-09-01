@@ -59,11 +59,14 @@ const EXPERIENCE: ExperienceEntry[] = [
 const TOOLS = ['Figma', 'Cursor', 'ChatGPT', 'Framer', 'Linear', 'Miro', 'Trello', 'Claude']
 const INTERESTS = ['Epic fantasy', 'Design engineering', 'Books', 'Design', 'Research', 'Teaching']
 
-function Eyebrow({ children }: { children: React.ReactNode }) {
+// `as` lets the one shared label style stand in for whatever heading level
+// actually applies at a given call site (this page's own h1, or an h2 for
+// each subordinate section below it) without duplicating the styling.
+function Eyebrow({ children, as: Tag = 'div' }: { children: React.ReactNode; as?: 'div' | 'h1' | 'h2' }) {
   return (
-    <div className="font-mono text-[10px] tracking-[0.14em] uppercase" style={{ color: 'var(--muted)' }}>
+    <Tag className="font-mono text-[10px] tracking-[0.14em] uppercase" style={{ color: 'var(--muted)', margin: 0 }}>
       {children}
-    </div>
+    </Tag>
   )
 }
 
@@ -85,15 +88,43 @@ function PillRow({ items }: { items: string[] }) {
 
 type HoverWord = 'snow' | 'books' | 'sofadondo' | 'gym'
 
-type Preview = { src: string; w: number; h: number; previewW: number; caption?: string }
+type Preview = { src: string; w: number; h: number; previewW: number; alt: string; caption?: string }
 
 // books is wide/landscape (4732×2044 ≈ 2.3:1), so needs a larger previewW
 // to reach a comparable rendered height to the other three (~360px).
+// `alt` describes what's actually in each photo (real content, not
+// decoration) so it reaches screen-reader users the same way the image
+// reaches sighted ones.
 const PREVIEWS: Record<HoverWord, Preview> = {
-  snow: { src: '/images/about/ABOUT%20IMAGE%201.png', w: 3160, h: 2852, previewW: 420, caption: 'I like mirror pictures' },
-  books: { src: '/images/about/ABOUT%20IMAGE%202.png', w: 4732, h: 2044, previewW: 840 },
-  sofadondo: { src: '/images/about/ABOUT%20IMAGE%203.png', w: 3268, h: 2852, previewW: 420 },
-  gym: { src: '/images/about/ABOUT%20IMAGE%204.png', w: 3160, h: 2852, previewW: 420 },
+  snow: {
+    src: '/images/about/ABOUT%20IMAGE%201.png',
+    w: 3160,
+    h: 2852,
+    previewW: 420,
+    alt: 'Mirror selfie of Faith in a yellow polka-dot dress, captioned “I love mirror pictures.”',
+    caption: 'I like mirror pictures',
+  },
+  books: {
+    src: '/images/about/ABOUT%20IMAGE%202.png',
+    w: 4732,
+    h: 2044,
+    previewW: 840,
+    alt: 'A collage of three book covers Faith loves: “Ponmo Is a Bird That Has No Place in a Cultured Culinary Sky and Other Stories,” “As Long as the Lemon Trees Grow,” and Sarah J. Maas’s “Throne of Glass” and “Heir of Fire.”',
+  },
+  sofadondo: {
+    src: '/images/about/ABOUT%20IMAGE%203.png',
+    w: 3268,
+    h: 2852,
+    previewW: 420,
+    alt: 'Faith speaking to a room of secondary school students at a SOFADONDO advocacy outreach.',
+  },
+  gym: {
+    src: '/images/about/ABOUT%20IMAGE%204.png',
+    w: 3160,
+    h: 2852,
+    previewW: 420,
+    alt: 'Mirror selfie of Faith wearing workout gloves at the gym.',
+  },
 }
 
 function displayHeight(p: Preview) {
@@ -102,6 +133,34 @@ function displayHeight(p: Preview) {
 
 const wavyUnderline =
   'font-medium underline decoration-wavy decoration-[1.5px] underline-offset-[4px] cursor-default'
+
+// A real, focusable <button> styled to read as plain inline text (the
+// design's own wavy-underline treatment, unchanged) rather than a <span>
+// with mouse-only handlers — keyboard users can Tab to it and it stays in
+// the browser's normal focus order, unlike a bare span. `cursor-default`
+// in wavyUnderline already overrides the browser's default button pointer
+// cursor, so it doesn't newly look "clickable".
+function HoverWord({ children, ...handlers }: { children: React.ReactNode } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  return (
+    <button
+      type="button"
+      className={wavyUnderline}
+      style={{
+        textDecorationColor: 'var(--accent)',
+        font: 'inherit',
+        color: 'inherit',
+        background: 'none',
+        border: 'none',
+        padding: 0,
+        margin: 0,
+        display: 'inline',
+      }}
+      {...handlers}
+    >
+      {children}
+    </button>
+  )
+}
 
 export function AboutContent() {
   // Hover-capable + fine pointer — same detection pattern used throughout
@@ -118,7 +177,13 @@ export function AboutContent() {
   // gate keeps that fork's first paint identical to the server's, only
   // flipping the mobile layout on after hydration has finished.
   const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
+  // Deferred one tick so the setState happens inside a callback, not
+  // synchronously in the effect body (react-hooks/set-state-in-effect) —
+  // same pattern Preloader.tsx already uses for its own post-mount flag.
+  useEffect(() => {
+    const t = window.setTimeout(() => setMounted(true), 0)
+    return () => window.clearTimeout(t)
+  }, [])
   const useMobileLayout = mounted && !hoverCapable
   const [activeWord, setActiveWord] = useState<HoverWord | null>(null)
   // Keeps the last image mounted so it fades out rather than popping.
@@ -150,17 +215,30 @@ export function AboutContent() {
     setActiveWord(word)
   }
 
-  const onEnter = (word: HoverWord) => (e: React.MouseEvent<HTMLSpanElement>) => {
+  const onEnter = (word: HoverWord) => (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!hoverCapable) return
     showPreview(word, e.currentTarget)
   }
 
   const onLeave = () => setActiveWord(null)
 
-  // Touch/no-hover devices: tap toggles the same reveal a hover would show
-  // on desktop — a second tap on the active word closes it.
-  const onTap = (word: HoverWord) => (e: React.MouseEvent<HTMLSpanElement>) => {
-    if (hoverCapable) return
+  // Keyboard-focusing the trigger mirrors mouse hover (reveal on focus,
+  // hide on blur) — the keyboard equivalent of "hovering" for the same
+  // hover-capable devices, so Tab alone already shows the image without
+  // needing Enter/Space too.
+  const onFocusReveal = (word: HoverWord) => (e: React.FocusEvent<HTMLButtonElement>) => {
+    if (!hoverCapable) return
+    showPreview(word, e.currentTarget)
+  }
+
+  // Click/tap toggles the reveal open/closed — attached on every device.
+  // It's the primary interaction on touch/no-hover devices (tap opens, a
+  // second tap on the active word closes it). On hover-capable devices
+  // it's what gives Enter/Space an explicit effect on a focused button
+  // (native <button> semantics fire a click for both keys): hovering
+  // already reveals the image without needing this, so clicking mid-hover
+  // just toggles it closed — a harmless, rare edge case.
+  const onToggle = (word: HoverWord) => (e: React.MouseEvent<HTMLButtonElement>) => {
     if (activeWord === word) {
       setActiveWord(null)
       return
@@ -169,7 +247,9 @@ export function AboutContent() {
   }
 
   const hw = (word: HoverWord) =>
-    hoverCapable ? { onMouseEnter: onEnter(word), onMouseLeave: onLeave } : { onClick: onTap(word) }
+    hoverCapable
+      ? { onMouseEnter: onEnter(word), onMouseLeave: onLeave, onFocus: onFocusReveal(word), onBlur: onLeave, onClick: onToggle(word) }
+      : { onClick: onToggle(word) }
 
   return (
     <>
@@ -203,7 +283,11 @@ export function AboutContent() {
           layout below so the revealed image always fits the viewport. */}
       {!useMobileLayout ? (
         <div
-          aria-hidden="true"
+          // Hidden from assistive tech while nothing is revealed (there's
+          // nothing there to announce); exposed once a word sets
+          // activeWord, so the real alt text on the image inside actually
+          // reaches screen readers instead of being permanently silenced.
+          aria-hidden={!activeWord}
           className="fixed z-50 pointer-events-none"
           style={{
             left: previewPos.x,
@@ -219,7 +303,7 @@ export function AboutContent() {
             <>
               <Image
                 src={previewImg.src}
-                alt=""
+                alt={previewImg.alt}
                 width={previewImg.previewW}
                 height={displayHeight(previewImg)}
                 className="w-full h-auto block"
@@ -239,7 +323,8 @@ export function AboutContent() {
         </div>
       ) : (
         <div
-          aria-hidden="true"
+          // Same reasoning as the desktop popup above.
+          aria-hidden={!activeWord}
           className="fixed inset-0 z-50 pointer-events-none flex items-center justify-center"
           style={{ padding: '56px 24px' }}
         >
@@ -258,7 +343,7 @@ export function AboutContent() {
             >
               <Image
                 src={previewImg.src}
-                alt=""
+                alt={previewImg.alt}
                 width={previewImg.previewW}
                 height={displayHeight(previewImg)}
                 className="block"
@@ -293,12 +378,10 @@ export function AboutContent() {
         <DraggableDotGrid />
         <div className="relative" style={{ zIndex: 1 }}>
           <section className="w-full max-w-[620px] mx-auto px-6" style={{ paddingTop: 64, paddingBottom: 44 }}>
-            <Eyebrow>About</Eyebrow>
+            <Eyebrow as="h1">About</Eyebrow>
             <p className="font-sans" style={{ margin: '14px 0 0', fontSize: 13.5, lineHeight: 1.72, color: 'var(--body)' }}>
               I&apos;m Faith, but you can call me{' '}
-              <span className={wavyUnderline} style={{ textDecorationColor: 'var(--accent)' }} {...hw('snow')}>
-                Snow
-              </span>{' '}
+              <HoverWord {...hw('snow')}>Snow</HoverWord>{' '}
               (a nickname I&apos;ve had since my Bachelor&apos;s).
             </p>
             <p className="font-sans" style={{ margin: '14px 0 0', fontSize: 13.5, lineHeight: 1.72, color: 'var(--body)' }}>
@@ -307,23 +390,17 @@ export function AboutContent() {
             </p>
             <p className="font-sans" style={{ margin: '14px 0 0', fontSize: 13.5, lineHeight: 1.72, color: 'var(--body)' }}>
               Outside design, I mentor, volunteer with an advocacy group called{' '}
-              <span className={wavyUnderline} style={{ textDecorationColor: 'var(--accent)' }} {...hw('sofadondo')}>
-                SOFADONDO
-              </span>
+              <HoverWord {...hw('sofadondo')}>SOFADONDO</HoverWord>
               , write on freeCodeCamp, Medium, &amp; Substack, and build things I care about, most recently
               Lorelane, a game for readers. I&apos;ve always loved{' '}
-              <span className={wavyUnderline} style={{ textDecorationColor: 'var(--accent)' }} {...hw('books')}>
-                books
-              </span>
+              <HoverWord {...hw('books')}>books</HoverWord>
               , especially epic fantasy, and I&apos;m usually reading when I&apos;m not designing or at the{' '}
-              <span className={wavyUnderline} style={{ textDecorationColor: 'var(--accent)' }} {...hw('gym')}>
-                gym
-              </span>
+              <HoverWord {...hw('gym')}>gym</HoverWord>
               .
             </p>
 
             <div style={{ marginTop: 40 }}>
-              <Eyebrow>Experience</Eyebrow>
+              <Eyebrow as="h2">Experience</Eyebrow>
             </div>
             <div className="flex flex-col" style={{ marginTop: 14 }}>
               {EXPERIENCE.map((e, i) => (
@@ -344,12 +421,12 @@ export function AboutContent() {
             </div>
 
             <div style={{ marginTop: 36 }}>
-              <Eyebrow>Tools</Eyebrow>
+              <Eyebrow as="h2">Tools</Eyebrow>
             </div>
             <PillRow items={TOOLS} />
 
             <div style={{ marginTop: 36 }}>
-              <Eyebrow>Interests</Eyebrow>
+              <Eyebrow as="h2">Interests</Eyebrow>
             </div>
             <PillRow items={INTERESTS} />
           </section>

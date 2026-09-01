@@ -55,9 +55,19 @@ export function WorkCardVisual({ slug }: Props) {
       )
 
     case 'flyp':
+      // Left-aligned crop (not the default centered one every other cover
+      // uses) — the source asset's subject sits toward the left, so cropping
+      // from center was cutting it off; object-left keeps the left edge
+      // anchored and lets any overflow get cropped from the right instead.
       return (
         <div className="relative size-full">
-          <Image src="/images/Flyp%20Cover.png" alt="" fill sizes="(min-width: 1024px) 32vw, 100vw" className="object-cover" />
+          <Image
+            src="/images/Flyp%20Cover.png"
+            alt=""
+            fill
+            sizes="(min-width: 1024px) 32vw, 100vw"
+            className="object-cover object-left"
+          />
         </div>
       )
 

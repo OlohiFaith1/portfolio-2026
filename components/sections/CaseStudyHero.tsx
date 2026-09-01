@@ -63,7 +63,13 @@ export function CaseStudyHero({ year, org, role, title, readTime, heroImage, sta
           {title}
         </h1>
         <div className="relative w-full" style={{ marginTop: 30, aspectRatio: '3 / 2', borderRadius: 14, overflow: 'hidden', background: 'var(--surface)' }}>
-          <Image src={heroImage.src} alt={heroImage.alt} fill sizes="(min-width: 768px) 620px, 100vw" style={{ objectFit: 'cover' }} priority />
+          {/* A hero slot with no src yet (an image queued to be added later) —
+              same convention as CaseStudyChapter's FigureImage: render the
+              empty surface box, skip next/image entirely rather than pass it
+              an invalid empty src. */}
+          {heroImage.src && (
+            <Image src={heroImage.src} alt={heroImage.alt} fill sizes="(min-width: 768px) 620px, 100vw" style={{ objectFit: 'cover' }} priority />
+          )}
         </div>
         <CaseStudyStats stats={stats} />
       </section>

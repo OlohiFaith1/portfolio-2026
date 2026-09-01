@@ -325,6 +325,125 @@ export const CASE_STUDIES: Record<string, CaseStudyContent> = {
     ],
   },
 
+  flyp: {
+    year: '2026',
+    org: 'Flyp',
+    role: 'Product Design and Motion Ideation',
+    // Real, existing tagline for Flyp — already used as its Work Grid
+    // description in lib/work-projects.ts — reused here rather than writing
+    // a new headline, since no hero title copy was given for this case study.
+    title: 'A Figma plugin for exporting motion, made simpler.',
+    heroImage: { src: '/images/flyp/Flyp%20Case%20Study%20Cover.png', alt: 'Flyp case study cover image' },
+    stats: [
+      { value: 'Figma-native', label: 'Motion within the design workflow' },
+      { value: 'Motion-ready', label: 'Turn static designs into motion' },
+      { value: 'No rebuild', label: 'Animate existing Figma designs' },
+    ],
+    chapters: [
+      {
+        no: '',
+        label: 'The Backstory',
+        head: 'Where static designs start moving.',
+        body: [
+          [
+            { text: 'In late 2025, I briefly joined Superflous, a design agency led by ' },
+            { text: 'Demilade Olaleye', href: 'https://ph.demiladehq.com/' },
+            {
+              text: ', where I had the opportunity to contribute to some really exciting projects. Flyp is the one I’m most proud of — a Figma plugin built to bridge the gap between static Figma designs and motion.',
+            },
+          ],
+          'I contributed to the plugin experience, working on parts of the product interface and exploring motion concepts for its launch videos.',
+          'It was an interesting blend of product design and motion, and one that pushed me to think beyond the usual.',
+        ],
+      },
+      {
+        no: '',
+        label: 'The Challenge',
+        head: 'What happens when a static design needs to move?',
+        body: 'Designers can create detailed interfaces in Figma, but bringing those designs to life or presenting them with motion often means leaving Figma and starting again in another tool.',
+        parts: [
+          {
+            // Both slots are real flyp clips now, each rendered uncropped at
+            // its own natural aspect ratio (see CaseStudyInlineVideo) rather
+            // than forced into the usual object-fit:cover treatment.
+            // layout:'column' + crop:false matches every other multi-image
+            // gallery already in this file (Azza/SyncWatch) rather than the
+            // otherwise-unused row-grid default.
+            type: 'gallery',
+            layout: 'column',
+            crop: false,
+            images: [
+              {
+                src: '',
+                alt: 'Flyp case study video — leaving Figma to animate elsewhere (1 of 2)',
+                video: '/flyp-0147.mp4',
+                width: 1920,
+                height: 1200,
+              },
+              {
+                src: '',
+                alt: 'Flyp case study video — leaving Figma to animate elsewhere (2 of 2)',
+                video: '/images/flyp/Comp_1w_35.mp4',
+                // The file's encoded pixel buffer is 1920×1080, but it carries
+                // a non-square pixel aspect ratio (SAR 9:16) that makes its
+                // true displayed shape a 1:1 square — confirmed via ffprobe's
+                // display_aspect_ratio and matched by the browser's own
+                // reported videoWidth/videoHeight. Using the true display
+                // size here (not the raw encoded one) keeps this layout hint
+                // in sync with what <video> actually renders once loaded.
+                width: 1920,
+                height: 1920,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        no: '',
+        label: 'The Solution',
+        head: 'Bringing motion into the Figma workflow.',
+        body: 'Flyp brings motion into the Figma workflow, allowing designers to take their existing designs and explore animation without having to rebuild everything from scratch.',
+        parts: [
+          {
+            // First slot is the real Fraymer.png asset, rendered uncropped
+            // at its own 1826×1686 aspect ratio (crop:false, matching every
+            // other multi-media gallery in this file). Second slot is the
+            // real Fraymer-Video 1.mp4 clip, rendered uncropped at its own
+            // 720×900 (4:5) aspect ratio (see CaseStudyInlineVideo). Third
+            // (final) slot is the real Fraymer- Again.mp4 clip, rendered
+            // uncropped at its own 720×720 (1:1) aspect ratio.
+            type: 'gallery',
+            layout: 'column',
+            crop: false,
+            images: [
+              {
+                src: '/images/flyp/Fraymer.png',
+                alt: 'A Figma canvas of low-fidelity wireframes and layout explorations for Fraymer, the team behind Flyp',
+                caption: 'A screenshot of our Figma canvas',
+                width: 1826,
+                height: 1686,
+              },
+              {
+                src: '',
+                alt: 'Flyp case study video — motion inside the Figma workflow (2 of 3)',
+                video: '/images/flyp/Fraymer-Video%201.mp4',
+                width: 720,
+                height: 900,
+              },
+              {
+                src: '',
+                alt: 'Flyp case study video — motion inside the Figma workflow (3 of 3)',
+                video: '/images/flyp/Fraymer-%20Again.mp4',
+                width: 720,
+                height: 720,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
   syncwatch: {
     year: '2026',
     org: 'SyncWatch',

@@ -15,7 +15,8 @@ export default function MercadoPage() {
     <>
       <CaseStudyProgressRail />
       <div className="relative" style={{ zIndex: 1, backgroundColor: 'var(--background)' }}>
-        <main className="mx-auto w-full max-w-[620px]" style={{ padding: '64px 26px 0' }}>
+        {/* Not a <main> — see app/work/azza/page.tsx for why. */}
+        <div className="mx-auto w-full max-w-[620px]" style={{ padding: '64px 26px 0' }}>
           <CaseStudyHero
             year={content.year}
             org={content.org}
@@ -26,9 +27,9 @@ export default function MercadoPage() {
             stats={content.stats}
           />
           {content.chapters.map((chapter) => (
-            <CaseStudyChapter key={chapter.no} chapter={chapter} />
+            <CaseStudyChapter key={chapter.label} chapter={chapter} />
           ))}
-        </main>
+        </div>
         <NextProjectSection currentSlug="mercado" />
       </div>
       <CaseStudyFooter />

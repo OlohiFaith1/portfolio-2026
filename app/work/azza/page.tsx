@@ -17,7 +17,11 @@ export default function AzzaPage() {
     <>
       <CaseStudyProgressRail />
       <div className="relative" style={{ zIndex: 1, backgroundColor: 'var(--background)' }}>
-        <main className="mx-auto w-full max-w-[620px]" style={{ padding: '64px 26px 0' }}>
+        {/* Not a <main> — the root layout already provides the page's one
+            <main> landmark; nesting a second one here would be invalid
+            HTML (a <main> may not descend from another <main>). This div
+            only carries layout (width/padding), never semantics. */}
+        <div className="mx-auto w-full max-w-[620px]" style={{ padding: '64px 26px 0' }}>
           <CaseStudyHero
             year={content.year}
             org={content.org}
@@ -30,7 +34,7 @@ export default function AzzaPage() {
           {content.chapters.map((chapter) => (
             <CaseStudyChapter key={chapter.label} chapter={chapter} />
           ))}
-        </main>
+        </div>
         <NextProjectSection currentSlug="azza" />
       </div>
       <CaseStudyFooter />
