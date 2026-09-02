@@ -143,3 +143,27 @@ body {
 .preloader-tv-brightness {
   animation: preloader-tv-brightness 3.6s ease-in-out infinite;
 }
+
+/* Continuous analog static for PreloaderTV's screen — jitters the same
+   feTurbulence grain texture's own tile position through a handful of
+   pseudo-random offsets, stepped (not eased) so each jump reads as a
+   discrete noise frame rather than a smooth pan. Layered on the existing
+   grain div (see PreloaderTV.tsx) so it inherits that div's already-tuned
+   opacity/blend-mode rather than duplicating a second noise layer. */
+@keyframes preloader-tv-static {
+  0% { background-position: 0 0; }
+  10% { background-position: -37px 13px; }
+  20% { background-position: 22px -29px; }
+  30% { background-position: -14px 41px; }
+  40% { background-position: 39px 8px; }
+  50% { background-position: -26px -33px; }
+  60% { background-position: 11px 27px; }
+  70% { background-position: -43px -6px; }
+  80% { background-position: 18px 36px; }
+  90% { background-position: -9px -21px; }
+  100% { background-position: 0 0; }
+}
+
+.preloader-tv-static {
+  animation: preloader-tv-static 0.6s steps(1) infinite;
+}

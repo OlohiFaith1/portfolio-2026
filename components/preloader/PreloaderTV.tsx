@@ -9,18 +9,17 @@ import Image from 'next/image'
 // loading/timing: it just cycles a few project covers on a fixed interval
 // for as long as it's mounted, which is exactly as long as Preloader's own
 // panel is — mounting and unmounting together by construction.
-// The four personal photos in public/images/retro tv images — each a very
-// different aspect ratio (4:3 landscape, a tall 0.57:1 portrait, 3:4
-// portrait, 4:3 landscape again). Real intrinsic dimensions are carried
-// alongside each src so they can render at natural aspect ratio, sized to
-// the screen's full width (height following proportionally) rather than
-// object-fit's box-constrained scaling — the screen area's own
-// `overflow: hidden` below crops any vertical excess for the two portrait
-// photos, centered top/bottom, since matching the screen's full width on
-// every image (not leaving pillarboxed gaps on the two narrower ones) is
-// the priority here.
+// Three of the personal photos in public/images/retro tv images (Editor
+// session.png stays on disk but is intentionally left out of this list) —
+// each a different aspect ratio (a tall 0.57:1 portrait, 3:4 portrait, 4:3
+// landscape). Real intrinsic dimensions are carried alongside each src as
+// reference for that ratio; actual sizing uses `fill` + `object-fit: cover`
+// so every image fully covers the screen box regardless of its own aspect
+// ratio, cropping whatever's needed to do it (top/bottom for the two
+// portrait photos, left/right for the landscape one) rather than leaving
+// letterboxed gaps on any of them — the screen area's own
+// `overflow: hidden` below is what actually clips that excess.
 const SCREEN_IMAGES = [
-  { src: '/images/retro%20tv%20images/Editor%20session.png', width: 4032, height: 3024 },
   { src: '/images/retro%20tv%20images/Halftone%20Banknotes.png', width: 3063, height: 5424 },
   { src: '/images/retro%20tv%20images/High-Flash%20Halftone%20Candle.png', width: 3527, height: 4703 },
   { src: '/images/retro%20tv%20images/Vintage%20Pink%20Halftone%20Product.png', width: 4703, height: 3527 },
@@ -99,11 +98,14 @@ export function PreloaderTV() {
     <div
       style={{
         position: 'relative',
-        // ~25% larger than the previous clamp(220px, 42vh, 420px) at every
-        // tier, but capped by viewport width too (min() against vw) so a
-        // narrow phone can never get a TV wider than it is tall enough to
-        // hold without spilling past the screen edges.
-        height: 'clamp(250px, min(52vh, 104vw), 540px)',
+        // ~12% larger again on top of that (250/52vh/104vw/540 → 280/58vh/
+        // 116vw/605), still capped by viewport width too (min() against vw)
+        // so a narrow phone can never get a TV wider than it is tall enough
+        // to hold without spilling past the screen edges. Every other size
+        // in this component is a percentage of this one height (aspect
+        // ratio locked below), so this single value is what scales the
+        // whole TV — frame, screen box, and the images inside it — together.
+        height: 'clamp(280px, min(58vh, 116vw), 605px)',
         aspectRatio: TV_ASPECT,
       }}
     >
@@ -150,7 +152,7 @@ export function PreloaderTV() {
             transition: reducedMotion ? 'none' : 'transform 60ms ease-out',
           }}
         >
-          {SCREEN_IMAGES.map(({ src, width, height }, i) => (
+          {SCREEN_IMAGES.map(({ src }, i) => (
             <div
               key={src}
               style={{
@@ -166,14 +168,11 @@ export function PreloaderTV() {
               <Image
                 src={src}
                 alt=""
-                width={width}
-                height={height}
+                fill
                 sizes="220px"
                 className={reducedMotion ? undefined : 'preloader-tv-brightness'}
                 style={{
-                  display: 'block',
-                  width: '100%',
-                  height: 'auto',
+                  objectFit: 'cover',
                   filter: reducedMotion ? 'contrast(1.05) saturate(0.85) brightness(0.94)' : undefined,
                 }}
               />
@@ -208,14 +207,18 @@ export function PreloaderTV() {
           }}
         />
 
-        {/* Grain — briefly boosted during the channel-change flash to read
-            as a flick of static, otherwise a near-subliminal texture. */}
+        {/* Grain — continuously animated (see preloader-tv-static in
+            globals.css, which jitters this same texture's tile position in
+            discrete steps for an authentic flickering-static cadence) and
+            briefly boosted further during the channel-change flash, on top
+            of that baseline animated flicker. */}
         <div
+          className={reducedMotion ? undefined : 'preloader-tv-static'}
           style={{
             position: 'absolute',
             inset: 0,
             backgroundImage: `url("${GRAIN_URL}")`,
-            opacity: flickerActive ? 0.22 : 0.05,
+            opacity: flickerActive ? 0.26 : 0.09,
             transition: 'opacity 60ms linear',
             mixBlendMode: 'overlay',
           }}

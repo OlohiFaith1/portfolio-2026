@@ -25,8 +25,8 @@ const EXPERIENCE: ExperienceEntry[] = [
     body: [
       'In late 2024, I joined the engineering team at Blocverse to turn an earlier idea (making financial transactions possible through WhatsApp) into our hackathon submission, Azza DeFi, which became one of the winners of the Base Around The World hackathon.',
       'As Founding Product Designer, I led design for Azza, a WhatsApp-based cross-border payment product enabling crypto and stablecoin transactions across 5+ countries, serving 15K+ users and processing $20M+ in transaction volume.',
-      'In collaboration with the rest of the team, I designed the core product experience, conversational flows, the assets used on the bot like receipts, transaction statements, cashback cards, Merchant and Admin Dashboards, Azza for Business, and more. I also worked with Ella on Azza’s visual identity, design systems, and processes.',
-      'Because we were a small team, I wore multiple hats: I led the biweekly newsletter and hosted biweekly Twitter Spaces. Newsletter views grew by 1,775.5% and subscribers by 152.9%, helping drive product visibility and discovery.',
+      'In collaboration with the rest of the team, I designed the core product experience, conversational flows, the assets used on the bot like receipts, transaction statements, cashback cards, Merchant and Admin Dashboards, Azza for Business, and more. I also worked with our brand designer, Ella, on maintaining Azza’s visual identity, design systems, and processes.',
+      'Because we were a lean team keen on shipping fast, I wore multiple hats: I led the biweekly newsletter and hosted biweekly Twitter Spaces. Newsletter views grew by 1,775.5% and subscribers by 152.9%, helping drive product visibility and adoption.',
       'Working at Azza, and Blocverse by extension, was one of the most important experiences of my career. I learned a lot from the people, the meaningful work we did, and the opportunity to build something from the ground up.',
     ],
   },
@@ -43,7 +43,7 @@ const EXPERIENCE: ExperienceEntry[] = [
     role: 'Product Designer',
     years: '2025',
     body: [
-      'In 2025, I joined Metafide AI as a contract Product Designer, working across product and marketing design under Head of Design Adrian Roman to standardize design processes and workflows. I loved working on the product and, especially, with such a diverse group of exceptionally talented people.',
+      'In 2025, I joined Metafide AI as a contract Product Designer, working across product and marketing design under Head of Design, Adrian Roman, to standardize design processes and workflows. I loved working on the product and, especially, with such a diverse group of exceptionally talented people.',
     ],
   },
   {
