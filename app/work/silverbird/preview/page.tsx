@@ -6,10 +6,11 @@ export const metadata = { title: 'Silverbird Cinemas — Faith Olohijere' }
 // The Silverbird Cinemas standalone preview — same role Azza's/Mercado's/
 // SyncWatch's/Flyp's own previews play, reached from Flyp's preview via
 // "Next". Figma ("Silverbird Case Study Preview" 368:18296) shows no
-// hover-tint/artwork reveal frame (same as Flyp), and the full multi-
-// section case study isn't built yet — so this is comingSoon, matching
-// Silverbird's existing Work Grid entry (lib/work-projects.ts) and the
-// same precedent set by Flyp's own preview.
+// hover-tint/artwork reveal frame, so `hoverReveal={false}` keeps the
+// shared default (Azza's tint + artwork) from appearing. The real case
+// study now exists at /work/silverbird (matches lib/work-projects.ts,
+// which lists silverbird as live), so this navigates normally instead of
+// showing "Coming Soon" — the same precedent set by Flyp's own preview.
 export default function SilverbirdPreviewPage() {
   return (
     <div style={{ position: 'relative', zIndex: 1 }}>
@@ -21,7 +22,7 @@ export default function SilverbirdPreviewPage() {
         nextHref="/work/lnvc/preview"
         Mockup={SilverbirdMockup}
         mobileRoleMaxWidth={200}
-        comingSoon
+        hoverReveal={false}
       />
     </div>
   )

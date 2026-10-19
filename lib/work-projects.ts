@@ -20,7 +20,8 @@ export interface WorkProject {
 // is needed) so names/years/routes live in exactly one place. This is a
 // positional layout, not a generic auto-placed list, so this array's order
 // IS the render order — Flyp was moved directly before Mercado (was
-// Mercado, Flyp), everything else keeps its original position.
+// Mercado, Flyp), then Silverbird directly before Mercado (was Mercado,
+// Silverbird); everything else keeps its original position.
 export const WORK_PROJECTS: WorkProject[] = [
   {
     slug: 'azza',
@@ -50,6 +51,15 @@ export const WORK_PROJECTS: WorkProject[] = [
     line: 'A Figma plugin for exporting motion, made simpler.',
   },
   {
+    slug: 'silverbird',
+    name: 'Silverbird Cinemas',
+    year: '2025',
+    type: 'WORK',
+    href: '/work/silverbird',
+    comingSoon: false,
+    line: 'A platform for managing cinema ticketing and operations.',
+  },
+  {
     slug: 'mercado',
     name: 'Mercado',
     year: '2025',
@@ -58,15 +68,6 @@ export const WORK_PROJECTS: WorkProject[] = [
     comingSoon: false,
     comingSoonTag: true,
     line: 'A stablecoin payment experience built for merchants.',
-  },
-  {
-    slug: 'silverbird',
-    name: 'Silverbird Cinemas',
-    year: '2025',
-    type: 'WORK',
-    href: '',
-    comingSoon: true,
-    line: 'A platform for managing cinema ticketing and operations.',
   },
   {
     slug: 'lnvc',
@@ -79,7 +80,7 @@ export const WORK_PROJECTS: WorkProject[] = [
   },
 ]
 
-// The case-study sequence (Azza → Syncwatch → Flyp → Mercado → Silverbird →
+// The case-study sequence (Azza → Syncwatch → Flyp → Silverbird → Mercado →
 // LNVC → back to Azza) is this same array's own order — no separate
 // ordering data needed. Used by NextProjectSection so every case study's
 // "Next Project" card stays in lockstep with the Work Grid by construction.

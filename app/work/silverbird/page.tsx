@@ -5,14 +5,11 @@ import { NextProjectSection } from '@/components/sections/NextProjectSection'
 import { CaseStudyFooter } from '@/components/sections/CaseStudyFooter'
 import { CASE_STUDIES, getReadingTime } from '@/lib/case-studies'
 
-// Kept out of search results while the case study is unpublished — remove
-// `robots` once the Work Grid entry goes live.
-export const metadata = { title: 'Silverbird Cinemas — Faith Olohijere', robots: { index: false } }
+export const metadata = { title: 'Silverbird Cinemas — Faith Olohijere' }
 
 // Claude Design "Snow — Portfolio v2" case-study format — see
-// app/work/azza/page.tsx for the shared structural notes. Built for review
-// only: the Work Grid entry (lib/work-projects.ts) stays comingSoon, so
-// nothing links here yet.
+// app/work/azza/page.tsx for the shared structural notes. Published: the
+// Work Grid entry (lib/work-projects.ts) links here.
 export default function SilverbirdPage() {
   const content = CASE_STUDIES.silverbird
   return (

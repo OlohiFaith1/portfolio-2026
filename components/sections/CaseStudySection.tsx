@@ -54,6 +54,9 @@ export interface CaseStudySectionProps {
   /** Desktop-only hover reveal behind the mockup. Defaults to Azza's tint + artwork. */
   hoverTintColor?: string
   hoverArtwork?: HoverArtwork
+  /** Pass false for a project whose Figma preview has no hover reveal —
+   *  drops the tint + artwork layers above (defaults to true). */
+  hoverReveal?: boolean
   /** Desktop-only hover reveal — project metadata text color. Omit to leave text color unchanged. */
   hoverTextColors?: HoverTextColors
   /** Desktop-only hover reveal — "Next" arrow icon override (e.g. a white variant matching hoverTextColors). Omit to leave it unchanged. */
@@ -72,6 +75,7 @@ export function CaseStudySection({
   comingSoon = false,
   hoverTintColor = DEFAULT_HOVER_TINT_COLOR,
   hoverArtwork = DEFAULT_HOVER_ARTWORK,
+  hoverReveal = true,
   hoverTextColors,
   hoverArrowSrc,
   mobileRoleMaxWidth,
@@ -122,7 +126,7 @@ export function CaseStudySection({
   return (
     <section className="relative min-h-screen flex flex-col lg:items-center lg:justify-center overflow-hidden">
 
-      {!comingSoon && (
+      {!comingSoon && hoverReveal && (
         <>
           {/* Tint layer — covers dot-grid with the project's hover color on phone hover */}
           <motion.div
