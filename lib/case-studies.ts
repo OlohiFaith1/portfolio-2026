@@ -444,6 +444,266 @@ export const CASE_STUDIES: Record<string, CaseStudyContent> = {
     ],
   },
 
+  // Independent design project (not a Silverbird commission) — copy is the
+  // approved first draft, verbatim apart from minor punctuation. Every
+  // visual after the hero is an exported screen or a walkthrough rendered
+  // from the exports, and stays within the reading column (no `wide`), so
+  // all of them share the text's own width and edges.
+  silverbird: {
+    year: '2025',
+    org: 'Silverbird Cinemas',
+    role: 'Web Design, User Experience and Interface Design',
+    title: 'A platform for managing corporate ticket partnerships.',
+    heroImage: {
+      src: '/images/Silverbird%20Cover.png',
+      alt: 'A desktop monitor beside a Mac mini, showing the platform’s home dashboard with ticket totals and a recent activity table',
+    },
+    stats: [{ value: 'Ticket management' }, { value: 'Ticket operations' }, { value: 'Ticket validation' }],
+    chapters: [
+      {
+        no: '',
+        label: 'The Backstory',
+        head: 'Managing the journey from partnership to ticket.',
+        body: [
+          'Corporate partnerships can involve more than agreeing to work together. Once a partnership is confirmed, tickets need to be generated, shared with the right people, and validated when they arrive at the cinema.',
+          'This project explored how those operations could be managed through a single web platform, giving cinema staff a way to manage partner records and handle the ticket workflow that follows.',
+          'This was an independent design project informed by research conducted by someone who interned at Silverbird Cinemas.',
+        ],
+        parts: [
+          {
+            // Super Admin onboarding walkthrough: a camera-only recording of the
+            // three exported screens (sign-in → code → code entered), rendered in
+            // jobmate-motion-studio's `silverbird-onboarding` scene at 1440×1024
+            // (the exports' 5760×4096 ratio).
+            type: 'gallery',
+            layout: 'column',
+            crop: false,
+            images: [
+              {
+                src: '',
+                alt: 'Walkthrough of the Super Admin onboarding screens: sign in with an email address, then enter the six-digit verification code',
+                video: '/images/silverbird/silverbird-onboarding.mp4',
+                width: 1440,
+                height: 1024,
+                videoControls: true,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        no: '',
+        label: 'The Challenge',
+        head: 'Keeping partner and ticket operations connected.',
+        body: [
+          'The experience needed to support two connected parts of the workflow: managing corporate partners and handling the tickets created for them.',
+          'Staff needed to be able to check whether a partner already existed, generate the right number and type of tickets, choose the included menu items, and define when those tickets were valid.',
+          'After generation, the tickets would be downloaded and shared with the partner. At the cinema, staff would need a way to validate each ticket and review its status.',
+          'The design brought these tasks together in one operational interface, with access organised around the responsibilities of different staff roles.',
+        ],
+        parts: [
+          {
+            // Caption spelling ("archtypes") is as provided — keep it verbatim.
+            type: 'gallery',
+            layout: 'column',
+            crop: false,
+            images: [
+              {
+                src: '/images/silverbird/Screenshot%202026-10-15%20at%2011.40.19.png',
+                alt: 'Figma canvas with the screens grouped into three columns: Admin Management for Super Admins, Admin for regular Admins, and Sales Agent',
+                caption: 'Screenshot of the three user archtypes.',
+                width: 1824,
+                height: 1620,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        no: '',
+        label: 'The Solution',
+        head: 'One workflow, from partner records to ticket validation.',
+        body: [
+          'The platform centres on partner management. Once management confirms a partnership, the Super Admin checks whether the company is already listed and adds it if it is not.',
+        ],
+        parts: [
+          {
+            // Partner Management walkthrough (add, rename, delete a partner), rendered in
+            // jobmate-motion-studio's `silverbird-partners` scene at 1440×1024 from the four
+            // Partners exports in this folder.
+            type: 'gallery',
+            layout: 'column',
+            crop: false,
+            images: [
+              {
+                src: '',
+                alt: 'Walkthrough of Partner Management: adding a partner, renaming a partner inline, and deleting a partner after confirming',
+                video: '/images/silverbird/silverbird-partners.mp4',
+                width: 1440,
+                height: 1024,
+                videoControls: true,
+              },
+            ],
+          },
+          {
+            type: 'paragraphs',
+            body: [
+              'From there, tickets can be generated for the selected partner. Staff configure the quantity, choose between VVIP, Regular, and Gift Voucher tickets, select available menu items, and set the validity period. The generated tickets can then be downloaded and shared with the partner.',
+            ],
+          },
+          {
+            // Generate Tickets: the two exported screens as static images, unfilled then
+            // Gift Vouchers filled, each on the light grey canvas card.
+            type: 'canvasImages',
+            images: [
+              {
+                src: '/images/silverbird/Generate%20Tickets%20(Unfilled).png',
+                alt: 'The empty Generate Tickets form: partner, number of tickets, ticket type, menu and validity range, beside an empty preview',
+                width: 5760,
+                height: 4096,
+              },
+              {
+                src: '/images/silverbird/Generate%20Tickets-%20Gift%20Vouchers%20(Filled)%20(Desktop).png',
+                alt: 'The Generate Tickets form completed for 78 Gift Voucher tickets for Wema Bank, with menu items selected and the preview showing the price per ticket and validity range',
+                width: 5760,
+                height: 4096,
+              },
+            ],
+          },
+          {
+            type: 'paragraphs',
+            body: [
+              'Each ticket includes a QR code and a unique Ticket ID. Staff can validate a ticket by scanning its QR code or entering its ID manually.',
+            ],
+          },
+          {
+            // The two ways to validate a ticket, as separate walkthroughs (QR scan first), rendered
+            // in jobmate-motion-studio's `silverbird-validate-qr` / `silverbird-validate-id` scenes
+            // at 1440×1024 from the seven Validate Ticket exports in this folder.
+            type: 'gallery',
+            layout: 'column',
+            crop: false,
+            images: [
+              {
+                src: '',
+                alt: 'Validating a ticket by scanning its QR code: choosing Scan QR Code, the ticket in the camera viewfinder, then the Valid Ticket result',
+                caption: 'Scan QR Code',
+                video: '/images/silverbird/silverbird-validate-qr.mp4',
+                width: 1440,
+                height: 1024,
+                videoControls: true,
+              },
+              {
+                src: '',
+                alt: 'Validating a ticket by entering its Ticket ID: choosing Enter Ticket ID, typing the six characters, then the Valid Ticket result',
+                caption: 'Enter Ticket ID',
+                video: '/images/silverbird/silverbird-validate-id.mp4',
+                width: 1440,
+                height: 1024,
+                videoControls: true,
+              },
+            ],
+          },
+          {
+            type: 'paragraphs',
+            body: [
+              'The platform also includes a history view that brings ticket details into one place, including the Ticket ID, price, partner name, generation date, scanning staff member, and ticket status.',
+            ],
+          },
+          {
+            type: 'canvasImages',
+            images: [
+              {
+                src: '/images/silverbird/History-Gift%20Vouchers%20(Desktop).png',
+                alt: 'The History page on the Gift Vouchers tab, listing tickets with their Ticket ID, price, scanning staff member, partner, generation date and status',
+                caption: 'Screenshot of Gift Voucher History',
+                width: 5760,
+                height: 4096,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        no: '',
+        label: 'Designing for Different Roles',
+        head: 'Different responsibilities, a shared overview.',
+        body: [
+          'The platform has three roles: Super Admin, Admin, and Sales Agent.',
+          'The Super Admin has access to partner management, ticket generation, history, staff management, menu management, notifications, and ticket validation. Admins can generate tickets, view history, scan tickets, and access notifications. Sales Agents can view history, scan tickets, and access notifications.',
+          'Each role has a similar dashboard, with cards showing the total number of tickets, used tickets, and expired tickets. A recent activity table, organised with tabs for ticket types, provides another view of ticket activity.',
+        ],
+        parts: [
+          {
+            type: 'canvasImages',
+            images: [
+              {
+                src: '/images/silverbird/Sales%20Agent-%20Ticket%20Batch.png',
+                alt: 'A Sales Agent’s Ticket Batch page, with a summary of the batch above a table of its tickets showing Ticket ID, price, scanning staff member, partner, generation date and status',
+                caption: 'Sales agent ticket batching',
+                width: 5760,
+                height: 4096,
+              },
+            ],
+          },
+          {
+            type: 'paragraphs',
+            body: [
+              'Staff accounts capture a username, branch, and password. The branch field identifies the cinema location associated with each staff member, supporting accountability across multiple branches.',
+            ],
+          },
+          {
+            type: 'canvasImages',
+            images: [
+              {
+                src: '/images/silverbird/Settings-%20Sales%20Agent%20Management.png',
+                alt: 'Settings on the Sales Agent Management tab, listing sales agents with their username, branch, hidden password and date added, with an open menu to reset a password or delete an account',
+                caption: 'Admin settings for managing staff accounts',
+                width: 5760,
+                height: 4096,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        no: '',
+        label: 'Menu Management',
+        head: 'Making ticket selections visible before generation.',
+        body: [
+          'When generating tickets, staff can select the food and drinks included with a ticket. The menu field lets them choose from available items, while the preview on the right updates to reflect their selections.',
+          'The walkthrough demonstrates how staff can select multiple items, review the completed ticket details, and initiate ticket generation. This keeps the selected menu items visible alongside the rest of the ticket information before the tickets are generated.',
+        ],
+        parts: [
+          {
+            // Menu selection on Generate Tickets: a walkthrough built in the motion studio
+            // (silverbird-menu) from the Unfilled, Select Menu and Generating in Progress exports.
+            // Its grey canvas is in the video, so it takes the canvasImages cards' 24px radius.
+            type: 'gallery',
+            layout: 'column',
+            crop: false,
+            images: [
+              {
+                src: '',
+                alt: 'Choosing menu items while generating tickets: the menu field opens its list, items are ticked, and the preview lists them before the tickets generate',
+                video: '/images/silverbird/silverbird-menu.mp4',
+                width: 1440,
+                height: 1024,
+                videoControls: true,
+                radius: 24,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        no: '',
+        label: 'In Closing',
+        body: 'The project brought partner management, ticket generation, validation, and ticket history into a single operational experience, designed around the responsibilities of cinema staff.',
+      },
+    ],
+  },
+
   syncwatch: {
     year: '2026',
     org: 'SyncWatch',
@@ -584,7 +844,7 @@ export function getReadingTime(content: CaseStudyContent): string {
           return ''
         })
         .join(' ')
-      return `${c.head} ${bodyText(c.body)} ${c.quote ?? ''} ${blockText} ${partText}`
+      return `${c.head ?? ''} ${bodyText(c.body)} ${c.quote ?? ''} ${blockText} ${partText}`
     })
     .join(' ')
     .trim()

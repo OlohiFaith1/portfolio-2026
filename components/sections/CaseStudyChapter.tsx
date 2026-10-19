@@ -3,6 +3,7 @@ import { AzzaYouPaidAnimation } from './AzzaYouPaidAnimation'
 import { AzzaCouponCarousel } from './AzzaCouponCarousel'
 import { SyncWatchLogoFlicker } from './SyncWatchLogoFlicker'
 import { CaseStudyInlineVideo } from './CaseStudyInlineVideo'
+import { CaseStudyPlaceholder } from './CaseStudyPlaceholder'
 
 // A paragraph is either plain text, or a sequence of segments so a
 // paragraph can carry inline links (e.g. "we entered the [X](url) and
@@ -32,6 +33,18 @@ export interface CaseStudyFigure {
    *  known upfront instead of shifting layout once metadata loads. `src`
    *  is unused when this is set. */
   video?: string
+  /** Corner radius for a `video` figure (defaults to 12) — 24 matches the
+   *  canvasImages cards' grey containers when the video carries its own. */
+  radius?: number
+  /** For a `video` figure: opt in to CaseStudyInlineVideo's accessible
+   *  playback — `alt` as the video's name, no autoplay under reduced
+   *  motion, and a pause/play button. */
+  videoControls?: boolean
+  /** Marks this slot as an asset still to come: with no `src`/`video`, it
+   *  renders a labelled CaseStudyPlaceholder (this text is the label) at
+   *  width/height's aspect ratio (3:2 if unset) instead of the plain empty
+   *  surface box. Drop this and fill in `src` once the real file exists. */
+  placeholder?: string
 }
 
 // An additional heading/body/image grouping within a chapter, after its
@@ -72,11 +85,12 @@ export type CaseStudyPart =
   | { type: 'heading'; text: string }
   | { type: 'paragraphs'; body: CaseStudyParagraph[] }
   | { type: 'callout'; text: CaseStudyParagraph }
-  | { type: 'gallery'; images: CaseStudyFigure[]; layout?: 'row' | 'column'; crop?: boolean }
+  | { type: 'gallery'; images: CaseStudyFigure[]; layout?: 'row' | 'column'; crop?: boolean; wide?: boolean }
   | { type: 'credits'; groups: CaseStudyCreditGroup[] }
   | { type: 'videos'; videos: CaseStudyVideoClip[]; background?: string }
   | { type: 'framedImages'; images: CaseStudyFigure[]; background?: string }
   | { type: 'couponCarousel'; caption?: string; background?: string }
+  | { type: 'canvasImages'; images: CaseStudyFigure[] }
   | { type: 'divider' }
 
 export interface CaseStudyChapterData {
@@ -84,7 +98,10 @@ export interface CaseStudyChapterData {
    *  show only the label, with no number/dash prefix at all. */
   no: string
   label: string
-  head: string
+  /** Omit for a chapter with no heading (e.g. a short closing statement
+   *  that sits directly under its label) — the label then becomes the
+   *  chapter's <h2>, so the page outline keeps every section. */
+  head?: string
   /** A plain string renders as the chapter's one existing paragraph
    *  (every case study but Azza still uses this form, unchanged); an
    *  array supports multiple paragraphs. */
@@ -158,7 +175,18 @@ function Paragraphs({ body }: { body: string | CaseStudyParagraph[] }) {
 // into a landscape box.
 function FigureImage({ figure, crop = true }: { figure: CaseStudyFigure; crop?: boolean }) {
   if (figure.video && figure.width && figure.height) {
-    return <CaseStudyInlineVideo src={figure.video} width={figure.width} height={figure.height} caption={figure.caption} />
+    return <CaseStudyInlineVideo src={figure.video} width={figure.width} height={figure.height} label={figure.alt} caption={figure.caption} radius={figure.radius} controls={figure.videoControls} />
+  }
+  if (!figure.src && figure.placeholder) {
+    return (
+      <div style={{ marginTop: 24 }}>
+        <CaseStudyPlaceholder
+          label={figure.placeholder}
+          aspectRatio={figure.width && figure.height ? `${figure.width} / ${figure.height}` : undefined}
+        />
+        {figure.caption && <div style={{ marginTop: 8, fontSize: 10, color: 'var(--muted)' }}>{figure.caption}</div>}
+      </div>
+    )
   }
   // A figure slot with no src yet (an image queued to be added later) —
   // render the same bordered/rounded surface every other figure sits in,
@@ -217,6 +245,14 @@ function Gallery({ images, layout = 'row', crop = true }: { images: CaseStudyFig
       ))}
     </div>
   )
+}
+
+// Lets wide product screens (dashboards, tables) break out of the 620px
+// reading column: negative inline margins grow the box to 960px centered
+// on the column, shrinking to the viewport minus a 16px gutter on each
+// side below that — so it never causes horizontal scroll on mobile.
+function Wide({ children }: { children: React.ReactNode }) {
+  return <div style={{ marginInline: 'calc(50% - min(480px, 50vw - 16px))' }}>{children}</div>
 }
 
 // A vertical stack of video clips, each sharing FigureImage's bordered
@@ -329,6 +365,41 @@ function FramedImageStack({ images, background }: { images: CaseStudyFigure[]; b
   )
 }
 
+// Static desktop screens on the motion studio's light grey canvas
+// (#f7f7f5) — the same framing as the studio's Silverbird videos, scaled to
+// the column: 5% side / 3.6% top-bottom padding (the studio's 72px × 51.2px
+// of 1440), a 24px outer radius and a slight 4px radius on the screen
+// itself, with no border, stroke or shadow. Each image keeps its own aspect
+// ratio at full card width (width/height required).
+function CanvasImageStack({ images }: { images: CaseStudyFigure[] }) {
+  return (
+    <div style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 24 }}>
+      {images.map((figure, i) =>
+        figure.width && figure.height ? (
+          <div key={i}>
+            <div style={{ borderRadius: 24, background: '#f7f7f5', padding: '3.6% 5%' }}>
+              <Image
+                src={figure.src}
+                alt={figure.alt}
+                width={figure.width}
+                height={figure.height}
+                sizes="(min-width: 768px) 620px, 100vw"
+                style={{
+                  display: 'block',
+                  width: '100%',
+                  height: 'auto',
+                  borderRadius: 4,
+                }}
+              />
+            </div>
+            {figure.caption && <div style={{ marginTop: 8, fontSize: 10, color: 'var(--muted)' }}>{figure.caption}</div>}
+          </div>
+        ) : null
+      )}
+    </div>
+  )
+}
+
 // Same outer frame as VideoStack/FramedImageStack (full content width,
 // rounded, padded box), wrapping the restored AzzaCouponCarousel animation
 // instead of a video or static figure — the "black frame" is this outer
@@ -420,11 +491,19 @@ function ChapterPart({ part }: { part: CaseStudyPart }) {
     case 'callout':
       return <Callout text={part.text} />
     case 'gallery':
-      return <Gallery images={part.images} layout={part.layout} crop={part.crop} />
+      return part.wide ? (
+        <Wide>
+          <Gallery images={part.images} layout={part.layout} crop={part.crop} />
+        </Wide>
+      ) : (
+        <Gallery images={part.images} layout={part.layout} crop={part.crop} />
+      )
     case 'credits':
       return <Credits groups={part.groups} />
     case 'videos':
       return <VideoStack videos={part.videos} background={part.background} />
+    case 'canvasImages':
+      return <CanvasImageStack images={part.images} />
     case 'framedImages':
       return <FramedImageStack images={part.images} background={part.background} />
     case 'couponCarousel':
@@ -440,16 +519,25 @@ export function CaseStudyChapter({ chapter }: { chapter: CaseStudyChapterData })
   const { no, label, head, body, quote, figure, blocks, parts, youPaidAnimation, syncwatchLogoFlicker } = chapter
   return (
     <section style={{ paddingTop: 48 }}>
-      <div className="font-mono" style={{ fontSize: 9.5, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--muted)' }}>
-        {no && `${no} — `}
-        {label}
-      </div>
-      <h2
-        className="font-sans font-medium text-foreground"
-        style={{ margin: '12px 0 0', fontSize: 'clamp(20px, 3vw, 24px)', lineHeight: 1.25, letterSpacing: '-0.025em' }}
-      >
-        {head}
-      </h2>
+      {head ? (
+        <div className="font-mono" style={{ fontSize: 9.5, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--muted)' }}>
+          {no && `${no} — `}
+          {label}
+        </div>
+      ) : (
+        <h2 className="font-mono font-normal" style={{ margin: 0, fontSize: 9.5, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--muted)' }}>
+          {no && `${no} — `}
+          {label}
+        </h2>
+      )}
+      {head && (
+        <h2
+          className="font-sans font-medium text-foreground"
+          style={{ margin: '12px 0 0', fontSize: 'clamp(20px, 3vw, 24px)', lineHeight: 1.25, letterSpacing: '-0.025em' }}
+        >
+          {head}
+        </h2>
+      )}
       <Paragraphs body={body} />
       {youPaidAnimation && (
         <div style={{ marginTop: 24 }}>
